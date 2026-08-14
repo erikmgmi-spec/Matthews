@@ -1,0 +1,1657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Household Operations</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
+  :root{
+    --cream:#F1EBDE; --ink:#211E1A; --line:#DCD3C0; --muted:#7A7364;
+    --high:#7A2E23; --med:#8A6D3B; --low:#5C7360; --blue:#3C5A73;
+    --accent:#7A2E23; --accent-dark:#5E211A;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--cream);color:var(--ink);font-family:'Inter',sans-serif;}
+  .wrap{max-width:1000px;margin:0 auto;padding:36px 26px 90px;}
+  header{border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:6px;
+    display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;}
+  .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+  h1{font-family:'Playfair Display',serif;font-weight:600;font-size:28px;margin:0;letter-spacing:.01em;}
+  .addbtn{background:var(--accent);color:#fff;border:none;padding:10px 16px;
+    border-radius:8px;font-size:13px;cursor:pointer;font-weight:500;}
+  .addbtn:hover{background:var(--accent-dark);}
+
+  .tabs{display:flex;gap:4px;margin:20px 0 22px;border-bottom:1px solid var(--line);
+    overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab{padding:10px 14px;font-size:13px;cursor:pointer;color:var(--muted);
+    border-bottom:2px solid transparent;font-weight:500;white-space:nowrap;flex-shrink:0;}
+  .tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+  .panel{display:none;} .panel.active{display:block;}
+
+  .filters{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+  .chip{border:1px solid var(--line);background:#fff;padding:7px 14px;border-radius:20px;
+    font-size:12.5px;cursor:pointer;color:var(--muted);}
+  .chip.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+
+  .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin-bottom:12px;}
+  .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+  .card-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;}
+  .tag{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;
+    border-radius:12px;font-weight:600;white-space:nowrap;}
+  .tag.high{background:#FBEAE6;color:var(--high);}
+  .tag.medium{background:#F5EEDD;color:var(--med);}
+  .tag.low{background:#E9EFE9;color:var(--low);}
+  .card-area{font-size:12px;color:var(--muted);margin-top:2px;letter-spacing:.03em;text-transform:uppercase;}
+  .card-body{margin-top:8px;font-size:14px;line-height:1.55;color:#33312C;white-space:pre-wrap;}
+  .card-meta{margin-top:10px;font-size:12.5px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap;}
+  .card-meta b{color:var(--ink);font-weight:600;}
+  .card-actions{margin-top:10px;display:flex;gap:10px;}
+  .card-actions button{background:none;border:none;font-size:12.5px;color:var(--muted);
+    cursor:pointer;text-decoration:underline;padding:0;}
+  .card-actions button:hover{color:var(--ink);}
+  .warranty-badge{font-size:11px;padding:3px 8px;border-radius:10px;font-weight:600;}
+  .warranty-active{background:#E9EFE9;color:var(--low);}
+  .warranty-expired{background:#FBEAE6;color:var(--high);}
+
+  .stage-badge{font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;padding:4px 10px;
+    border-radius:12px;font-weight:600;white-space:nowrap;}
+  .stage-identified{background:#EDEAE2;color:#6B6659;}
+  .stage-contacted{background:#F5EEDD;color:var(--med);}
+  .stage-scheduled{background:#E6EEF3;color:var(--blue);}
+  .stage-commenced{background:#E3E8F5;color:#4A4E8A;}
+  .stage-completed{background:#E9EFE9;color:var(--low);}
+
+  .empty{text-align:center;padding:50px 20px;color:var(--muted);}
+  .empty h3{font-family:'Playfair Display',serif;color:var(--ink);margin-bottom:6px;}
+
+  .overlay{position:fixed;inset:0;background:rgba(33,30,26,.5);display:flex;
+    align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto;z-index:10;}
+  .modal{background:var(--cream);max-width:580px;width:100%;border-radius:14px;padding:26px 28px 22px;}
+  .modal h2{font-family:'Playfair Display',serif;font-size:23px;margin:0 0 16px;}
+  label{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:5px;margin-top:13px;}
+  input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);
+    border-radius:8px;font-family:'Inter',sans-serif;font-size:14px;background:#fff;color:var(--ink);}
+  textarea{resize:vertical;min-height:70px;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+  .modal-actions{display:flex;justify-content:space-between;align-items:center;margin-top:20px;}
+  .save{background:var(--accent);color:#fff;border:none;padding:11px 18px;
+    border-radius:8px;cursor:pointer;font-size:13.5px;font-weight:500;}
+  .save:hover{background:var(--accent-dark);}
+  .cancel{background:#fff;border:1px solid var(--line);padding:10px 16px;
+    border-radius:8px;cursor:pointer;font-size:13.5px;}
+  .del{background:none;border:none;color:var(--high);cursor:pointer;font-size:12.5px;text-decoration:underline;}
+  .status{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+    background:var(--ink);color:var(--cream);padding:9px 18px;border-radius:20px;
+    font-size:12.5px;opacity:0;transition:opacity .3s;pointer-events:none;}
+  .status.show{opacity:1;}
+  .banner{background:#F1EEE3;border:1px solid var(--line);border-radius:8px;padding:10px 14px;
+    font-size:12.5px;color:var(--muted);margin-bottom:18px;}
+
+  /* Calendar */
+  .cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+  .cal-nav{display:flex;align-items:center;gap:14px;}
+  .cal-nav button{background:#fff;border:1px solid var(--line);border-radius:6px;
+    width:32px;height:32px;cursor:pointer;font-size:14px;}
+  .cal-month{font-family:'Playfair Display',serif;font-size:20px;min-width:180px;text-align:center;}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
+  .cal-dow{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+    text-align:center;padding-bottom:6px;}
+  .cal-day{background:#fff;border:1px solid var(--line);border-radius:8px;min-height:88px;
+    padding:6px;font-size:12px;cursor:pointer;position:relative;}
+  .cal-day:hover{border-color:var(--ink);}
+  .cal-day.empty-cell{background:transparent;border:none;cursor:default;}
+  .cal-daynum{font-size:12px;color:var(--muted);font-weight:600;}
+  .cal-event{background:#F1EEE3;border-radius:4px;padding:2px 5px;margin-top:3px;
+    font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .cal-event.recurring{background:#E9EFE9;color:var(--low);}
+
+  /* Mobile responsiveness */
+  @media (max-width: 640px){
+    .wrap{padding:20px 14px 70px;}
+    header{align-items:flex-start;}
+    .eyebrow{text-align:center;width:100%;}
+    h1{font-size:22px;text-align:center;width:100%;}
+    header > div:first-child{width:100%;}
+    header > div:last-child{width:100%;justify-content:center;}
+    .addbtn{flex:1;padding:11px 10px;font-size:12.5px;}
+    .row2,.row3{grid-template-columns:1fr;}
+    .modal{padding:20px 18px 18px;max-height:90vh;overflow-y:auto;}
+    .cal-day{min-height:52px;padding:4px;font-size:10px;}
+    .cal-daynum{font-size:10.5px;}
+    .cal-event{font-size:9px;padding:1px 3px;}
+    .cal-dow{font-size:9.5px;}
+    .cal-grid{gap:3px;}
+    .card{padding:14px 16px;}
+    .card-title{font-size:16px;}
+    input,select,textarea{font-size:16px;} /* prevents iOS auto-zoom on focus */
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow">Private Workspace &middot; Shared with Principal</div>
+      <h1 id="page-title">Household Operations</h1>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="addbtn" id="add-btn">+ Add</button>
+      <button class="addbtn" id="import-btn" style="background:#fff;color:var(--ink);border:1px solid var(--line);" onclick="openImportModal()">Import Data</button>
+    </div>
+  </header>
+
+  <div class="banner">This workspace is shared — entries added by anyone with the link are visible to everyone with access.</div>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="sops">SOPs</div>
+    <div class="tab" data-tab="calendar">Monthly Calendar</div>
+    <div class="tab" data-tab="projects">Projects</div>
+    <div class="tab" data-tab="hours">Hours Log</div>
+    <div class="tab" data-tab="pm">Preventative Maintenance</div>
+    <div class="tab" data-tab="vendors">Vendors</div>
+    <div class="tab" data-tab="properties">Properties</div>
+    <div class="tab" data-tab="vehicles">Vehicles</div>
+    <div class="tab" data-tab="receipts">Receipts</div>
+    <div class="tab" data-tab="propdetails">Property Details</div>
+  </div>
+
+  <div class="panel active" id="panel-sops">
+    <div class="filters" id="sop-filters"></div>
+    <div id="sop-list"></div>
+  </div>
+
+  <div class="panel" id="panel-calendar">
+    <div class="cal-head">
+      <div class="cal-month" id="cal-month-label"></div>
+      <div class="cal-nav">
+        <button onclick="calShift(-1)">&#8592;</button>
+        <button onclick="calShift(1)">&#8594;</button>
+      </div>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+  </div>
+
+  <div class="panel" id="panel-projects">
+    <div style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Stage</div>
+    <div class="filters" id="proj-stage-filters" style="margin-bottom:14px;"></div>
+    <div style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Area</div>
+    <div class="filters" id="proj-filters"></div>
+    <div id="proj-list"></div>
+  </div>
+
+  <div class="panel" id="panel-hours">
+    <div class="cal-head">
+      <div class="cal-month" id="hours-month-label"></div>
+      <div class="cal-nav">
+        <button onclick="hoursShift(-1)">&#8592;</button>
+        <button onclick="hoursShift(1)">&#8594;</button>
+      </div>
+    </div>
+    <div id="hours-total" style="margin-bottom:16px;"></div>
+    <div id="hours-list"></div>
+  </div>
+
+  <div class="panel" id="panel-pm">
+    <div class="filters" id="pm-filters"></div>
+    <div id="pm-list"></div>
+  </div>
+
+  <div class="panel" id="panel-vendors">
+    <div id="vendor-search-row" style="margin-bottom:14px;">
+      <input id="vendor-search" placeholder="Search vendors by name, specialty, or phone…" style="width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:8px;font-family:'Inter',sans-serif;font-size:14px;" oninput="renderVendors()">
+    </div>
+    <div id="vendor-list"></div>
+  </div>
+
+  <div class="panel" id="panel-properties">
+    <div id="property-list"></div>
+  </div>
+
+  <div class="panel" id="panel-vehicles">
+    <div id="vehicle-list"></div>
+  </div>
+
+  <div class="panel" id="panel-receipts">
+    <div class="cal-head">
+      <div class="cal-month" id="receipts-month-label"></div>
+      <div class="cal-nav">
+        <button onclick="receiptsShift(-1)">&#8592;</button>
+        <button onclick="receiptsShift(1)">&#8594;</button>
+      </div>
+    </div>
+    <div id="receipts-total" style="margin-bottom:16px;"></div>
+    <div id="receipts-list"></div>
+  </div>
+
+  <div class="panel" id="panel-propdetails">
+    <div style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Property</div>
+    <div class="filters" id="propdetail-property-filters" style="margin-bottom:14px;"></div>
+    <div style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Category</div>
+    <div class="filters" id="propdetail-category-filters"></div>
+    <div id="propdetail-list"></div>
+  </div>
+</div>
+
+<div class="status" id="status"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyCm8HVqjj6FgsqBdW9vmdwcZ9DJWPWasuo",
+  authDomain: "keating-estate---handgraaf.firebaseapp.com",
+  projectId: "keating-estate---handgraaf",
+  storageBucket: "keating-estate---handgraaf.firebasestorage.app",
+  messagingSenderId: "946043487218",
+  appId: "1:946043487218:web:5c3d7ad0e0547eae80a16b",
+  measurementId: "G-H8EN1QMM7G"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+</script>
+<script>
+const SOP_CATEGORIES = ["Security","Access","Supervision","Vehicle Use & Notation","Facilities & Guest Use","General Household Standards"];
+const PRIORITIES = ["High","Medium","Low"];
+const PROJ_AREAS = ["Main Home","Julian Main House","Vehicles","Hangar"];
+const PROJ_STAGES = ["Vendor identified","Vendor contacted","Vendor scheduled","Project commenced","Project completed"];
+const PM_FREQUENCIES = ["Weekly","Monthly","Quarterly","Semi-Annual","Annual"];
+const STAGE_CLASS = {
+  "Vendor identified":"stage-identified", "Vendor contacted":"stage-contacted",
+  "Vendor scheduled":"stage-scheduled", "Project commenced":"stage-commenced",
+  "Project completed":"stage-completed"
+};
+
+let sops = [], calEvents = [], projects = [], hoursLog = [], pmTasks = [];
+let vendorDirectory = [], properties = [], vehicles = [], vehicleTrips = [], receipts = [], propertyDetails = [];
+let activeTab = 'sops';
+let sopFilter = 'All';
+let projFilter = 'All';
+let projStageFilter = 'All Stages';
+let calDate = new Date();
+let hoursDate = new Date();
+let receiptsDate = new Date();
+let pmFilter = 'All';
+let propDetailPropertyFilter = 'All';
+let propDetailCategoryFilter = 'All';
+let editing = {type:null, id:null};
+
+async function loadAll(){
+  sops = await loadKey('vendor-sops', seedSops());
+  calEvents = await loadKey('monthly-calendar', []);
+  projects = await loadKey('completed-projects', []);
+  hoursLog = await loadKey('hours-log', []);
+  pmTasks = await loadKey('pm-tasks', []);
+  vendorDirectory = await loadKey('vendor-directory', []);
+  properties = await loadKey('property-catalog', seedProperties());
+  vehicles = await loadKey('vehicle-catalog', []);
+  vehicleTrips = await loadKey('vehicle-trips', []);
+  receipts = await loadKey('receipts-log', []);
+  propertyDetails = await loadKey('property-details', []);
+  renderSops(); renderCalendar(); renderProjects(); renderHours(); renderPM();
+  renderVendors(); renderProperties(); renderVehicles(); renderReceipts(); renderPropDetails();
+}
+
+function seedProperties(){
+  return [
+    {id: cryptoId(), name:"Julian Home", address:"", type:"", sqft:"", acreage:"", notes:"", attachments:[]}
+  ];
+}
+
+async function loadKey(key, fallback){
+  try{
+    const snap = await db.collection('household-ops').doc(key).get();
+    if(snap.exists && snap.data().value) return snap.data().value;
+    return fallback;
+  }catch(e){ console.error(e); return fallback; }
+}
+async function saveKey(key, data){
+  try{
+    await db.collection('household-ops').doc(key).set({ value: data, updatedAt: new Date().toISOString() });
+    toast("Saved");
+  }catch(e){
+    console.error(e);
+    toast("Save failed — check connection");
+  }
+}
+function cryptoId(){ return 'id-' + Date.now() + '-' + Math.random().toString(36).slice(2,8); }
+function toast(msg){
+  const el = document.getElementById('status');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 1400);
+}
+function escapeHtml(s){
+  const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML;
+}
+
+function seedSops(){
+  return [
+    {id: cryptoId(), title:"Gate Closure Before Departure", category:"Access", priority:"High",
+     body:"Wait for both gates to fully close before leaving the property. Do not leave with either gate open, even briefly.", vendor:""},
+    {id: cryptoId(), title:"Restroom Use", category:"Facilities & Guest Use", priority:"Medium",
+     body:"Vendors and contractors use the guest bathroom near the garage entrance only. Interior/family bathrooms are off-limits.", vendor:""},
+    {id: cryptoId(), title:"Fuel Fill-Up (If Vehicle Used)", category:"Vehicle Use & Notation", priority:"Medium",
+     body:"If a household vehicle is used for a vendor errand or pickup, return with a full tank before end of day.", vendor:""},
+    {id: cryptoId(), title:"Vendors Requiring Hands-On Supervision", category:"Supervision", priority:"High",
+     body:"List which vendors may never be left unattended inside the residence, and which are cleared for solo access after vetting.", vendor:""},
+  ];
+}
+
+/* ---------- TABS ---------- */
+document.querySelectorAll('.tab').forEach(t=>{
+  t.onclick = ()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('panel-'+t.dataset.tab).classList.add('active');
+    activeTab = t.dataset.tab;
+    const titles = {sops:"Vendor Access & SOPs", calendar:"Monthly Calendar", projects:"Project Pipeline &amp; History", hours:"Monthly Hours Log", pm:"Preventative Maintenance", vendors:"Vendor Directory", properties:"Property Catalog", vehicles:"Vehicle Catalog", receipts:"Receipts", propdetails:"Property Details"};
+    document.getElementById('page-title').textContent = titles[activeTab];
+  };
+});
+document.getElementById('add-btn').onclick = ()=>{
+  if(activeTab==='sops') openSopModal();
+  else if(activeTab==='calendar') openCalModal(fmtDate(new Date(calDate.getFullYear(),calDate.getMonth(),1)));
+  else if(activeTab==='projects') openProjModal();
+  else if(activeTab==='hours') openHoursModal();
+  else if(activeTab==='pm') openPMModal();
+  else if(activeTab==='vendors') openVendorModal();
+  else if(activeTab==='properties') openPropertyModal();
+  else if(activeTab==='vehicles') openVehicleModal();
+  else if(activeTab==='receipts') openReceiptModal();
+  else openPropDetailModal();
+};
+
+/* ---------- SOPs ---------- */
+function renderSops(){
+  const filters = document.getElementById('sop-filters');
+  filters.innerHTML = '';
+  ["All", ...SOP_CATEGORIES].forEach(cat=>{
+    const chip = document.createElement('div');
+    chip.className = 'chip' + (sopFilter===cat ? ' active' : '');
+    chip.textContent = cat;
+    chip.onclick = ()=>{ sopFilter = cat; renderSops(); };
+    filters.appendChild(chip);
+  });
+  const list = document.getElementById('sop-list');
+  const shown = sopFilter==="All" ? sops : sops.filter(e=>e.category===sopFilter);
+  if(shown.length===0){ list.innerHTML = `<div class="empty"><h3>No SOPs here yet</h3><p>Add the first protocol for this category.</p></div>`; return; }
+  list.innerHTML = shown.map(e=>`
+    <div class="card">
+      <div class="card-top">
+        <div><div class="card-title">${escapeHtml(e.title)}</div><div class="card-area">${escapeHtml(e.category)}</div></div>
+        <span class="tag ${e.priority.toLowerCase()}">${e.priority}</span>
+      </div>
+      <div class="card-body">${escapeHtml(e.body)}</div>
+      ${e.vendor ? `<div class="card-meta"><span>Applies to: <b>${escapeHtml(e.vendor)}</b></span></div>` : ''}
+      ${e.category==='Vehicle Use & Notation' && (e.miles||e.location||e.purpose) ? `
+        <div class="card-meta">
+          ${e.miles ? `<span>Miles: <b>${escapeHtml(e.miles)}</b></span>`:''}
+          ${e.location ? `<span>Where: <b>${escapeHtml(e.location)}</b></span>`:''}
+          ${e.purpose ? `<span>For: <b>${escapeHtml(e.purpose)}</b></span>`:''}
+        </div>` : ''}
+      ${e.photo ? `<img src="${e.photo}" style="max-width:220px;border-radius:8px;margin-top:10px;border:1px solid var(--line);">` : ''}
+      <div class="card-actions"><button onclick="openSopModal('${e.id}')">Edit</button></div>
+    </div>`).join('');
+}
+function openSopModal(id){
+  editing = {type:'sop', id: id||null};
+  const e = id ? sops.find(x=>x.id===id) : {title:'',category:SOP_CATEGORIES[0],priority:'Medium',body:'',vendor:'',miles:'',location:'',purpose:'',photo:''};
+  showModal(`
+    <h2>${id?'Edit SOP':'New SOP'}</h2>
+    <label>Title</label><input id="f-title" value="${escapeHtml(e.title)}" placeholder="e.g. Unattended Access Rule">
+    <div class="row2">
+      <div><label>Category</label><select id="f-category" onchange="toggleVehicleFields()">${SOP_CATEGORIES.map(c=>`<option ${c===e.category?'selected':''}>${c}</option>`).join('')}</select></div>
+      <div><label>Priority</label><select id="f-priority">${PRIORITIES.map(p=>`<option ${p===e.priority?'selected':''}>${p}</option>`).join('')}</select></div>
+    </div>
+    <label>Instructions</label><textarea id="f-body" placeholder="Exact protocol, step by step.">${escapeHtml(e.body)}</textarea>
+    <label>Applies to (optional vendor / trade / staff)</label><input id="f-vendor" value="${escapeHtml(e.vendor)}" placeholder="e.g. All vendors, or a specific company">
+    <div id="vehicle-fields" style="display:${e.category==='Vehicle Use & Notation'?'block':'none'};">
+      <div class="row3">
+        <div><label>Miles</label><input id="f-miles" value="${escapeHtml(e.miles||'')}" placeholder="e.g. 42"></div>
+        <div><label>Where</label><input id="f-location" value="${escapeHtml(e.location||'')}" placeholder="e.g. Vendor pickup, La Jolla"></div>
+        <div><label>For What</label><input id="f-purpose" value="${escapeHtml(e.purpose||'')}" placeholder="e.g. Part pickup"></div>
+      </div>
+      <label>Photo of Parked Car (optional)</label>
+      <input type="file" id="f-photo" accept="image/*" capture="environment" onchange="handlePhoto(event)">
+      <div id="photo-preview">${e.photo?`<img src="${e.photo}" style="max-width:180px;border-radius:8px;margin-top:8px;">`:''}</div>
+      <input type="hidden" id="f-photo-data" value="${e.photo||''}">
+    </div>
+    ${modalActions(id, 'submitSop', 'deleteSop')}
+  `);
+}
+function toggleVehicleFields(){
+  const cat = val('f-category');
+  document.getElementById('vehicle-fields').style.display = cat==='Vehicle Use & Notation' ? 'block' : 'none';
+}
+function handlePhoto(evt){
+  const file = evt.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const img = new Image();
+    img.onload = function(){
+      const canvas = document.createElement('canvas');
+      const maxW = 700;
+      const scale = Math.min(1, maxW/img.width);
+      canvas.width = img.width*scale; canvas.height = img.height*scale;
+      canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+      document.getElementById('f-photo-data').value = dataUrl;
+      document.getElementById('photo-preview').innerHTML = `<img src="${dataUrl}" style="max-width:180px;border-radius:8px;margin-top:8px;">`;
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+async function submitSop(){
+  const title = val('f-title'), category = val('f-category'), priority = val('f-priority'),
+        body = val('f-body'), vendor = val('f-vendor');
+  if(!title || !body){ toast("Title and instructions are required"); return; }
+  const extra = category==='Vehicle Use & Notation'
+    ? { miles: val('f-miles'), location: val('f-location'), purpose: val('f-purpose'),
+        photo: document.getElementById('f-photo-data') ? document.getElementById('f-photo-data').value : '' }
+    : { miles:'', location:'', purpose:'', photo:'' };
+  if(editing.id){ const i = sops.findIndex(x=>x.id===editing.id); sops[i] = {...sops[i], title,category,priority,body,vendor,...extra}; }
+  else { sops.push({id:cryptoId(), title,category,priority,body,vendor,...extra}); }
+  await saveKey('vendor-sops', sops); closeModal(); renderSops();
+}
+async function deleteSop(){ sops = sops.filter(e=>e.id!==editing.id); await saveKey('vendor-sops', sops); closeModal(); renderSops(); }
+
+/* ---------- CALENDAR ---------- */
+function fmtDate(d){ return d.toISOString().slice(0,10); }
+function calShift(dir){ calDate = new Date(calDate.getFullYear(), calDate.getMonth()+dir, 1); renderCalendar(); }
+
+function renderCalendar(){
+  const label = calDate.toLocaleString('default',{month:'long', year:'numeric'});
+  document.getElementById('cal-month-label').textContent = label;
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+  ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(d=>{
+    const el = document.createElement('div'); el.className='cal-dow'; el.textContent=d; grid.appendChild(el);
+  });
+  const year = calDate.getFullYear(), month = calDate.getMonth();
+  const firstDow = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+
+  for(let i=0;i<firstDow;i++){ const el=document.createElement('div'); el.className='cal-day empty-cell'; grid.appendChild(el); }
+
+  for(let d=1; d<=daysInMonth; d++){
+    const dateStr = fmtDate(new Date(year,month,d));
+    const dayEvents = calEvents.filter(e=> e.date===dateStr || (e.recurring && e.weekday===new Date(year,month,d).getDay()));
+    const cell = document.createElement('div'); cell.className='cal-day';
+    cell.innerHTML = `<div class="cal-daynum">${d}</div>` +
+      dayEvents.slice(0,3).map(e=>`<div class="cal-event ${e.recurring?'recurring':''}">${escapeHtml(e.title)}${e.startTime?` &middot; ${fmtTime(e.startTime)}`:''}</div>`).join('') +
+      (dayEvents.length>3 ? `<div style="font-size:10px;color:var(--muted);margin-top:2px;">+${dayEvents.length-3} more</div>` : '');
+    cell.onclick = ()=> openCalModal(dateStr, dayEvents);
+    grid.appendChild(cell);
+  }
+}
+
+function openCalModal(dateStr, dayEvents){
+  dayEvents = dayEvents || calEvents.filter(e=>e.date===dateStr);
+  const existingList = dayEvents.map(e=>`
+    <div style="padding:8px 0;border-bottom:1px solid var(--line);font-size:13px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span><b>${escapeHtml(e.title)}</b> ${e.vendor?`&mdash; <span style="color:var(--muted)">${escapeHtml(e.vendor)}</span>`:''} ${e.recurring?`<span style="color:var(--low);font-size:11px;">(weekly)</span>`:''}</span>
+        <button class="del" onclick="deleteCalEvent('${e.id}', '${dateStr}')">Remove</button>
+      </div>
+      ${e.startTime||e.endTime ? `<div style="color:var(--muted);font-size:12px;margin-top:2px;">${e.startTime?fmtTime(e.startTime):''}${e.startTime&&e.endTime?' – ':''}${e.endTime?fmtTime(e.endTime):''}</div>` : ''}
+      ${e.notes ? `<div style="color:#33312C;font-size:12.5px;margin-top:3px;white-space:pre-wrap;">${escapeHtml(e.notes)}</div>` : ''}
+    </div>`).join('');
+
+  const vendorOptions = getKnownVendors().map(v=>`<option value="${escapeHtml(v)}">`).join('');
+
+  showModal(`
+    <h2>${new Date(dateStr+'T00:00:00').toLocaleDateString('default',{weekday:'long', month:'long', day:'numeric'})}</h2>
+    ${dayEvents.length ? `<div style="margin-bottom:14px;">${existingList}</div>` : ''}
+    <label>New Entry Title</label><input id="f-cal-title" placeholder="e.g. SYNLawn service, Erik power washing">
+    <div class="row2">
+      <div><label>Vendor / Person (optional)</label><input id="f-cal-vendor" list="vendor-datalist" placeholder="e.g. SYNLawn"><datalist id="vendor-datalist">${vendorOptions}</datalist></div>
+      <div><label>Repeats weekly on this day?</label>
+        <select id="f-cal-recurring"><option value="no">No — one time only</option><option value="yes">Yes — every week</option></select>
+      </div>
+    </div>
+    <div class="row2">
+      <div><label>Start Time (optional)</label><input type="time" id="f-cal-start"></div>
+      <div><label>End Time (optional)</label><input type="time" id="f-cal-end"></div>
+    </div>
+    <label>Notes (optional)</label><textarea id="f-cal-notes" placeholder="Any detail worth attaching to this entry."></textarea>
+    <div class="modal-actions">
+      <div></div>
+      <div style="display:flex;gap:10px;">
+        <button class="cancel" onclick="closeModal()">Close</button>
+        <button class="save" onclick="submitCalEvent('${dateStr}')">Add Entry</button>
+      </div>
+    </div>
+  `);
+}
+function getKnownVendors(){
+  const set = new Set();
+  vendorDirectory.forEach(v=> v.name && set.add(v.name));
+  sops.forEach(s=> s.vendor && set.add(s.vendor));
+  projects.forEach(p=> p.vendor && set.add(p.vendor));
+  pmTasks.forEach(p=> p.vendor && set.add(p.vendor));
+  calEvents.forEach(e=> e.vendor && set.add(e.vendor));
+  return Array.from(set).sort();
+}
+function getKnownAreas(){
+  const set = new Set(PROJ_AREAS);
+  properties.forEach(p=> p.name && set.add(p.name));
+  return Array.from(set).sort();
+}
+async function submitCalEvent(dateStr){
+  const title = val('f-cal-title');
+  if(!title){ toast("Title required"); return; }
+  const vendor = val('f-cal-vendor');
+  const recurring = val('f-cal-recurring') === 'yes';
+  const startTime = val('f-cal-start');
+  const endTime = val('f-cal-end');
+  const notes = val('f-cal-notes');
+  const weekday = new Date(dateStr+'T00:00:00').getDay();
+  calEvents.push({id:cryptoId(), date:dateStr, title, vendor, recurring, weekday, startTime, endTime, notes});
+  await saveKey('monthly-calendar', calEvents);
+  closeModal(); renderCalendar();
+}
+async function deleteCalEvent(id, dateStr){
+  calEvents = calEvents.filter(e=>e.id!==id);
+  await saveKey('monthly-calendar', calEvents);
+  closeModal(); renderCalendar();
+  openCalModal(dateStr);
+}
+
+/* ---------- COMPLETED PROJECTS ---------- */
+function renderProjects(){
+  const filters = document.getElementById('proj-filters');
+  filters.innerHTML = '';
+  ["All", ...getKnownAreas()].forEach(cat=>{
+    const chip = document.createElement('div');
+    chip.className = 'chip' + (projFilter===cat ? ' active' : '');
+    chip.textContent = cat;
+    chip.onclick = ()=>{ projFilter = cat; renderProjects(); };
+    filters.appendChild(chip);
+  });
+  const stageFilters = document.getElementById('proj-stage-filters');
+  stageFilters.innerHTML = '';
+  ["All Stages", ...PROJ_STAGES].forEach(st=>{
+    const chip = document.createElement('div');
+    chip.className = 'chip' + (projStageFilter===st ? ' active' : '');
+    chip.textContent = st;
+    chip.onclick = ()=>{ projStageFilter = st; renderProjects(); };
+    stageFilters.appendChild(chip);
+  });
+
+  const list = document.getElementById('proj-list');
+  let shown = projFilter==="All" ? projects : projects.filter(e=>e.area===projFilter);
+  shown = projStageFilter==="All Stages" ? shown : shown.filter(e=>(e.stage||"Vendor identified")===projStageFilter);
+
+  if(shown.length===0){ list.innerHTML = `<div class="empty"><h3>No projects in this view</h3><p>Add a project, or adjust the filters above.</p></div>`; return; }
+
+  const today = new Date();
+  list.innerHTML = shown.map(e=>{
+    const stage = e.stage || "Vendor identified";
+    let warrantyBadge = '';
+    if(e.warrantyExpires){
+      const exp = new Date(e.warrantyExpires+'T00:00:00');
+      warrantyBadge = exp >= today
+        ? `<span class="warranty-badge warranty-active">Warranty until ${exp.toLocaleDateString('default',{month:'short',day:'numeric',year:'numeric'})}</span>`
+        : `<span class="warranty-badge warranty-expired">Warranty expired</span>`;
+    }
+    return `
+    <div class="card">
+      <div class="card-top">
+        <div><div class="card-title">${escapeHtml(e.title)}</div><div class="card-area">${escapeHtml(e.area)} &middot; ${escapeHtml(e.vendor||'No vendor listed')}</div></div>
+        <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+          <span class="stage-badge ${STAGE_CLASS[stage]}">${stage}</span>
+          ${warrantyBadge}
+        </div>
+      </div>
+      <div class="card-meta">
+        <span>Completed: <b>${e.completedDate ? new Date(e.completedDate+'T00:00:00').toLocaleDateString('default',{month:'short',day:'numeric',year:'numeric'}) : '—'}</b></span>
+        <span>Estimate: <b>${e.estimate ? '$'+Number(e.estimate).toLocaleString() : '—'}</b></span>
+        <span>Actual Cost: <b>${e.cost ? '$'+Number(e.cost).toLocaleString() : '—'}</b></span>
+        <span>Invoice #: <b>${escapeHtml(e.invoiceRef) || '—'}</b></span>
+      </div>
+      ${e.proposal ? `<div class="card-body" style="font-style:italic;color:var(--muted);">${escapeHtml(e.proposal)}</div>` : ''}
+      ${e.notes ? `<div class="card-body">${escapeHtml(e.notes)}</div>` : ''}
+      ${e.attachments && e.attachments.length ? `
+        <div class="card-meta" style="flex-direction:column;align-items:flex-start;gap:6px;margin-top:10px;">
+          <span style="text-transform:uppercase;font-size:10.5px;letter-spacing:.06em;color:var(--muted);">Invoices &amp; Attachments</span>
+          ${e.attachments.map(a=>{
+            if(a.type==='image') return `<img src="${a.data}" style="max-width:160px;border-radius:8px;border:1px solid var(--line);margin-top:4px;">`;
+            if(a.type==='invoice') return `<a href="${escapeHtml(a.data)}" target="_blank" style="font-size:12.5px;color:var(--blue);">🧾 ${escapeHtml(a.label||a.data)}</a>`;
+            return `<a href="${escapeHtml(a.data)}" target="_blank" style="font-size:12.5px;color:var(--blue);">🔗 ${escapeHtml(a.label||a.data)}</a>`;
+          }).join('')}
+        </div>` : ''}
+      <div class="card-actions"><button onclick="openProjModal('${e.id}')">Edit</button></div>
+    </div>`;
+  }).join('');
+}
+function openProjModal(id){
+  editing = {type:'proj', id: id||null};
+  const e = id ? projects.find(x=>x.id===id) : {title:'',area:PROJ_AREAS[0],stage:PROJ_STAGES[0],vendor:'',completedDate:'',cost:'',invoiceRef:'',warrantyExpires:'',notes:'',proposal:'',attachments:[]};
+  window._projAttachments = (e.attachments || []).slice();
+  showModal(`
+    <h2>${id?'Edit Project':'Add Project'}</h2>
+    <label>Project Name</label><input id="f-title" value="${escapeHtml(e.title)}" placeholder="e.g. Build pool">
+    <div class="row2">
+      <div><label>Area / Location</label><input id="f-area" list="area-datalist" value="${escapeHtml(e.area||'')}" placeholder="e.g. Main Home, Julian Home"><datalist id="area-datalist">${getKnownAreas().map(a=>`<option value="${escapeHtml(a)}">`).join('')}</datalist></div>
+      <div><label>Stage</label><select id="f-stage">${PROJ_STAGES.map(s=>`<option ${s===(e.stage||PROJ_STAGES[0])?'selected':''}>${s}</option>`).join('')}</select></div>
+    </div>
+    <label>Vendor</label><input id="f-vendor" list="vendor-datalist" value="${escapeHtml(e.vendor)}" placeholder="e.g. Endless Pools"><datalist id="vendor-datalist">${getKnownVendors().map(v=>`<option value="${escapeHtml(v)}">`).join('')}</datalist>
+    <label>Proposal</label><textarea id="f-proposal" placeholder="What was proposed/scoped for this project.">${escapeHtml(e.proposal||'')}</textarea>
+    <div class="row3">
+      <div><label>Completed Date</label><input type="date" id="f-completed" value="${e.completedDate||''}"></div>
+      <div><label>Estimate ($)</label><input type="number" id="f-estimate" value="${e.estimate||''}" placeholder="0.00"></div>
+      <div><label>Actual Cost ($)</label><input type="number" id="f-cost" value="${e.cost||''}" placeholder="0.00"></div>
+    </div>
+    <label>Invoice Ref #</label><input id="f-invoice" value="${escapeHtml(e.invoiceRef)}" placeholder="e.g. INV-4021">
+    <label>Warranty Expiration (if applicable)</label><input type="date" id="f-warranty" value="${e.warrantyExpires||''}">
+    <label>Notes</label><textarea id="f-notes" placeholder="Warranty terms, follow-up needed, etc.">${escapeHtml(e.notes)}</textarea>
+
+    <label>Attachments &mdash; Invoices, Warranties, Photos, URLs</label>
+    <div id="attach-list">${renderAttachList()}</div>
+    <div class="row2" style="margin-top:8px;">
+      <div>
+        <label style="margin-top:0;">Upload Image</label>
+        <input type="file" id="f-attach-image" accept="image/*" capture="environment" onchange="addImageAttachment(event)">
+      </div>
+      <div>
+        <label style="margin-top:0;">Add Link (invoice URL, doc link, etc.)</label>
+        <div style="display:flex;gap:6px;">
+          <input id="f-attach-url" placeholder="https://...">
+          <button class="cancel" style="white-space:nowrap;" onclick="addUrlAttachment()">Add</button>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:10px;">
+      <label style="margin-top:0;">Invoice / Document Repository Link</label>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:6px;">Link to where the actual invoice or document is stored (Drive, Dropbox, email, etc.) — labeled so it's searchable later.</div>
+      <div class="row2">
+        <input id="f-attach-invoice-label" placeholder="Label, e.g. Invoice #4021 — KCS Restoration">
+        <input id="f-attach-invoice-url" placeholder="https://drive.google.com/...">
+      </div>
+      <button class="cancel" style="margin-top:8px;" onclick="addInvoiceAttachment()">Add Invoice Link</button>
+    </div>
+    ${modalActions(id, 'submitProj', 'deleteProj')}
+  `);
+}
+function renderAttachList(){
+  const items = window._projAttachments || [];
+  if(!items.length) return `<div style="font-size:12.5px;color:var(--muted);">No attachments yet.</div>`;
+  return items.map((a,i)=>{
+    const icon = a.type==='image' ? '🖼 Image' : a.type==='invoice' ? '🧾 '+escapeHtml(a.label||a.data) : '🔗 '+escapeHtml(a.label||a.data);
+    return `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);font-size:12.5px;">
+      <span>${icon}</span>
+      <button class="del" onclick="removeAttachment(${i})">Remove</button>
+    </div>`;
+  }).join('');
+}
+function addInvoiceAttachment(){
+  const label = document.getElementById('f-attach-invoice-label').value.trim();
+  const url = document.getElementById('f-attach-invoice-url').value.trim();
+  if(!url){ toast("A link is required for invoice attachments"); return; }
+  window._projAttachments.push({type:'invoice', data:url, label: label || url});
+  document.getElementById('f-attach-invoice-label').value = '';
+  document.getElementById('f-attach-invoice-url').value = '';
+  document.getElementById('attach-list').innerHTML = renderAttachList();
+}
+function addImageAttachment(evt){
+  const file = evt.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const img = new Image();
+    img.onload = function(){
+      const canvas = document.createElement('canvas');
+      const maxW = 700;
+      const scale = Math.min(1, maxW/img.width);
+      canvas.width = img.width*scale; canvas.height = img.height*scale;
+      canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+      window._projAttachments.push({type:'image', data:dataUrl});
+      document.getElementById('attach-list').innerHTML = renderAttachList();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function addUrlAttachment(){
+  const url = document.getElementById('f-attach-url').value.trim();
+  if(!url) return;
+  window._projAttachments.push({type:'url', data:url, label:url});
+  document.getElementById('f-attach-url').value = '';
+  document.getElementById('attach-list').innerHTML = renderAttachList();
+}
+function removeAttachment(i){
+  window._projAttachments.splice(i,1);
+  document.getElementById('attach-list').innerHTML = renderAttachList();
+}
+async function submitProj(){
+  const title = val('f-title');
+  if(!title){ toast("Project name required"); return; }
+  const data = {
+    title, area: val('f-area'), stage: val('f-stage'), vendor: val('f-vendor'), completedDate: val('f-completed'),
+    cost: val('f-cost'), estimate: val('f-estimate'), invoiceRef: val('f-invoice'), warrantyExpires: val('f-warranty'), notes: val('f-notes'), proposal: val('f-proposal'),
+    attachments: window._projAttachments || []
+  };
+  if(editing.id){ const i = projects.findIndex(x=>x.id===editing.id); projects[i] = {...projects[i], ...data}; }
+  else { projects.push({id:cryptoId(), ...data}); }
+  await saveKey('completed-projects', projects); closeModal(); renderProjects();
+}
+async function deleteProj(){ projects = projects.filter(e=>e.id!==editing.id); await saveKey('completed-projects', projects); closeModal(); renderProjects(); }
+
+/* ---------- HOURS LOG ---------- */
+function hoursShift(dir){ hoursDate = new Date(hoursDate.getFullYear(), hoursDate.getMonth()+dir, 1); renderHours(); }
+
+function calcHours(start, finish){
+  if(!start || !finish) return 0;
+  const [sh, sm] = start.split(':').map(Number);
+  const [fh, fm] = finish.split(':').map(Number);
+  let mins = (fh*60+fm) - (sh*60+sm);
+  if(mins < 0) mins += 24*60; // overnight shift
+  return mins/60;
+}
+
+function renderHours(){
+  const label = hoursDate.toLocaleString('default',{month:'long', year:'numeric'});
+  document.getElementById('hours-month-label').textContent = label;
+
+  const monthEntries = hoursLog.filter(e=>{
+    const d = new Date(e.date+'T00:00:00');
+    return d.getFullYear()===hoursDate.getFullYear() && d.getMonth()===hoursDate.getMonth();
+  }).sort((a,b)=> a.date.localeCompare(b.date));
+
+  const totalHrs = monthEntries.reduce((sum,e)=> sum + calcHours(e.start, e.finish), 0);
+  const monthReceipts = receipts.filter(function(r){
+    const d = new Date(r.date+'T00:00:00');
+    return d.getFullYear()===hoursDate.getFullYear() && d.getMonth()===hoursDate.getMonth();
+  });
+  const receiptsTotal = monthReceipts.reduce(function(sum,r){ return sum + (parseFloat(r.price)||0); }, 0);
+  document.getElementById('hours-total').innerHTML =
+    `<div class="card" style="display:flex;justify-content:space-between;align-items:center;">
+       <span style="font-family:'Playfair Display',serif;font-size:18px;">Total Hours for ${label}</span>
+       <span style="font-family:'Playfair Display',serif;font-size:22px;font-weight:600;">${totalHrs.toFixed(2)} hrs</span>
+     </div>
+     <div class="card" style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
+       <span style="font-family:'Playfair Display',serif;font-size:18px;">Receipts for ${label}</span>
+       <span style="font-family:'Playfair Display',serif;font-size:22px;font-weight:600;">${monthReceipts.length} receipt${monthReceipts.length!==1?'s':''} &middot; $${receiptsTotal.toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2})}</span>
+     </div>`;
+
+  const list = document.getElementById('hours-list');
+  if(monthEntries.length===0){
+    list.innerHTML = `<div class="empty"><h3>No hours logged this month</h3><p>Add a day to start tracking.</p></div>`;
+    return;
+  }
+  list.innerHTML = monthEntries.map(e=>{
+    const hrs = calcHours(e.start, e.finish);
+    const dateLabel = new Date(e.date+'T00:00:00').toLocaleDateString('default',{weekday:'short', month:'short', day:'numeric'});
+    return `
+    <div class="card">
+      <div class="card-top">
+        <div><div class="card-title">${dateLabel}</div>${e.notes?`<div class="card-area">${escapeHtml(e.notes)}</div>`:''}</div>
+        <span class="tag low">${hrs.toFixed(2)} hrs</span>
+      </div>
+      <div class="card-meta">
+        <span>Start: <b>${fmtTime(e.start)}</b></span>
+        <span>Finish: <b>${fmtTime(e.finish)}</b></span>
+      </div>
+      <div class="card-actions"><button onclick="openHoursModal('${e.id}')">Edit</button></div>
+    </div>`;
+  }).join('');
+}
+
+function fmtTime(t){
+  if(!t) return '—';
+  const [h,m] = t.split(':').map(Number);
+  const ampm = h>=12 ? 'PM' : 'AM';
+  const h12 = h%12===0 ? 12 : h%12;
+  return `${h12}:${String(m).padStart(2,'0')} ${ampm}`;
+}
+
+function openHoursModal(id){
+  editing = {type:'hours', id: id||null};
+  const e = id ? hoursLog.find(x=>x.id===id) : {date: fmtDate(new Date()), start:'', finish:'', notes:''};
+  showModal(`
+    <h2>${id?'Edit Day':'Log a Day'}</h2>
+    <label>Date</label><input type="date" id="f-h-date" value="${e.date}">
+    <div class="row2">
+      <div><label>Time Start</label><input type="time" id="f-h-start" value="${e.start}" oninput="updateHoursPreview()"></div>
+      <div><label>Time Finish</label><input type="time" id="f-h-finish" value="${e.finish}" oninput="updateHoursPreview()"></div>
+    </div>
+    <div id="hours-preview" style="margin-top:10px;font-size:13px;color:var(--muted);">
+      ${e.start && e.finish ? `Total: <b style="color:var(--ink);">${calcHours(e.start,e.finish).toFixed(2)} hours</b>` : 'Enter both times to calculate total hours.'}
+    </div>
+    <label>Notes (optional)</label><textarea id="f-h-notes" placeholder="e.g. vendor walkthroughs, on-site day">${escapeHtml(e.notes||'')}</textarea>
+    ${modalActions(id, 'submitHours', 'deleteHours')}
+  `);
+}
+function updateHoursPreview(){
+  const start = val('f-h-start'), finish = val('f-h-finish');
+  const el = document.getElementById('hours-preview');
+  if(start && finish){
+    el.innerHTML = `Total: <b style="color:var(--ink);">${calcHours(start,finish).toFixed(2)} hours</b>`;
+  } else {
+    el.textContent = 'Enter both times to calculate total hours.';
+  }
+}
+async function submitHours(){
+  const date = val('f-h-date'), start = val('f-h-start'), finish = val('f-h-finish'), notes = val('f-h-notes');
+  if(!date || !start || !finish){ toast("Date, start, and finish times are required"); return; }
+  if(editing.id){ const i = hoursLog.findIndex(x=>x.id===editing.id); hoursLog[i] = {...hoursLog[i], date,start,finish,notes}; }
+  else { hoursLog.push({id:cryptoId(), date,start,finish,notes}); }
+  await saveKey('hours-log', hoursLog); closeModal();
+  hoursDate = new Date(date+'T00:00:00');
+  renderHours();
+}
+async function deleteHours(){ hoursLog = hoursLog.filter(e=>e.id!==editing.id); await saveKey('hours-log', hoursLog); closeModal(); renderHours(); }
+
+
+/* ---------- PREVENTATIVE MAINTENANCE ---------- */
+function renderPM(){
+  const filters = document.getElementById('pm-filters');
+  filters.innerHTML = '';
+  ["All", ...PM_FREQUENCIES].forEach(f=>{
+    const chip = document.createElement('div');
+    chip.className = 'chip' + (pmFilter===f ? ' active' : '');
+    chip.textContent = f;
+    chip.onclick = ()=>{ pmFilter = f; renderPM(); };
+    filters.appendChild(chip);
+  });
+
+  const list = document.getElementById('pm-list');
+  const shown = pmFilter==="All" ? pmTasks : pmTasks.filter(e=>e.frequency===pmFilter);
+  if(shown.length===0){ list.innerHTML = `<div class="empty"><h3>No preventative maintenance items yet</h3><p>Add a recurring task and set its next due day.</p></div>`; return; }
+
+  const today = new Date(); today.setHours(0,0,0,0);
+  list.innerHTML = shown.map(e=>{
+    let dueBadge = '';
+    if(e.nextDue){
+      const due = new Date(e.nextDue+'T00:00:00');
+      const daysOut = Math.round((due-today)/86400000);
+      if(daysOut < 0) dueBadge = `<span class="tag high">Overdue</span>`;
+      else if(daysOut <= 7) dueBadge = `<span class="tag medium">Due soon</span>`;
+      else dueBadge = `<span class="tag low">Scheduled</span>`;
+    }
+    return `
+    <div class="card">
+      <div class="card-top">
+        <div><div class="card-title">${escapeHtml(e.title)}</div><div class="card-area">${escapeHtml(e.frequency)}</div></div>
+        ${dueBadge}
+      </div>
+      <div class="card-body">${escapeHtml(e.body)}</div>
+      <div class="card-meta">
+        <span>Vendor: <b>${escapeHtml(e.vendor)||'—'}</b></span>
+        <span>Est. Cost: <b>${e.cost ? '$'+Number(e.cost).toLocaleString() : '—'}</b></span>
+        <span>Next Due: <b>${e.nextDue ? new Date(e.nextDue+'T00:00:00').toLocaleDateString('default',{month:'short',day:'numeric',year:'numeric'}) : '—'}</b></span>
+      </div>
+      <div class="card-actions">
+        <button onclick="openPMModal('${e.id}')">Edit</button>
+        ${e.nextDue ? `<button onclick="pushPMToCalendar('${e.id}')">Add to Calendar</button>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openPMModal(id){
+  editing = {type:'pm', id: id||null};
+  const e = id ? pmTasks.find(x=>x.id===id) : {title:'',frequency:PM_FREQUENCIES[1],body:'',vendor:'',cost:'',nextDue:''};
+  showModal(`
+    <h2>${id?'Edit Maintenance Item':'Add Maintenance Item'}</h2>
+    <label>Title</label><input id="f-title" value="${escapeHtml(e.title)}" placeholder="e.g. HVAC filter replacement">
+    <div class="row2">
+      <div><label>Frequency</label><select id="f-freq">${PM_FREQUENCIES.map(f=>`<option ${f===e.frequency?'selected':''}>${f}</option>`).join('')}</select></div>
+      <div><label>Next Due Date</label><input type="date" id="f-nextdue" value="${e.nextDue||''}"></div>
+    </div>
+    <label>Statement / Instructions</label><textarea id="f-body" placeholder="What needs to happen, and how.">${escapeHtml(e.body)}</textarea>
+    <div class="row2">
+      <div><label>Vendor</label><input id="f-vendor" value="${escapeHtml(e.vendor)}" placeholder="e.g. West Automotive Group"></div>
+      <div><label>Estimated Cost ($)</label><input type="number" id="f-cost" value="${e.cost||''}" placeholder="0.00"></div>
+    </div>
+    ${modalActions(id, 'submitPM', 'deletePM')}
+  `);
+}
+async function submitPM(){
+  const title = val('f-title'), frequency = val('f-freq'), body = val('f-body'),
+        vendor = val('f-vendor'), cost = val('f-cost'), nextDue = val('f-nextdue');
+  if(!title){ toast("Title is required"); return; }
+  if(editing.id){ const i = pmTasks.findIndex(x=>x.id===editing.id); pmTasks[i] = {...pmTasks[i], title,frequency,body,vendor,cost,nextDue}; }
+  else { pmTasks.push({id:cryptoId(), title,frequency,body,vendor,cost,nextDue}); }
+  await saveKey('pm-tasks', pmTasks); closeModal(); renderPM();
+}
+async function deletePM(){ pmTasks = pmTasks.filter(e=>e.id!==editing.id); await saveKey('pm-tasks', pmTasks); closeModal(); renderPM(); }
+
+async function pushPMToCalendar(id){
+  const e = pmTasks.find(x=>x.id===id);
+  if(!e || !e.nextDue) return;
+  const weekday = new Date(e.nextDue+'T00:00:00').getDay();
+  calEvents.push({id:cryptoId(), date:e.nextDue, title:e.title, vendor:e.vendor||'', recurring:false, weekday});
+  await saveKey('monthly-calendar', calEvents);
+  toast("Added to Monthly Calendar");
+}
+
+/* ---------- IMPORT DATA (deterministic, no API needed) ---------- */
+const HEADER_MAPS = {
+  projects: {title:['project name','title','project'], area:['area','location','property'], stage:['stage','status'], vendor:['vendor name','vendor','contractor','vendor contact'], completedDate:['completion date','completed date','completed'], cost:['actual cost ($)','actual cost','cost'], estimate:['estimate received ($)','estimate','estimate received'], invoiceRef:['invoice #','invoice ref','invoice'], notes:['notes'], proposal:['proposal']},
+  pm: {title:['title','task'], frequency:['frequency'], body:['instructions','body','description','statement'], vendor:['vendor'], cost:['cost','estimated cost','estimate'], nextDue:['next due','due date','next due date']},
+  sops: {title:['title'], category:['category'], priority:['priority'], body:['instructions','body'], vendor:['vendor','applies to']},
+  hours: {date:['date'], start:['start','start time','time start'], finish:['end','finish','end time','time finish'], notes:['notes','note']},
+  calendar: {date:['date'], title:['title'], vendor:['vendor'], recurring:['recurring']},
+  vendors: {name:['name','company','vendor name'], phone:['phone','phone number'], specialty:['specialty','trade','category'], notes:['notes']},
+  properties: {name:['name','property name'], address:['address'], type:['type'], sqft:['sqft','square footage','sq ft'], acreage:['acreage'], notes:['notes']},
+  receipts: {date:['date'], price:['price','amount','cost'], notes:['notes','for','description']},
+  propdetails: {property:['property'], category:['category','section'], item:['item','equipment','component','name'], makeModel:['make','model','make/model','make, model'], serial:['serial','serial number','sn'], location:['location'], notes:['notes']}
+};
+const STAGE_MAP = {
+  'complete':'Project completed', 'completed':'Project completed',
+  'in progress':'Project commenced', 'delayed':'Project commenced',
+  'not started':'Vendor identified', 'canceled':'Vendor identified', 'cancelled':'Vendor identified',
+  'awaiting estimate':'Vendor contacted', 'contacted':'Vendor contacted', 'scheduled':'Vendor scheduled'
+};
+
+function parseFlexibleDate(str){
+  if(!str) return '';
+  str = str.trim();
+  if(/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+  const m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+  if(m){
+    let mo = m[1], d = m[2], y = m[3];
+    if(y.length===2) y = '20'+y;
+    return y+'-'+mo.padStart(2,'0')+'-'+d.padStart(2,'0');
+  }
+  const parsed = new Date(str);
+  if(!isNaN(parsed)) return fmtDate(parsed);
+  return '';
+}
+function parseFlexibleTime(str){
+  if(!str) return '';
+  str = str.trim();
+  if(/^\d{2}:\d{2}$/.test(str)) return str;
+  const m = str.match(/^(\d{1,2}):(\d{2})\s*(AM|PM|am|pm)?$/);
+  if(m){
+    let h = parseInt(m[1],10), min = m[2], ampm = m[3];
+    if(ampm){
+      ampm = ampm.toUpperCase();
+      if(ampm==='PM' && h!==12) h += 12;
+      if(ampm==='AM' && h===12) h = 0;
+    }
+    return String(h).padStart(2,'0')+':'+min;
+  }
+  return '';
+}
+function parseCSVBlock(raw){
+  const lines = raw.split('\n').map(l=>l.replace(/\r$/,'')).filter(l=>l.trim().length>0);
+  if(lines.length===0) return {headers:[], rows:[]};
+  const delimiter = lines[0].includes('\t') ? '\t' : ',';
+  const splitLine = function(line){
+    const out = []; let cur=''; let inQuotes=false;
+    for(let i=0;i<line.length;i++){
+      const ch = line[i];
+      if(ch==='"'){ inQuotes = !inQuotes; continue; }
+      if(ch===delimiter && !inQuotes){ out.push(cur); cur=''; continue; }
+      cur += ch;
+    }
+    out.push(cur);
+    return out.map(function(s){ return s.trim(); });
+  };
+  const headers = splitLine(lines[0]).map(function(h){ return h.toLowerCase().trim(); });
+  const rows = lines.slice(1).map(splitLine);
+  return {headers:headers, rows:rows};
+}
+function mapRowToRecord(headers, row, target){
+  const map = HEADER_MAPS[target];
+  const record = {};
+  Object.keys(map).forEach(function(field){
+    const aliases = map[field];
+    let idx = -1;
+    for(let a=0;a<aliases.length;a++){
+      idx = headers.findIndex(function(h){ return h===aliases[a] || h.includes(aliases[a]); });
+      if(idx !== -1) break;
+    }
+    record[field] = idx !== -1 && row[idx] !== undefined ? row[idx] : '';
+  });
+  return record;
+}
+
+function openImportModal(){
+  showModal(`
+    <h2>Import Data</h2>
+    <p style="font-size:13px;color:var(--muted);margin-top:-6px;">Paste rows copied directly from a spreadsheet (include the header row), or upload a file. Column headers are matched automatically — review the preview before committing.</p>
+    <label>Import into</label>
+    <select id="imp-target">
+      <option value="projects">Projects</option>
+      <option value="pm">Preventative Maintenance</option>
+      <option value="sops">SOPs</option>
+      <option value="hours">Hours Log</option>
+      <option value="calendar">Monthly Calendar</option>
+      <option value="vendors">Vendor Directory</option>
+      <option value="properties">Property Catalog</option>
+      <option value="receipts">Receipts</option>
+      <option value="propdetails">Property Details</option>
+    </select>
+    <label>Paste data here (include header row)</label>
+    <textarea id="imp-data" style="min-height:180px;font-family:monospace;font-size:12.5px;" placeholder="Paste table rows, including header row."></textarea>
+    <div style="font-size:12px;color:var(--muted);margin:6px 0;">— or —</div>
+    <label style="margin-top:0;">Upload a File (.xlsx or .csv)</label>
+    <input type="file" id="imp-file" accept=".xlsx,.csv" onchange="handleImportFile(event)">
+    <div id="imp-file-status" style="font-size:12px;color:var(--muted);margin-top:4px;"></div>
+    <div id="imp-status" style="margin-top:10px;font-size:13px;color:var(--muted);"></div>
+    <div class="modal-actions">
+      <div></div>
+      <div style="display:flex;gap:10px;">
+        <button class="cancel" onclick="closeModal()">Cancel</button>
+        <button class="save" onclick="runImport()">Preview Import</button>
+      </div>
+    </div>
+  `);
+}
+
+async function handleImportFile(evt){
+  const file = evt.target.files[0];
+  if(!file) return;
+  const statusEl = document.getElementById('imp-file-status');
+  const textarea = document.getElementById('imp-data');
+  const ext = file.name.split('.').pop().toLowerCase();
+
+  statusEl.textContent = "Reading file…";
+  try{
+    if(ext === 'csv'){
+      textarea.value = await file.text();
+      statusEl.textContent = `Loaded ${file.name}. Choose a target and click Preview Import.`;
+    } else if(ext === 'xlsx'){
+      const buf = await file.arrayBuffer();
+      const wb = XLSX.read(buf, {type:'array'});
+      const firstSheetName = wb.SheetNames[0];
+      const csv = XLSX.utils.sheet_to_csv(wb.Sheets[firstSheetName]);
+      textarea.value = csv;
+      statusEl.textContent = `Loaded sheet "${firstSheetName}" from ${file.name}${wb.SheetNames.length>1?` (${wb.SheetNames.length} tabs found — only the first is loaded)`:''}. Choose a target and click Preview Import.`;
+    }
+  }catch(err){
+    console.error(err);
+    statusEl.textContent = "Couldn't read that file. Try a different format, or paste the data manually.";
+  }
+}
+
+function runImport(){
+  const target = val('imp-target');
+  const raw = document.getElementById('imp-data').value.trim();
+  const statusEl = document.getElementById('imp-status');
+  if(!raw){ statusEl.textContent = "Paste some data first, or upload a file."; return; }
+
+  const parsed = parseCSVBlock(raw);
+  const headers = parsed.headers, rows = parsed.rows;
+  if(rows.length===0){ statusEl.textContent = "No data rows found below the header."; return; }
+
+  const records = rows.map(function(row){
+    const r = mapRowToRecord(headers, row, target);
+    if(target==='hours'){ r.date = parseFlexibleDate(r.date); r.start = parseFlexibleTime(r.start); r.finish = parseFlexibleTime(r.finish); }
+    if(target==='calendar'){ r.date = parseFlexibleDate(r.date); r.recurring = /yes|true|weekly/i.test(r.recurring); }
+    if(target==='projects'){
+      r.completedDate = parseFlexibleDate(r.completedDate);
+      const statusKey = (r.stage||'').toLowerCase().trim();
+      r.stage = STAGE_MAP[statusKey] || (PROJ_STAGES.includes(r.stage) ? r.stage : 'Vendor identified');
+      r.cost = (r.cost||'').replace(/[$,]/g,''); r.estimate = (r.estimate||'').replace(/[$,]/g,'');
+    }
+    if(target==='receipts'){ r.date = parseFlexibleDate(r.date); r.price = (r.price||'').replace(/[$,]/g,''); }
+    return r;
+  }).filter(function(r){ return Object.values(r).some(function(v){ return v && String(v).trim() !== ''; }); });
+
+  if(records.length===0){
+    statusEl.textContent = "Couldn't match any recognizable columns. Check your header row names.";
+    return;
+  }
+
+  window._pendingImport = {target: target, records: records};
+  statusEl.innerHTML = `Found <b>${records.length}</b> rows, matched to ${target}. <button class="save" style="margin-left:8px;padding:6px 12px;font-size:12px;" onclick="commitImport()">Import ${records.length} rows</button>`;
+}
+
+async function commitImport(){
+  const pending = window._pendingImport || {};
+  const target = pending.target, records = pending.records;
+  if(!records) return;
+
+  if(target==='projects'){
+    records.forEach(function(r){ projects.push({id:cryptoId(), title:r.title||'Untitled', area:r.area||'Main Home', stage:r.stage||'Vendor identified', vendor:r.vendor||'', completedDate:r.completedDate||'', cost:r.cost||'', estimate:r.estimate||'', invoiceRef:r.invoiceRef||'', warrantyExpires:'', notes:r.notes||'', proposal:r.proposal||'', attachments:[]}); });
+    await saveKey('completed-projects', projects); renderProjects();
+  } else if(target==='pm'){
+    records.forEach(function(r){ pmTasks.push({id:cryptoId(), title:r.title||'Untitled', frequency:r.frequency||'Quarterly', body:r.body||'', vendor:r.vendor||'', cost:r.cost||'', nextDue:r.nextDue||''}); });
+    await saveKey('pm-tasks', pmTasks); renderPM();
+  } else if(target==='sops'){
+    records.forEach(function(r){ sops.push({id:cryptoId(), title:r.title||'Untitled', category:r.category||'General Household Standards', priority:r.priority||'Medium', body:r.body||'', vendor:r.vendor||'', miles:'',location:'',purpose:'',photo:''}); });
+    await saveKey('vendor-sops', sops); renderSops();
+  } else if(target==='hours'){
+    records.forEach(function(r){ hoursLog.push({id:cryptoId(), date:r.date||'', start:r.start||'', finish:r.finish||'', notes:r.notes||''}); });
+    await saveKey('hours-log', hoursLog); renderHours();
+  } else if(target==='calendar'){
+    records.forEach(function(r){
+      const weekday = r.date ? new Date(r.date+'T00:00:00').getDay() : 0;
+      calEvents.push({id:cryptoId(), date:r.date||'', title:r.title||'Untitled', vendor:r.vendor||'', recurring:!!r.recurring, weekday:weekday});
+    });
+    await saveKey('monthly-calendar', calEvents); renderCalendar();
+  } else if(target==='vendors'){
+    records.forEach(function(r){ vendorDirectory.push({id:cryptoId(), name:r.name||'Untitled', phone:r.phone||'', specialty:r.specialty||'', notes:r.notes||''}); });
+    await saveKey('vendor-directory', vendorDirectory); renderVendors();
+  } else if(target==='properties'){
+    records.forEach(function(r){ properties.push({id:cryptoId(), name:r.name||'Untitled', address:r.address||'', type:r.type||'', sqft:r.sqft||'', acreage:r.acreage||'', notes:r.notes||'', attachments:[]}); });
+    await saveKey('property-catalog', properties); renderProperties();
+  } else if(target==='receipts'){
+    records.forEach(function(r){ receipts.push({id:cryptoId(), date:r.date||'', price:r.price||'', notes:r.notes||'', projectId:'', photo:''}); });
+    await saveKey('receipts-log', receipts); renderReceipts();
+  } else if(target==='propdetails'){
+    records.forEach(function(r){ propertyDetails.push({id:cryptoId(), property:r.property||'', category: PROPDETAIL_CATEGORIES.includes(r.category)?r.category:'Other', item:r.item||'Untitled', makeModel:r.makeModel||'', serial:r.serial||'', location:r.location||'', notes:r.notes||''}); });
+    await saveKey('property-details', propertyDetails); renderPropDetails();
+  }
+  window._pendingImport = null;
+  closeModal();
+  toast(`Imported ${records.length} rows`);
+}
+
+/* ---------- VENDOR DIRECTORY ---------- */
+function renderVendors(){
+  const searchEl = document.getElementById('vendor-search');
+  const q = (searchEl ? searchEl.value : '').toLowerCase().trim();
+  const shown = !q ? vendorDirectory : vendorDirectory.filter(v=>
+    (v.name||'').toLowerCase().includes(q) || (v.specialty||'').toLowerCase().includes(q) || (v.phone||'').includes(q));
+
+  const list = document.getElementById('vendor-list');
+  if(vendorDirectory.length===0){ list.innerHTML = `<div class="empty"><h3>No vendors yet</h3><p>Add contacts here — they'll auto-suggest anywhere a vendor field appears in this tool.</p></div>`; return; }
+  if(shown.length===0){ list.innerHTML = `<div class="empty"><h3>No matches</h3></div>`; return; }
+
+  list.innerHTML = shown.map(v=>`
+    <div class="card">
+      <div class="card-top">
+        <div><div class="card-title">${escapeHtml(v.name)}</div><div class="card-area">${escapeHtml(v.specialty||'')}</div></div>
+        ${v.phone ? `<a href="tel:${escapeHtml(v.phone)}" style="font-size:13px;color:var(--blue);white-space:nowrap;">${escapeHtml(v.phone)}</a>` : ''}
+      </div>
+      ${v.notes ? `<div class="card-body">${escapeHtml(v.notes)}</div>` : ''}
+      <div class="card-actions"><button onclick="openVendorModal('${v.id}')">Edit</button></div>
+    </div>`).join('');
+}
+function openVendorModal(id){
+  editing = {type:'vendor', id: id||null};
+  const v = id ? vendorDirectory.find(x=>x.id===id) : {name:'',phone:'',specialty:'',notes:''};
+  showModal(`
+    <h2>${id?'Edit Vendor':'Add Vendor'}</h2>
+    <label>Name / Company</label><input id="f-v-name" value="${escapeHtml(v.name)}" placeholder="e.g. KCS Restoration">
+    <div class="row2">
+      <div><label>Phone</label><input id="f-v-phone" value="${escapeHtml(v.phone)}" placeholder="e.g. 619.946.3279"></div>
+      <div><label>Specialty / Trade</label><input id="f-v-specialty" value="${escapeHtml(v.specialty)}" placeholder="e.g. HVAC, Pool, Landscape"></div>
+    </div>
+    <label>Notes</label><textarea id="f-v-notes" placeholder="Access notes, preferred contact, reliability, etc.">${escapeHtml(v.notes)}</textarea>
+    ${modalActions(id, 'submitVendor', 'deleteVendor')}
+  `);
+}
+async function submitVendor(){
+  const name = val('f-v-name');
+  if(!name){ toast("Name is required"); return; }
+  const data = {name, phone: val('f-v-phone'), specialty: val('f-v-specialty'), notes: val('f-v-notes')};
+  if(editing.id){ const i = vendorDirectory.findIndex(x=>x.id===editing.id); vendorDirectory[i] = {...vendorDirectory[i], ...data}; }
+  else { vendorDirectory.push({id:cryptoId(), ...data}); }
+  await saveKey('vendor-directory', vendorDirectory); closeModal(); renderVendors();
+}
+async function deleteVendor(){ vendorDirectory = vendorDirectory.filter(e=>e.id!==editing.id); await saveKey('vendor-directory', vendorDirectory); closeModal(); renderVendors(); }
+
+/* ---------- PROPERTY CATALOG ---------- */
+function renderProperties(){
+  const list = document.getElementById('property-list');
+  if(properties.length===0){ list.innerHTML = `<div class="empty"><h3>No properties yet</h3></div>`; return; }
+  list.innerHTML = properties.map(p=>`
+    <div class="card">
+      <div class="card-top">
+        <div><div class="card-title">${escapeHtml(p.name)}</div><div class="card-area">${escapeHtml(p.address||'Address not yet added')}</div></div>
+      </div>
+      <div class="card-meta">
+        <span>Type: <b>${escapeHtml(p.type)||'—'}</b></span>
+        <span>Sq. Ft.: <b>${escapeHtml(p.sqft)||'—'}</b></span>
+        <span>Acreage: <b>${escapeHtml(p.acreage)||'—'}</b></span>
+      </div>
+      ${p.notes ? `<div class="card-body">${escapeHtml(p.notes)}</div>` : ''}
+      ${p.attachments && p.attachments.length ? `
+        <div class="card-meta" style="flex-direction:column;align-items:flex-start;gap:6px;margin-top:10px;">
+          <span style="text-transform:uppercase;font-size:10.5px;letter-spacing:.06em;color:var(--muted);">Documents &amp; Photos</span>
+          ${p.attachments.map(a=> a.type==='image'
+            ? `<img src="${a.data}" style="max-width:160px;border-radius:8px;border:1px solid var(--line);margin-top:4px;">`
+            : `<a href="${escapeHtml(a.data)}" target="_blank" style="font-size:12.5px;color:var(--blue);">🔗 ${escapeHtml(a.label||a.data)}</a>`
+          ).join('')}
+        </div>` : ''}
+      <div class="card-actions"><button onclick="openPropertyModal('${p.id}')">Edit</button></div>
+    </div>`).join('');
+}
+function openPropertyModal(id){
+  editing = {type:'property', id: id||null};
+  const p = id ? properties.find(x=>x.id===id) : {name:'',address:'',type:'',sqft:'',acreage:'',notes:'',attachments:[]};
+  window._propAttachments = (p.attachments || []).slice();
+  showModal(`
+    <h2>${id?'Edit Property':'Add Property'}</h2>
+    <label>Property Name</label><input id="f-p-name" value="${escapeHtml(p.name)}" placeholder="e.g. Julian Home">
+    <label>Address</label><input id="f-p-address" value="${escapeHtml(p.address)}" placeholder="Street address">
+    <div class="row3">
+      <div><label>Type</label><input id="f-p-type" value="${escapeHtml(p.type)}" placeholder="e.g. Primary, Secondary, Ranch"></div>
+      <div><label>Square Footage</label><input id="f-p-sqft" value="${escapeHtml(p.sqft)}" placeholder="e.g. 10,000"></div>
+      <div><label>Acreage</label><input id="f-p-acreage" value="${escapeHtml(p.acreage)}" placeholder="e.g. 5 acres"></div>
+    </div>
+    <label>Notes</label><textarea id="f-p-notes" placeholder="Access details, systems, anything worth logging.">${escapeHtml(p.notes)}</textarea>
+    <label>Documents &amp; Photos</label>
+    <div id="prop-attach-list">${renderPropAttachList()}</div>
+    <div class="row2" style="margin-top:8px;">
+      <div>
+        <label style="margin-top:0;">Upload Image</label>
+        <input type="file" id="f-p-attach-image" accept="image/*" capture="environment" onchange="addPropImageAttachment(event)">
+      </div>
+      <div>
+        <label style="margin-top:0;">Add Document Link</label>
+        <div style="display:flex;gap:6px;">
+          <input id="f-p-attach-url" placeholder="https://...">
+          <button class="cancel" style="white-space:nowrap;" onclick="addPropUrlAttachment()">Add</button>
+        </div>
+      </div>
+    </div>
+    ${modalActions(id, 'submitProperty', 'deleteProperty')}
+  `);
+}
+function renderPropAttachList(){
+  const items = window._propAttachments || [];
+  if(!items.length) return `<div style="font-size:12.5px;color:var(--muted);">No attachments yet.</div>`;
+  return items.map((a,i)=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);font-size:12.5px;">
+      <span>${a.type==='image' ? '🖼 Image' : '🔗 '+escapeHtml(a.label||a.data)}</span>
+      <button class="del" onclick="removePropAttachment(${i})">Remove</button>
+    </div>`).join('');
+}
+function addPropImageAttachment(evt){
+  const file = evt.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const img = new Image();
+    img.onload = function(){
+      const canvas = document.createElement('canvas');
+      const maxW = 700;
+      const scale = Math.min(1, maxW/img.width);
+      canvas.width = img.width*scale; canvas.height = img.height*scale;
+      canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+      window._propAttachments.push({type:'image', data:dataUrl});
+      document.getElementById('prop-attach-list').innerHTML = renderPropAttachList();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function addPropUrlAttachment(){
+  const url = document.getElementById('f-p-attach-url').value.trim();
+  if(!url) return;
+  window._propAttachments.push({type:'url', data:url, label:url});
+  document.getElementById('f-p-attach-url').value = '';
+  document.getElementById('prop-attach-list').innerHTML = renderPropAttachList();
+}
+function removePropAttachment(i){
+  window._propAttachments.splice(i,1);
+  document.getElementById('prop-attach-list').innerHTML = renderPropAttachList();
+}
+async function submitProperty(){
+  const name = val('f-p-name');
+  if(!name){ toast("Property name is required"); return; }
+  const data = {
+    name, address: val('f-p-address'), type: val('f-p-type'), sqft: val('f-p-sqft'), acreage: val('f-p-acreage'),
+    notes: val('f-p-notes'), attachments: window._propAttachments || []
+  };
+  if(editing.id){ const i = properties.findIndex(x=>x.id===editing.id); properties[i] = {...properties[i], ...data}; }
+  else { properties.push({id:cryptoId(), ...data}); }
+  await saveKey('property-catalog', properties); closeModal(); renderProperties();
+}
+async function deleteProperty(){ properties = properties.filter(e=>e.id!==editing.id); await saveKey('property-catalog', properties); closeModal(); renderProperties(); }
+
+/* ---------- VEHICLE CATALOG ---------- */
+function renderVehicles(){
+  const list = document.getElementById('vehicle-list');
+  if(vehicles.length===0){ list.innerHTML = `<div class="empty"><h3>No vehicles yet</h3><p>Add a vehicle, then log trips against it — miles, purpose, and a secure/parked photo.</p></div>`; return; }
+
+  list.innerHTML = vehicles.map(v=>{
+    const trips = vehicleTrips.filter(t=>t.vehicleId===v.id).sort((a,b)=> b.date.localeCompare(a.date)).slice(0,5);
+    return `
+    <div class="card">
+      <div class="card-top">
+        <div><div class="card-title">${escapeHtml(v.name)}</div><div class="card-area">${escapeHtml(v.make)} ${escapeHtml(v.model)} ${escapeHtml(v.year)}</div></div>
+        ${v.photo ? `<img src="${v.photo}" style="width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid var(--line);">` : ''}
+      </div>
+      <div class="card-meta">
+        <span>Plate: <b>${escapeHtml(v.plate)||'—'}</b></span>
+        <span>VIN: <b>${escapeHtml(v.vin)||'—'}</b></span>
+        <span>Insurance: <b>${escapeHtml(v.insurance)||'—'}</b></span>
+      </div>
+      ${v.notes ? `<div class="card-body">${escapeHtml(v.notes)}</div>` : ''}
+      <div class="card-actions">
+        <button onclick="openVehicleModal('${v.id}')">Edit Vehicle</button>
+        <button onclick="openTripModal('${v.id}')">+ Log Trip</button>
+      </div>
+      ${trips.length ? `
+        <div style="margin-top:12px;border-top:1px solid var(--line);padding-top:10px;">
+          <div style="font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Recent Trips</div>
+          ${trips.map(t=>`
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);font-size:12.5px;">
+              <span>${new Date(t.date+'T00:00:00').toLocaleDateString('default',{month:'short',day:'numeric'})} &middot; ${escapeHtml(t.purpose||'—')} &middot; ${t.milesStart&&t.milesFinish ? (Number(t.milesFinish)-Number(t.milesStart))+' mi' : '—'}</span>
+              ${t.photo ? `<img src="${t.photo}" style="width:36px;height:36px;object-fit:cover;border-radius:6px;">` : ''}
+            </div>`).join('')}
+        </div>` : ''}
+    </div>`;
+  }).join('');
+}
+function openVehicleModal(id){
+  editing = {type:'vehicle', id: id||null};
+  const v = id ? vehicles.find(x=>x.id===id) : {name:'',make:'',model:'',year:'',plate:'',vin:'',insurance:'',notes:'',photo:''};
+  showModal(`
+    <h2>${id?'Edit Vehicle':'Add Vehicle'}</h2>
+    <label>Vehicle Name / Nickname</label><input id="f-vh-name" value="${escapeHtml(v.name)}" placeholder="e.g. Ferrari, Jeep Gladiator">
+    <div class="row3">
+      <div><label>Make</label><input id="f-vh-make" value="${escapeHtml(v.make)}"></div>
+      <div><label>Model</label><input id="f-vh-model" value="${escapeHtml(v.model)}"></div>
+      <div><label>Year</label><input id="f-vh-year" value="${escapeHtml(v.year)}"></div>
+    </div>
+    <div class="row2">
+      <div><label>License Plate</label><input id="f-vh-plate" value="${escapeHtml(v.plate)}"></div>
+      <div><label>VIN</label><input id="f-vh-vin" value="${escapeHtml(v.vin)}"></div>
+    </div>
+    <label>Insurance Info</label><input id="f-vh-insurance" value="${escapeHtml(v.insurance)}" placeholder="Policy #, carrier">
+    <label>Notes</label><textarea id="f-vh-notes" placeholder="Storage, care instructions, anything relevant.">${escapeHtml(v.notes)}</textarea>
+    <label>Vehicle Photo</label>
+    <input type="file" id="f-vh-photo" accept="image/*" capture="environment" onchange="handleVehiclePhoto(event)">
+    <div id="vh-photo-preview">${v.photo?`<img src="${v.photo}" style="max-width:160px;border-radius:8px;margin-top:8px;">`:''}</div>
+    <input type="hidden" id="f-vh-photo-data" value="${v.photo||''}">
+    ${modalActions(id, 'submitVehicle', 'deleteVehicle')}
+  `);
+}
+function handleVehiclePhoto(evt){
+  const file = evt.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const img = new Image();
+    img.onload = function(){
+      const canvas = document.createElement('canvas');
+      const maxW = 500;
+      const scale = Math.min(1, maxW/img.width);
+      canvas.width = img.width*scale; canvas.height = img.height*scale;
+      canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+      document.getElementById('f-vh-photo-data').value = dataUrl;
+      document.getElementById('vh-photo-preview').innerHTML = `<img src="${dataUrl}" style="max-width:160px;border-radius:8px;margin-top:8px;">`;
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+async function submitVehicle(){
+  const name = val('f-vh-name');
+  if(!name){ toast("Vehicle name is required"); return; }
+  const data = {
+    name, make: val('f-vh-make'), model: val('f-vh-model'), year: val('f-vh-year'),
+    plate: val('f-vh-plate'), vin: val('f-vh-vin'), insurance: val('f-vh-insurance'), notes: val('f-vh-notes'),
+    photo: document.getElementById('f-vh-photo-data') ? document.getElementById('f-vh-photo-data').value : ''
+  };
+  if(editing.id){ const i = vehicles.findIndex(x=>x.id===editing.id); vehicles[i] = {...vehicles[i], ...data}; }
+  else { vehicles.push({id:cryptoId(), ...data}); }
+  await saveKey('vehicle-catalog', vehicles); closeModal(); renderVehicles();
+}
+async function deleteVehicle(){
+  vehicles = vehicles.filter(e=>e.id!==editing.id);
+  vehicleTrips = vehicleTrips.filter(t=>t.vehicleId!==editing.id);
+  await saveKey('vehicle-catalog', vehicles); await saveKey('vehicle-trips', vehicleTrips);
+  closeModal(); renderVehicles();
+}
+
+function openTripModal(vehicleId){
+  editing = {type:'trip', id:null, vehicleId};
+  showModal(`
+    <h2>Log Trip</h2>
+    <label>Date</label><input type="date" id="f-t-date" value="${fmtDate(new Date())}">
+    <label>Driver / Purpose</label><input id="f-t-purpose" placeholder="e.g. Erik — vendor pickup">
+    <div class="row2">
+      <div><label>Miles Started</label><input type="number" id="f-t-start" placeholder="e.g. 12,400"></div>
+      <div><label>Miles Finished</label><input type="number" id="f-t-finish" placeholder="e.g. 12,442"></div>
+    </div>
+    <label>Photo — Vehicle Parked &amp; Secure</label>
+    <input type="file" id="f-t-photo" accept="image/*" capture="environment" onchange="handleTripPhoto(event)">
+    <div id="trip-photo-preview"></div>
+    <input type="hidden" id="f-t-photo-data" value="">
+    <div class="modal-actions">
+      <div></div>
+      <div style="display:flex;gap:10px;">
+        <button class="cancel" onclick="closeModal()">Cancel</button>
+        <button class="save" onclick="submitTrip()">Save Trip</button>
+      </div>
+    </div>
+  `);
+}
+function handleTripPhoto(evt){
+  const file = evt.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const img = new Image();
+    img.onload = function(){
+      const canvas = document.createElement('canvas');
+      const maxW = 500;
+      const scale = Math.min(1, maxW/img.width);
+      canvas.width = img.width*scale; canvas.height = img.height*scale;
+      canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+      document.getElementById('f-t-photo-data').value = dataUrl;
+      document.getElementById('trip-photo-preview').innerHTML = `<img src="${dataUrl}" style="max-width:160px;border-radius:8px;margin-top:8px;">`;
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+async function submitTrip(){
+  const date = val('f-t-date'), purpose = val('f-t-purpose'), milesStart = val('f-t-start'), milesFinish = val('f-t-finish');
+  const photo = document.getElementById('f-t-photo-data').value;
+  vehicleTrips.push({id:cryptoId(), vehicleId: editing.vehicleId, date, purpose, milesStart, milesFinish, photo});
+  await saveKey('vehicle-trips', vehicleTrips);
+  closeModal(); renderVehicles();
+}
+
+/* ---------- RECEIPTS ---------- */
+function receiptsShift(dir){ receiptsDate = new Date(receiptsDate.getFullYear(), receiptsDate.getMonth()+dir, 1); renderReceipts(); }
+
+function renderReceipts(){
+  const label = receiptsDate.toLocaleString('default',{month:'long', year:'numeric'});
+  document.getElementById('receipts-month-label').textContent = label;
+
+  const monthReceipts = receipts.filter(function(r){
+    const d = new Date(r.date+'T00:00:00');
+    return d.getFullYear()===receiptsDate.getFullYear() && d.getMonth()===receiptsDate.getMonth();
+  }).sort(function(a,b){ return a.date.localeCompare(b.date); });
+
+  const total = monthReceipts.reduce(function(sum,r){ return sum + (parseFloat(r.price)||0); }, 0);
+  document.getElementById('receipts-total').innerHTML =
+    `<div class="card" style="display:flex;justify-content:space-between;align-items:center;">
+       <span style="font-family:'Playfair Display',serif;font-size:18px;">Total for ${label}</span>
+       <span style="font-family:'Playfair Display',serif;font-size:22px;font-weight:600;">$${total.toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2})}</span>
+     </div>`;
+
+  const list = document.getElementById('receipts-list');
+  if(monthReceipts.length===0){
+    list.innerHTML = `<div class="empty"><h3>No receipts logged this month</h3><p>Snap a photo and log the amount as purchases happen.</p></div>`;
+    return;
+  }
+  list.innerHTML = monthReceipts.map(function(r){
+    const dateLabel = new Date(r.date+'T00:00:00').toLocaleDateString('default',{weekday:'short', month:'short', day:'numeric'});
+    const linkedProject = r.projectId ? projects.find(function(p){ return p.id===r.projectId; }) : null;
+    return `
+    <div class="card">
+      <div class="card-top">
+        <div><div class="card-title">${escapeHtml(r.notes||'Receipt')}</div><div class="card-area">${dateLabel}${linkedProject?' &middot; Linked to '+escapeHtml(linkedProject.title):''}</div></div>
+        <span class="tag low">$${Number(r.price||0).toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2})}</span>
+      </div>
+      ${r.photo ? `<img src="${r.photo}" style="max-width:220px;border-radius:8px;margin-top:10px;border:1px solid var(--line);">` : ''}
+      <div class="card-actions"><button onclick="openReceiptModal('${r.id}')">Edit</button></div>
+    </div>`;
+  }).join('');
+}
+
+function openReceiptModal(id){
+  editing = {type:'receipt', id: id||null};
+  const r = id ? receipts.find(function(x){ return x.id===id; }) : {date: fmtDate(new Date()), price:'', notes:'', photo:'', projectId:''};
+  const projectOptions = projects.map(function(p){ return `<option value="${p.id}" ${p.id===r.projectId?'selected':''}>${escapeHtml(p.title)}</option>`; }).join('');
+  showModal(`
+    <h2>${id?'Edit Receipt':'Log Receipt'}</h2>
+    <label>Date</label><input type="date" id="f-r-date" value="${r.date}">
+    <label>Price ($)</label><input type="number" id="f-r-price" value="${r.price||''}" placeholder="0.00">
+    <label>Notes — What was this for?</label><textarea id="f-r-notes" placeholder="e.g. Pool chemicals, Home Depot run for gate hardware">${escapeHtml(r.notes||'')}</textarea>
+    <label>Link to a Project (optional)</label>
+    <select id="f-r-project"><option value="">— None —</option>${projectOptions}</select>
+    <label>Receipt Photo</label>
+    <input type="file" id="f-r-photo" accept="image/*" capture="environment" onchange="handleReceiptPhoto(event)">
+    <div id="receipt-photo-preview">${r.photo?`<img src="${r.photo}" style="max-width:180px;border-radius:8px;margin-top:8px;">`:''}</div>
+    <input type="hidden" id="f-r-photo-data" value="${r.photo||''}">
+    ${modalActions(id, 'submitReceipt', 'deleteReceipt')}
+  `);
+}
+function handleReceiptPhoto(evt){
+  const file = evt.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const img = new Image();
+    img.onload = function(){
+      const canvas = document.createElement('canvas');
+      const maxW = 700;
+      const scale = Math.min(1, maxW/img.width);
+      canvas.width = img.width*scale; canvas.height = img.height*scale;
+      canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+      document.getElementById('f-r-photo-data').value = dataUrl;
+      document.getElementById('receipt-photo-preview').innerHTML = `<img src="${dataUrl}" style="max-width:180px;border-radius:8px;margin-top:8px;">`;
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+async function submitReceipt(){
+  const date = val('f-r-date'), price = val('f-r-price'), notes = val('f-r-notes'), projectId = val('f-r-project');
+  if(!date){ toast("Date is required"); return; }
+  const photo = document.getElementById('f-r-photo-data').value;
+  const data = {date, price, notes, projectId, photo};
+  if(editing.id){ const i = receipts.findIndex(function(x){ return x.id===editing.id; }); receipts[i] = {...receipts[i], ...data}; }
+  else { receipts.push({id:cryptoId(), ...data}); }
+  await saveKey('receipts-log', receipts); closeModal();
+  receiptsDate = new Date(date+'T00:00:00');
+  renderReceipts();
+}
+async function deleteReceipt(){ receipts = receipts.filter(function(e){ return e.id!==editing.id; }); await saveKey('receipts-log', receipts); closeModal(); renderReceipts(); }
+
+/* ---------- PROPERTY DETAILS (Systems & Equipment) ---------- */
+const PROPDETAIL_CATEGORIES = ["Appliances","Lighting & Electrical","Water","Heating/Cooling","Security","Connectivity","Other"];
+
+function getKnownPropDetailProperties(){
+  const set = new Set();
+  properties.forEach(function(p){ if(p.name) set.add(p.name); });
+  propertyDetails.forEach(function(d){ if(d.property) set.add(d.property); });
+  return Array.from(set).sort();
+}
+
+function renderPropDetails(){
+  const propFilters = document.getElementById('propdetail-property-filters');
+  propFilters.innerHTML = '';
+  ["All", ...getKnownPropDetailProperties()].forEach(function(p){
+    const chip = document.createElement('div');
+    chip.className = 'chip' + (propDetailPropertyFilter===p ? ' active' : '');
+    chip.textContent = p;
+    chip.onclick = function(){ propDetailPropertyFilter = p; renderPropDetails(); };
+    propFilters.appendChild(chip);
+  });
+  const catFilters = document.getElementById('propdetail-category-filters');
+  catFilters.innerHTML = '';
+  ["All", ...PROPDETAIL_CATEGORIES].forEach(function(c){
+    const chip = document.createElement('div');
+    chip.className = 'chip' + (propDetailCategoryFilter===c ? ' active' : '');
+    chip.textContent = c;
+    chip.onclick = function(){ propDetailCategoryFilter = c; renderPropDetails(); };
+    catFilters.appendChild(chip);
+  });
+
+  let shown = propDetailPropertyFilter==="All" ? propertyDetails : propertyDetails.filter(function(d){ return d.property===propDetailPropertyFilter; });
+  shown = propDetailCategoryFilter==="All" ? shown : shown.filter(function(d){ return d.category===propDetailCategoryFilter; });
+
+  const list = document.getElementById('propdetail-list');
+  if(shown.length===0){ list.innerHTML = `<div class="empty"><h3>No details logged yet</h3><p>Add appliances, utilities, and systems with their make, model, and serial number.</p></div>`; return; }
+
+  list.innerHTML = shown.map(function(d){
+    return `
+    <div class="card">
+      <div class="card-top">
+        <div><div class="card-title">${escapeHtml(d.item)}</div><div class="card-area">${escapeHtml(d.property)} &middot; ${escapeHtml(d.category)}</div></div>
+      </div>
+      <div class="card-meta">
+        <span>Make/Model: <b>${escapeHtml(d.makeModel)||'—'}</b></span>
+        <span>Serial: <b>${escapeHtml(d.serial)||'—'}</b></span>
+        <span>Location: <b>${escapeHtml(d.location)||'—'}</b></span>
+      </div>
+      ${d.notes ? `<div class="card-body">${escapeHtml(d.notes)}</div>` : ''}
+      <div class="card-actions"><button onclick="openPropDetailModal('${d.id}')">Edit</button></div>
+    </div>`;
+  }).join('');
+}
+
+function openPropDetailModal(id){
+  editing = {type:'propdetail', id: id||null};
+  const d = id ? propertyDetails.find(function(x){ return x.id===id; }) : {property:'',category:PROPDETAIL_CATEGORIES[0],item:'',makeModel:'',serial:'',location:'',notes:''};
+  const propOptions = getKnownPropDetailProperties().map(function(p){ return `<option value="${escapeHtml(p)}">`; }).join('');
+  showModal(`
+    <h2>${id?'Edit Item':'Add Item'}</h2>
+    <div class="row2">
+      <div><label>Property</label><input id="f-pd-property" list="pd-property-datalist" value="${escapeHtml(d.property)}" placeholder="e.g. Main Home"><datalist id="pd-property-datalist">${propOptions}</datalist></div>
+      <div><label>Category</label><select id="f-pd-category">${PROPDETAIL_CATEGORIES.map(function(c){ return `<option ${c===d.category?'selected':''}>${c}</option>`; }).join('')}</select></div>
+    </div>
+    <label>Item</label><input id="f-pd-item" value="${escapeHtml(d.item)}" placeholder="e.g. Washer, Solar Panels, Water Heater ADU">
+    <div class="row2">
+      <div><label>Make / Model</label><input id="f-pd-makemodel" value="${escapeHtml(d.makeModel)}" placeholder="e.g. Jandy Pro Series JXI400NK"></div>
+      <div><label>Serial Number</label><input id="f-pd-serial" value="${escapeHtml(d.serial)}" placeholder="e.g. MT EC02 0503 4421 1910"></div>
+    </div>
+    <label>Location</label><input id="f-pd-location" value="${escapeHtml(d.location)}" placeholder="e.g. Main House Basement next to Laundry Room">
+    <label>Notes</label><textarea id="f-pd-notes" placeholder="Anything else worth logging.">${escapeHtml(d.notes)}</textarea>
+    ${modalActions(id, 'submitPropDetail', 'deletePropDetail')}
+  `);
+}
+async function submitPropDetail(){
+  const item = val('f-pd-item');
+  if(!item){ toast("Item name is required"); return; }
+  const data = {
+    property: val('f-pd-property'), category: val('f-pd-category'), item: item,
+    makeModel: val('f-pd-makemodel'), serial: val('f-pd-serial'), location: val('f-pd-location'), notes: val('f-pd-notes')
+  };
+  if(editing.id){ const i = propertyDetails.findIndex(function(x){ return x.id===editing.id; }); propertyDetails[i] = {...propertyDetails[i], ...data}; }
+  else { propertyDetails.push({id:cryptoId(), ...data}); }
+  await saveKey('property-details', propertyDetails); closeModal(); renderPropDetails();
+}
+async function deletePropDetail(){ propertyDetails = propertyDetails.filter(function(e){ return e.id!==editing.id; }); await saveKey('property-details', propertyDetails); closeModal(); renderPropDetails(); }
+
+/* ---------- SHARED MODAL HELPERS ---------- */
+function val(id){ return document.getElementById(id).value.trim ? document.getElementById(id).value.trim() : document.getElementById(id).value; }
+function modalActions(id, submitFn, deleteFn){
+  return `<div class="modal-actions">
+    <div>${id ? `<button class="del" onclick="${deleteFn}()">Delete</button>` : ''}</div>
+    <div style="display:flex;gap:10px;">
+      <button class="cancel" onclick="closeModal()">Cancel</button>
+      <button class="save" onclick="${submitFn}()">Save</button>
+    </div>
+  </div>`;
+}
+function showModal(html){
+  closeModal();
+  const overlay = document.createElement('div');
+  overlay.className = 'overlay'; overlay.id = 'overlay';
+  overlay.innerHTML = `<div class="modal">${html}</div>`;
+  document.body.appendChild(overlay);
+}
+function closeModal(){ const o = document.getElementById('overlay'); if(o) o.remove(); }
+
+loadAll();
+</script>
+</body>
+</html>
