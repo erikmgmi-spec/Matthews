@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Household operations dashboard for projects, maintenance, vendors, properties, vehicles, hours, and receipts.">
 <title>Household Operations</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
@@ -12,6 +14,9 @@
   }
   *{box-sizing:border-box;}
   body{margin:0;background:var(--cream);color:var(--ink);font-family:'Inter',sans-serif;}
+  .skip-link{position:fixed;left:12px;top:12px;z-index:30;background:var(--ink);color:#fff;padding:10px 14px;border-radius:8px;transform:translateY(-160%);}
+  .skip-link:focus{transform:translateY(0);}
+  button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[role="tab"]:focus-visible{outline:3px solid #C98A7E;outline-offset:2px;}
   .wrap{max-width:1000px;margin:0 auto;padding:36px 26px 90px;}
   header{border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:6px;
     display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;}
@@ -20,12 +25,13 @@
   .addbtn{background:var(--accent);color:#fff;border:none;padding:10px 16px;
     border-radius:8px;font-size:13px;cursor:pointer;font-weight:500;}
   .addbtn:hover{background:var(--accent-dark);}
+  .addbtn:disabled{opacity:.48;cursor:not-allowed;background:var(--muted);}
 
   .tabs{display:flex;gap:4px;margin:20px 0 22px;border-bottom:1px solid var(--line);
     overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
   .tabs::-webkit-scrollbar{display:none;}
   .tab{padding:10px 14px;font-size:13px;cursor:pointer;color:var(--muted);
-    border-bottom:2px solid transparent;font-weight:500;white-space:nowrap;flex-shrink:0;}
+    border:0;border-bottom:2px solid transparent;background:transparent;font-family:inherit;font-weight:500;white-space:nowrap;flex-shrink:0;min-height:44px;}
   .tab.active{color:var(--accent);border-bottom-color:var(--accent);}
   .panel{display:none;} .panel.active{display:block;}
 
@@ -48,7 +54,7 @@
   .card-meta b{color:var(--ink);font-weight:600;}
   .card-actions{margin-top:10px;display:flex;gap:10px;}
   .card-actions button{background:none;border:none;font-size:12.5px;color:var(--muted);
-    cursor:pointer;text-decoration:underline;padding:0;}
+    cursor:pointer;text-decoration:underline;padding:8px 4px;min-height:36px;}
   .card-actions button:hover{color:var(--ink);}
   .warranty-badge{font-size:11px;padding:3px 8px;border-radius:10px;font-weight:600;}
   .warranty-active{background:#E9EFE9;color:var(--low);}
@@ -89,6 +95,13 @@
   .status.show{opacity:1;}
   .banner{background:#F1EEE3;border:1px solid var(--line);border-radius:8px;padding:10px 14px;
     font-size:12.5px;color:var(--muted);margin-bottom:18px;}
+  .overview-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px;}
+  .metric{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;}
+  .metric-label{color:var(--muted);font-size:11px;letter-spacing:.06em;text-transform:uppercase;}
+  .metric-value{font-family:'Playfair Display',serif;font-size:26px;font-weight:600;margin-top:4px;}
+  .notice{border-left:4px solid var(--med);background:#fff;padding:12px 14px;border-radius:0 8px 8px 0;margin-bottom:10px;font-size:13px;line-height:1.45;}
+  .notice.high{border-left-color:var(--high);}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
 
   /* Calendar */
   .cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
@@ -127,10 +140,14 @@
     .card{padding:14px 16px;}
     .card-title{font-size:16px;}
     input,select,textarea{font-size:16px;} /* prevents iOS auto-zoom on focus */
+    .tabs{scroll-snap-type:x proximity;padding-bottom:2px;}
+    .tab{scroll-snap-align:start;min-height:48px;}
+    .overview-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
   }
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
 <div class="wrap">
   <header>
     <div>
@@ -138,104 +155,112 @@
       <h1 id="page-title">Household Operations</h1>
     </div>
     <div style="display:flex;gap:8px;">
-      <button class="addbtn" id="add-btn">+ Add</button>
+      <button class="addbtn" id="add-btn" disabled title="Choose a section before adding an item">+ Add</button>
       <button class="addbtn" id="import-btn" style="background:#fff;color:var(--ink);border:1px solid var(--line);" onclick="openImportModal()">Import Data</button>
     </div>
   </header>
 
   <div class="banner">This workspace is shared — entries added by anyone with the link are visible to everyone with access.</div>
 
-  <div class="tabs">
-    <div class="tab active" data-tab="sops">SOPs</div>
-    <div class="tab" data-tab="calendar">Monthly Calendar</div>
-    <div class="tab" data-tab="projects">Projects</div>
-    <div class="tab" data-tab="hours">Hours Log</div>
-    <div class="tab" data-tab="pm">Preventative Maintenance</div>
-    <div class="tab" data-tab="vendors">Vendors</div>
-    <div class="tab" data-tab="properties">Properties</div>
-    <div class="tab" data-tab="vehicles">Vehicles</div>
-    <div class="tab" data-tab="receipts">Receipts</div>
-    <div class="tab" data-tab="propdetails">Property Details</div>
-  </div>
+  <nav class="tabs" role="tablist" aria-label="Household operations sections">
+    <button class="tab active" id="tab-overview" role="tab" aria-selected="true" aria-controls="panel-overview" data-tab="overview">Overview</button>
+    <button class="tab" id="tab-sops" role="tab" aria-selected="false" aria-controls="panel-sops" data-tab="sops">SOPs</button>
+    <button class="tab" id="tab-calendar" role="tab" aria-selected="false" aria-controls="panel-calendar" data-tab="calendar">Monthly Calendar</button>
+    <button class="tab" id="tab-projects" role="tab" aria-selected="false" aria-controls="panel-projects" data-tab="projects">Projects</button>
+    <button class="tab" id="tab-hours" role="tab" aria-selected="false" aria-controls="panel-hours" data-tab="hours">Hours Log</button>
+    <button class="tab" id="tab-pm" role="tab" aria-selected="false" aria-controls="panel-pm" data-tab="pm">Preventative Maintenance</button>
+    <button class="tab" id="tab-vendors" role="tab" aria-selected="false" aria-controls="panel-vendors" data-tab="vendors">Vendors</button>
+    <button class="tab" id="tab-properties" role="tab" aria-selected="false" aria-controls="panel-properties" data-tab="properties">Properties</button>
+    <button class="tab" id="tab-vehicles" role="tab" aria-selected="false" aria-controls="panel-vehicles" data-tab="vehicles">Vehicles</button>
+    <button class="tab" id="tab-receipts" role="tab" aria-selected="false" aria-controls="panel-receipts" data-tab="receipts">Receipts</button>
+    <button class="tab" id="tab-propdetails" role="tab" aria-selected="false" aria-controls="panel-propdetails" data-tab="propdetails">Property Details</button>
+  </nav>
 
-  <div class="panel active" id="panel-sops">
+  <main id="main-content">
+  <section class="panel active" id="panel-overview" role="tabpanel" aria-labelledby="tab-overview">
+    <div id="overview-content"></div>
+  </section>
+
+  <section class="panel" id="panel-sops" role="tabpanel" aria-labelledby="tab-sops">
     <div class="filters" id="sop-filters"></div>
     <div id="sop-list"></div>
-  </div>
+  </section>
 
-  <div class="panel" id="panel-calendar">
+  <section class="panel" id="panel-calendar" role="tabpanel" aria-labelledby="tab-calendar">
     <div class="cal-head">
       <div class="cal-month" id="cal-month-label"></div>
       <div class="cal-nav">
-        <button onclick="calShift(-1)">&#8592;</button>
-        <button onclick="calShift(1)">&#8594;</button>
+        <button aria-label="Previous calendar month" onclick="calShift(-1)">&#8592;</button>
+        <button aria-label="Next calendar month" onclick="calShift(1)">&#8594;</button>
       </div>
     </div>
     <div class="cal-grid" id="cal-grid"></div>
-  </div>
+  </section>
 
-  <div class="panel" id="panel-projects">
+  <section class="panel" id="panel-projects" role="tabpanel" aria-labelledby="tab-projects">
     <div style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Stage</div>
     <div class="filters" id="proj-stage-filters" style="margin-bottom:14px;"></div>
     <div style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Area</div>
     <div class="filters" id="proj-filters"></div>
     <div id="proj-list"></div>
-  </div>
+  </section>
 
-  <div class="panel" id="panel-hours">
+  <section class="panel" id="panel-hours" role="tabpanel" aria-labelledby="tab-hours">
     <div class="cal-head">
       <div class="cal-month" id="hours-month-label"></div>
       <div class="cal-nav">
-        <button onclick="hoursShift(-1)">&#8592;</button>
-        <button onclick="hoursShift(1)">&#8594;</button>
+        <button aria-label="Previous hours month" onclick="hoursShift(-1)">&#8592;</button>
+        <button aria-label="Next hours month" onclick="hoursShift(1)">&#8594;</button>
       </div>
     </div>
     <div id="hours-total" style="margin-bottom:16px;"></div>
     <div id="hours-list"></div>
-  </div>
+  </section>
 
-  <div class="panel" id="panel-pm">
+  <section class="panel" id="panel-pm" role="tabpanel" aria-labelledby="tab-pm">
     <div class="filters" id="pm-filters"></div>
     <div id="pm-list"></div>
-  </div>
+  </section>
 
-  <div class="panel" id="panel-vendors">
+  <section class="panel" id="panel-vendors" role="tabpanel" aria-labelledby="tab-vendors">
     <div id="vendor-search-row" style="margin-bottom:14px;">
+      <label for="vendor-search" class="sr-only">Search vendors</label>
       <input id="vendor-search" placeholder="Search vendors by name, specialty, or phone…" style="width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:8px;font-family:'Inter',sans-serif;font-size:14px;" oninput="renderVendors()">
     </div>
     <div id="vendor-list"></div>
-  </div>
+  </section>
 
-  <div class="panel" id="panel-properties">
+  <section class="panel" id="panel-properties" role="tabpanel" aria-labelledby="tab-properties">
     <div id="property-list"></div>
-  </div>
+  </section>
 
-  <div class="panel" id="panel-vehicles">
+  <section class="panel" id="panel-vehicles" role="tabpanel" aria-labelledby="tab-vehicles">
     <div id="vehicle-list"></div>
-  </div>
+  </section>
 
-  <div class="panel" id="panel-receipts">
+  <section class="panel" id="panel-receipts" role="tabpanel" aria-labelledby="tab-receipts">
     <div class="cal-head">
       <div class="cal-month" id="receipts-month-label"></div>
       <div class="cal-nav">
-        <button onclick="receiptsShift(-1)">&#8592;</button>
-        <button onclick="receiptsShift(1)">&#8594;</button>
+        <button aria-label="Previous receipts month" onclick="receiptsShift(-1)">&#8592;</button>
+        <button aria-label="Next receipts month" onclick="receiptsShift(1)">&#8594;</button>
       </div>
     </div>
     <div id="receipts-total" style="margin-bottom:16px;"></div>
     <div id="receipts-list"></div>
-  </div>
+  </section>
 
-  <div class="panel" id="panel-propdetails">
+  <section class="panel" id="panel-propdetails" role="tabpanel" aria-labelledby="tab-propdetails">
     <div style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Property</div>
     <div class="filters" id="propdetail-property-filters" style="margin-bottom:14px;"></div>
     <div style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Category</div>
     <div class="filters" id="propdetail-category-filters"></div>
     <div id="propdetail-list"></div>
-  </div>
+  </section>
+  </main>
 </div>
 
-<div class="status" id="status"></div>
+<div class="status" id="status" role="status" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -267,7 +292,7 @@ const STAGE_CLASS = {
 
 let sops = [], calEvents = [], projects = [], hoursLog = [], pmTasks = [];
 let vendorDirectory = [], properties = [], vehicles = [], vehicleTrips = [], receipts = [], propertyDetails = [];
-let activeTab = 'sops';
+let activeTab = 'overview';
 let sopFilter = 'All';
 let projFilter = 'All';
 let projStageFilter = 'All Stages';
@@ -291,6 +316,7 @@ async function loadAll(){
   vehicleTrips = await loadKey('vehicle-trips', []);
   receipts = await loadKey('receipts-log', []);
   propertyDetails = await loadKey('property-details', []);
+  renderOverview();
   renderSops(); renderCalendar(); renderProjects(); renderHours(); renderPM();
   renderVendors(); renderProperties(); renderVehicles(); renderReceipts(); renderPropDetails();
 }
@@ -311,6 +337,7 @@ async function loadKey(key, fallback){
 async function saveKey(key, data){
   try{
     await db.collection('household-ops').doc(key).set({ value: data, updatedAt: new Date().toISOString() });
+    renderOverview();
     toast("Saved");
   }catch(e){
     console.error(e);
@@ -325,6 +352,10 @@ function toast(msg){
 }
 function escapeHtml(s){
   const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML;
+}
+function safeUrl(value){
+  try{ const u = new URL(value, location.href); return ['https:','http:'].includes(u.protocol) ? u.href : ''; }
+  catch(e){ return ''; }
 }
 
 function seedSops(){
@@ -343,14 +374,29 @@ function seedSops(){
 /* ---------- TABS ---------- */
 document.querySelectorAll('.tab').forEach(t=>{
   t.onclick = ()=>{
-    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
-    t.classList.add('active');
-    document.getElementById('panel-'+t.dataset.tab).classList.add('active');
+    document.querySelectorAll('.tab').forEach(x=>{ x.classList.remove('active'); x.setAttribute('aria-selected','false'); x.tabIndex=-1; });
+    document.querySelectorAll('.panel').forEach(x=>{ x.classList.remove('active'); x.hidden=true; });
+    t.classList.add('active'); t.setAttribute('aria-selected','true'); t.tabIndex=0;
+    const panel = document.getElementById('panel-'+t.dataset.tab); panel.classList.add('active'); panel.hidden=false;
     activeTab = t.dataset.tab;
-    const titles = {sops:"Vendor Access & SOPs", calendar:"Monthly Calendar", projects:"Project Pipeline &amp; History", hours:"Monthly Hours Log", pm:"Preventative Maintenance", vendors:"Vendor Directory", properties:"Property Catalog", vehicles:"Vehicle Catalog", receipts:"Receipts", propdetails:"Property Details"};
+    const titles = {overview:"Household Operations", sops:"Vendor Access & SOPs", calendar:"Monthly Calendar", projects:"Project Pipeline & History", hours:"Monthly Hours Log", pm:"Preventative Maintenance", vendors:"Vendor Directory", properties:"Property Catalog", vehicles:"Vehicle Catalog", receipts:"Receipts", propdetails:"Property Details"};
     document.getElementById('page-title').textContent = titles[activeTab];
+    document.getElementById('add-btn').disabled = activeTab==='overview';
+    document.getElementById('add-btn').title = activeTab==='overview' ? 'Choose a section before adding an item' : '';
   };
+  t.tabIndex = t.classList.contains('active') ? 0 : -1;
+});
+document.querySelector('.tabs').addEventListener('keydown', event=>{
+  const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
+  const current = tabs.indexOf(document.activeElement);
+  if(current < 0) return;
+  let next = current;
+  if(event.key==='ArrowRight') next = (current+1)%tabs.length;
+  else if(event.key==='ArrowLeft') next = (current-1+tabs.length)%tabs.length;
+  else if(event.key==='Home') next = 0;
+  else if(event.key==='End') next = tabs.length-1;
+  else return;
+  event.preventDefault(); tabs[next].focus(); tabs[next].click();
 });
 document.getElementById('add-btn').onclick = ()=>{
   if(activeTab==='sops') openSopModal();
@@ -364,6 +410,39 @@ document.getElementById('add-btn').onclick = ()=>{
   else if(activeTab==='receipts') openReceiptModal();
   else openPropDetailModal();
 };
+
+/* ---------- OVERVIEW ---------- */
+function renderOverview(){
+  const root = document.getElementById('overview-content');
+  if(!root) return;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const weekEnd = new Date(today); weekEnd.setDate(weekEnd.getDate()+7);
+  const activeProjects = projects.filter(p=>(p.stage||PROJ_STAGES[0])!=='Project completed');
+  const overdue = pmTasks.filter(p=>p.nextDue && new Date(p.nextDue+'T00:00:00') < today);
+  const dueSoon = pmTasks.filter(p=>{ if(!p.nextDue) return false; const d=new Date(p.nextDue+'T00:00:00'); return d>=today && d<=weekEnd; });
+  const thisMonthHours = hoursLog.filter(h=>{ const d=new Date(h.date+'T00:00:00'); return d.getMonth()===today.getMonth() && d.getFullYear()===today.getFullYear(); }).reduce((sum,h)=>sum+calcHours(h.start,h.finish),0);
+  const currentMonthSpend = receipts.filter(r=>{ const d=new Date(r.date+'T00:00:00'); return d.getMonth()===today.getMonth() && d.getFullYear()===today.getFullYear(); }).reduce((sum,r)=>sum+(parseFloat(r.price)||0),0);
+  const warnings = [];
+  projects.forEach(p=>{
+    if(p.completedDate && (p.stage||PROJ_STAGES[0])!=='Project completed') warnings.push(`<b>${escapeHtml(p.title)}</b> has a completion date but is still marked ${escapeHtml(p.stage||PROJ_STAGES[0])}.`);
+    if((p.stage||PROJ_STAGES[0])==='Project completed' && !p.completedDate) warnings.push(`<b>${escapeHtml(p.title)}</b> is marked complete without a completion date.`);
+    if(p.vendor && !vendorDirectory.some(v=>(v.name||'').trim().toLowerCase()===p.vendor.trim().toLowerCase())) warnings.push(`<b>${escapeHtml(p.title)}</b> references ${escapeHtml(p.vendor)}, which is not yet linked to the Vendor Directory.`);
+  });
+  root.innerHTML = `
+    <div class="overview-grid" aria-label="Current operational summary">
+      <div class="metric"><div class="metric-label">Active projects</div><div class="metric-value">${activeProjects.length}</div></div>
+      <div class="metric"><div class="metric-label">Maintenance overdue</div><div class="metric-value">${overdue.length}</div></div>
+      <div class="metric"><div class="metric-label">Hours this month</div><div class="metric-value">${thisMonthHours.toFixed(2)}</div></div>
+      <div class="metric"><div class="metric-label">Receipts this month</div><div class="metric-value">$${currentMonthSpend.toLocaleString(undefined,{maximumFractionDigits:0})}</div></div>
+    </div>
+    ${dueSoon.length ? `<div class="notice"><b>Due in the next 7 days:</b> ${dueSoon.map(x=>escapeHtml(x.title)).join(', ')}</div>` : ''}
+    ${overdue.length ? `<div class="notice high"><b>Overdue maintenance:</b> ${overdue.map(x=>escapeHtml(x.title)).join(', ')}</div>` : ''}
+    <div class="card">
+      <div class="card-title">Data checks</div>
+      <div class="card-body">${warnings.length ? `${warnings.length} item${warnings.length===1?'':'s'} need review. Existing records have not been changed.` : 'No stage, date, or vendor-link inconsistencies detected.'}</div>
+      ${warnings.slice(0,8).map(w=>`<div class="notice">${w}</div>`).join('')}
+    </div>`;
+}
 
 /* ---------- SOPs ---------- */
 function renderSops(){
@@ -393,7 +472,7 @@ function renderSops(){
           ${e.location ? `<span>Where: <b>${escapeHtml(e.location)}</b></span>`:''}
           ${e.purpose ? `<span>For: <b>${escapeHtml(e.purpose)}</b></span>`:''}
         </div>` : ''}
-      ${e.photo ? `<img src="${e.photo}" style="max-width:220px;border-radius:8px;margin-top:10px;border:1px solid var(--line);">` : ''}
+      ${e.photo ? `<img src="${e.photo}" alt="Vehicle notation photo for ${escapeHtml(e.title)}" style="max-width:220px;border-radius:8px;margin-top:10px;border:1px solid var(--line);">` : ''}
       <div class="card-actions"><button onclick="openSopModal('${e.id}')">Edit</button></div>
     </div>`).join('');
 }
@@ -621,9 +700,11 @@ function renderProjects(){
         <div class="card-meta" style="flex-direction:column;align-items:flex-start;gap:6px;margin-top:10px;">
           <span style="text-transform:uppercase;font-size:10.5px;letter-spacing:.06em;color:var(--muted);">Invoices &amp; Attachments</span>
           ${e.attachments.map(a=>{
-            if(a.type==='image') return `<img src="${a.data}" style="max-width:160px;border-radius:8px;border:1px solid var(--line);margin-top:4px;">`;
-            if(a.type==='invoice') return `<a href="${escapeHtml(a.data)}" target="_blank" style="font-size:12.5px;color:var(--blue);">🧾 ${escapeHtml(a.label||a.data)}</a>`;
-            return `<a href="${escapeHtml(a.data)}" target="_blank" style="font-size:12.5px;color:var(--blue);">🔗 ${escapeHtml(a.label||a.data)}</a>`;
+            if(a.type==='image') return `<img src="${a.data}" alt="Attachment for ${escapeHtml(e.title)}" style="max-width:160px;border-radius:8px;border:1px solid var(--line);margin-top:4px;">`;
+            const href = safeUrl(a.data);
+            if(!href) return `<span>Invalid attachment link</span>`;
+            if(a.type==='invoice') return `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer" style="font-size:12.5px;color:var(--blue);">🧾 ${escapeHtml(a.label||a.data)}</a>`;
+            return `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer" style="font-size:12.5px;color:var(--blue);">🔗 ${escapeHtml(a.label||a.data)}</a>`;
           }).join('')}
         </div>` : ''}
       <div class="card-actions"><button onclick="openProjModal('${e.id}')">Edit</button></div>
@@ -734,8 +815,11 @@ function removeAttachment(i){
 async function submitProj(){
   const title = val('f-title');
   if(!title){ toast("Project name required"); return; }
+  const stage = val('f-stage'), completedDate = val('f-completed');
+  if(stage==='Project completed' && !completedDate){ toast("A completed project needs a completion date"); return; }
+  if(stage!=='Project completed' && completedDate){ toast("Set the stage to Project completed or remove the completion date"); return; }
   const data = {
-    title, area: val('f-area'), stage: val('f-stage'), vendor: val('f-vendor'), completedDate: val('f-completed'),
+    title, area: val('f-area'), stage, vendor: val('f-vendor'), completedDate,
     cost: val('f-cost'), estimate: val('f-estimate'), invoiceRef: val('f-invoice'), warrantyExpires: val('f-warranty'), notes: val('f-notes'), proposal: val('f-proposal'),
     attachments: window._projAttachments || []
   };
@@ -1488,7 +1572,7 @@ function renderReceipts(){
         <div><div class="card-title">${escapeHtml(r.notes||'Receipt')}</div><div class="card-area">${dateLabel}${linkedProject?' &middot; Linked to '+escapeHtml(linkedProject.title):''}</div></div>
         <span class="tag low">$${Number(r.price||0).toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2})}</span>
       </div>
-      ${r.photo ? `<img src="${r.photo}" style="max-width:220px;border-radius:8px;margin-top:10px;border:1px solid var(--line);">` : ''}
+      ${r.photo ? `<img src="${r.photo}" alt="Receipt for ${escapeHtml(r.notes||'purchase')}" style="max-width:220px;border-radius:8px;margin-top:10px;border:1px solid var(--line);">` : ''}
       <div class="card-actions"><button onclick="openReceiptModal('${r.id}')">Edit</button></div>
     </div>`;
   }).join('');
@@ -1646,10 +1730,16 @@ function showModal(html){
   closeModal();
   const overlay = document.createElement('div');
   overlay.className = 'overlay'; overlay.id = 'overlay';
-  overlay.innerHTML = `<div class="modal">${html}</div>`;
+  overlay.innerHTML = `<div class="modal" role="dialog" aria-modal="true">${html}</div>`;
   document.body.appendChild(overlay);
+  const heading = overlay.querySelector('h2');
+  if(heading){ heading.id='modal-title'; overlay.querySelector('.modal').setAttribute('aria-labelledby','modal-title'); }
+  overlay.addEventListener('mousedown', event=>{ if(event.target===overlay) closeModal(); });
+  const firstControl = overlay.querySelector('input,select,textarea,button');
+  if(firstControl) firstControl.focus();
 }
 function closeModal(){ const o = document.getElementById('overlay'); if(o) o.remove(); }
+document.addEventListener('keydown', event=>{ if(event.key==='Escape' && document.getElementById('overlay')) closeModal(); });
 
 loadAll();
 </script>
