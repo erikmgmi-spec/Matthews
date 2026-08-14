@@ -95,6 +95,16 @@
   .status.show{opacity:1;}
   .banner{background:#F1EEE3;border:1px solid var(--line);border-radius:8px;padding:10px 14px;
     font-size:12.5px;color:var(--muted);margin-bottom:18px;}
+  .assistant{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:18px;}
+  .assistant h2{font-family:'Playfair Display',serif;font-size:19px;margin:0 0 4px;}
+  .assistant p{font-size:12.5px;color:var(--muted);margin:0 0 12px;line-height:1.45;}
+  .assistant-row{display:flex;gap:8px;align-items:flex-end;}
+  .assistant-row label{margin-top:0;}
+  .assistant-input{flex:1;}
+  .assistant-answer{display:none;margin-top:12px;padding:12px 14px;border-radius:8px;background:#F7F4ED;
+    font-size:13.5px;line-height:1.55;white-space:pre-wrap;}
+  .assistant-answer.show{display:block;}
+  .assistant-answer.error{background:#FBEAE6;color:var(--high);}
   .overview-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px;}
   .metric{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;}
   .metric-label{color:var(--muted);font-size:11px;letter-spacing:.06em;text-transform:uppercase;}
@@ -143,6 +153,8 @@
     .tabs{scroll-snap-type:x proximity;padding-bottom:2px;}
     .tab{scroll-snap-align:start;min-height:48px;}
     .overview-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+    .assistant-row{align-items:stretch;flex-direction:column;}
+    .assistant-row .addbtn{width:100%;}
   }
 </style>
 </head>
@@ -161,6 +173,19 @@
   </header>
 
   <div class="banner">This workspace is shared — entries added by anyone with the link are visible to everyone with access.</div>
+
+  <section class="assistant" aria-labelledby="assistant-title">
+    <h2 id="assistant-title">Operations Assistant</h2>
+    <p>Ask about projects, schedules, maintenance, SOPs, hours, or receipts. Sensitive identifiers and attachments are not sent.</p>
+    <div class="assistant-row">
+      <div class="assistant-input">
+        <label for="assistant-question">Question</label>
+        <input id="assistant-question" maxlength="1000" autocomplete="off" placeholder="What maintenance is due this month?">
+      </div>
+      <button class="addbtn" id="assistant-submit" type="button" onclick="askAssistant()">Ask</button>
+    </div>
+    <div class="assistant-answer" id="assistant-answer" role="status" aria-live="polite"></div>
+  </section>
 
   <nav class="tabs" role="tablist" aria-label="Household operations sections">
     <button class="tab active" id="tab-overview" role="tab" aria-selected="true" aria-controls="panel-overview" data-tab="overview">Overview</button>
@@ -357,6 +382,76 @@ function safeUrl(value){
   try{ const u = new URL(value, location.href); return ['https:','http:'].includes(u.protocol) ? u.href : ''; }
   catch(e){ return ''; }
 }
+
+/* ---------- OPERATIONS ASSISTANT ---------- */
+function assistantText(value, max){
+  return String(value == null ? '' : value).replace(/\s+/g, ' ').trim().slice(0, max || 400);
+}
+function assistantRows(rows, fields, limit){
+  return (rows || []).slice(-limit).map(function(row){
+    const clean = {};
+    fields.forEach(function(field){
+      const value = assistantText(row[field]);
+      if(value) clean[field] = value;
+    });
+    return clean;
+  });
+}
+function buildAssistantContext(){
+  const context = {
+    generatedAt: new Date().toISOString(),
+    sops: assistantRows(sops, ['title','category','priority','body','vendor'], 60),
+    calendar: assistantRows(calEvents, ['date','startTime','title','vendor','notes','recurring'], 100),
+    projects: assistantRows(projects, ['title','area','stage','vendor','proposal','estimate','cost','completedDate','warrantyExpires','notes'], 80),
+    hours: assistantRows(hoursLog, ['date','start','finish','notes'], 100),
+    maintenance: assistantRows(pmTasks, ['title','frequency','body','vendor','cost','nextDue'], 80),
+    vendors: assistantRows(vendorDirectory, ['name','specialty'], 80),
+    properties: assistantRows(properties, ['name','type','sqft','acreage'], 30),
+    vehicles: assistantRows(vehicles, ['name','make','model','year','notes'], 30),
+    receipts: assistantRows(receipts, ['date','price','notes'], 100),
+    propertyDetails: assistantRows(propertyDetails, ['property','category','item','makeModel','location','notes'], 100)
+  };
+  const sections = Object.keys(context).filter(function(key){ return Array.isArray(context[key]); });
+  while(JSON.stringify(context).length > 52000){
+    const largest = sections.sort(function(a,b){ return context[b].length - context[a].length; })[0];
+    if(!largest || context[largest].length === 0) break;
+    context[largest].shift();
+  }
+  return context;
+}
+async function askAssistant(){
+  const input = document.getElementById('assistant-question');
+  const button = document.getElementById('assistant-submit');
+  const answer = document.getElementById('assistant-answer');
+  const question = input.value.trim();
+  if(!question){ input.focus(); return; }
+
+  button.disabled = true;
+  button.textContent = 'Thinking…';
+  answer.className = 'assistant-answer show';
+  answer.textContent = 'Reviewing the current workspace…';
+  try{
+    const response = await fetch('/api/assistant', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({question: question, context: buildAssistantContext()})
+    });
+    const data = await response.json().catch(function(){ return {}; });
+    if(!response.ok) throw new Error(data.error || 'Assistant request failed (' + response.status + ').');
+    answer.textContent = data.answer || 'The assistant returned an empty response. Please try again.';
+  }catch(error){
+    answer.className = 'assistant-answer show error';
+    answer.textContent = error instanceof TypeError
+      ? 'The assistant service could not be reached. Check the network and Netlify function deployment.'
+      : error.message;
+  }finally{
+    button.disabled = false;
+    button.textContent = 'Ask';
+  }
+}
+document.getElementById('assistant-question').addEventListener('keydown', function(event){
+  if(event.key === 'Enter' && !event.shiftKey){ event.preventDefault(); askAssistant(); }
+});
 
 function seedSops(){
   return [
