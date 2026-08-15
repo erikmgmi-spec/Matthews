@@ -3,36 +3,43 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Household operations dashboard for projects, maintenance, vendors, properties, vehicles, hours, and receipts.">
-<title>Household Operations</title>
+<meta name="description" content="Keating Multi-Estate Dashboard for projects, maintenance, vendors, properties, vehicles, hours, and receipts.">
+<title>Keating Multi-Estate Dashboard</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
   :root{
-    --cream:#F1EBDE; --ink:#211E1A; --line:#DCD3C0; --muted:#7A7364;
-    --high:#7A2E23; --med:#8A6D3B; --low:#5C7360; --blue:#3C5A73;
-    --accent:#7A2E23; --accent-dark:#5E211A;
+    --cream:#F5F0E6; --paper:#FFFCF7; --ink:#211E1A; --line:#D8CEBB; --muted:#746D60;
+    --high:#7A2E23; --med:#9A7537; --low:#496654; --blue:#3C5A73;
+    --accent:#793226; --accent-dark:#562017; --brass:#A88445; --shadow:0 12px 32px rgba(52,42,29,.07);
   }
   *{box-sizing:border-box;}
   body{margin:0;background:var(--cream);color:var(--ink);font-family:'Inter',sans-serif;}
   .skip-link{position:fixed;left:12px;top:12px;z-index:30;background:var(--ink);color:#fff;padding:10px 14px;border-radius:8px;transform:translateY(-160%);}
   .skip-link:focus{transform:translateY(0);}
   button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[role="tab"]:focus-visible{outline:3px solid #C98A7E;outline-offset:2px;}
-  .wrap{max-width:1000px;margin:0 auto;padding:36px 26px 90px;}
+  .wrap{max-width:1120px;margin:0 auto;padding:42px 30px 100px;}
   header{border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:6px;
     display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;}
   .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
-  h1{font-family:'Playfair Display',serif;font-weight:600;font-size:28px;margin:0;letter-spacing:.01em;}
+  h1{font-family:'Playfair Display',serif;font-weight:600;font-size:31px;margin:0;letter-spacing:.005em;}
+  .section-context{font-size:12px;color:var(--muted);margin-top:6px;}
+  .workspace-state{display:inline-flex;align-items:center;gap:7px;font-size:11px;color:var(--low);font-weight:600;text-transform:uppercase;letter-spacing:.06em;}
+  .workspace-state::before{content:"";width:7px;height:7px;border-radius:50%;background:#62836B;box-shadow:0 0 0 3px #E5EEE7;}
   .addbtn{background:var(--accent);color:#fff;border:none;padding:10px 16px;
     border-radius:8px;font-size:13px;cursor:pointer;font-weight:500;}
   .addbtn:hover{background:var(--accent-dark);}
   .addbtn:disabled{opacity:.48;cursor:not-allowed;background:var(--muted);}
 
-  .tabs{display:flex;gap:4px;margin:20px 0 22px;border-bottom:1px solid var(--line);
-    overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .tabs{display:flex;flex-wrap:wrap;gap:2px 3px;margin:18px 0 24px;border-bottom:1px solid var(--line);
+    overflow:visible;scrollbar-width:none;}
   .tabs::-webkit-scrollbar{display:none;}
-  .tab{padding:10px 14px;font-size:13px;cursor:pointer;color:var(--muted);
+  .tab{padding:10px 11px;font-size:12.5px;cursor:pointer;color:var(--muted);
     border:0;border-bottom:2px solid transparent;background:transparent;font-family:inherit;font-weight:500;white-space:nowrap;flex-shrink:0;min-height:44px;}
   .tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+  .tab-group{align-self:center;font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:#A09685;
+    border-left:1px solid var(--line);padding-left:12px;margin-left:8px;}
+  .mobile-nav{display:none;margin:16px 0 20px;}
+  .mobile-nav label{margin-top:0;}
   .panel{display:none;} .panel.active{display:block;}
 
   .filters{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
@@ -40,7 +47,7 @@
     font-size:12.5px;cursor:pointer;color:var(--muted);}
   .chip.active{background:var(--accent);color:#fff;border-color:var(--accent);}
 
-  .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin-bottom:12px;}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 21px;margin-bottom:14px;box-shadow:0 5px 18px rgba(52,42,29,.035);}
   .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
   .card-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;}
   .tag{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;
@@ -93,10 +100,16 @@
     background:var(--ink);color:var(--cream);padding:9px 18px;border-radius:20px;
     font-size:12.5px;opacity:0;transition:opacity .3s;pointer-events:none;}
   .status.show{opacity:1;}
-  .banner{background:#F1EEE3;border:1px solid var(--line);border-radius:8px;padding:10px 14px;
+  .banner{background:#EFE9DD;border:1px solid var(--line);border-radius:9px;padding:10px 14px;
     font-size:12.5px;color:var(--muted);margin-bottom:18px;}
-  .assistant{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:18px;}
-  .assistant h2{font-family:'Playfair Display',serif;font-size:19px;margin:0 0 4px;}
+  .assistant{background:var(--paper);border:1px solid var(--line);border-radius:12px;margin-bottom:16px;box-shadow:var(--shadow);}
+  .assistant summary{cursor:pointer;padding:14px 18px;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+  .assistant summary::-webkit-details-marker{display:none;}
+  .assistant summary::after{content:"+";font-size:21px;color:var(--accent);font-weight:400;}
+  .assistant[open] summary::after{content:"−";}
+  .assistant-summary-copy{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;}
+  .assistant-content{padding:0 18px 17px;border-top:1px solid #EEE6D9;}
+  .assistant h2{font-family:'Playfair Display',serif;font-size:18px;margin:0;}
   .assistant p{font-size:12.5px;color:var(--muted);margin:0 0 12px;line-height:1.45;}
   .assistant-row{display:flex;gap:8px;align-items:flex-end;}
   .assistant-row label{margin-top:0;}
@@ -106,12 +119,24 @@
   .assistant-answer.show{display:block;}
   .assistant-answer.error{background:#FBEAE6;color:var(--high);}
   .overview-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px;}
-  .metric{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;}
+  .metric{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:17px;box-shadow:0 5px 18px rgba(52,42,29,.035);position:relative;overflow:hidden;}
+  .metric::after{content:attr(data-icon);position:absolute;right:13px;top:11px;font-size:18px;opacity:.42;}
   .metric-label{color:var(--muted);font-size:11px;letter-spacing:.06em;text-transform:uppercase;}
   .metric-value{font-family:'Playfair Display',serif;font-size:26px;font-weight:600;margin-top:4px;}
+  .metric-detail{font-size:11px;color:var(--muted);margin-top:5px;}
   .notice{border-left:4px solid var(--med);background:#fff;padding:12px 14px;border-radius:0 8px 8px 0;margin-bottom:10px;font-size:13px;line-height:1.45;}
   .notice.high{border-left-color:var(--high);}
   .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+  .review-summary{cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;list-style:none;}
+  .review-summary::-webkit-details-marker{display:none;}
+  .review-count{background:#F5EEDD;color:var(--med);border-radius:20px;padding:5px 10px;font-size:11px;font-weight:600;white-space:nowrap;}
+  .review-details[open] .review-summary{margin-bottom:12px;}
+  .skeleton{background:linear-gradient(90deg,#ECE5D8 25%,#F8F3EA 50%,#ECE5D8 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:12px;height:86px;}
+  @keyframes shimmer{to{background-position:-200% 0;}}
+  .mobile-actions{display:none;}
+  .quick-add-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px;}
+  .quick-add-grid button{background:var(--paper);border:1px solid var(--line);border-radius:9px;padding:12px;text-align:left;font-family:inherit;cursor:pointer;}
+  .quick-add-grid button:hover{border-color:var(--accent);color:var(--accent);}
 
   /* Calendar */
   .cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
@@ -136,7 +161,8 @@
     .wrap{padding:20px 14px 70px;}
     header{align-items:flex-start;}
     .eyebrow{text-align:center;width:100%;}
-    h1{font-size:22px;text-align:center;width:100%;}
+    h1{font-size:23px;text-align:center;width:100%;}
+    .section-context{text-align:center;}
     header > div:first-child{width:100%;}
     header > div:last-child{width:100%;justify-content:center;}
     .addbtn{flex:1;padding:11px 10px;font-size:12.5px;}
@@ -150,11 +176,20 @@
     .card{padding:14px 16px;}
     .card-title{font-size:16px;}
     input,select,textarea{font-size:16px;} /* prevents iOS auto-zoom on focus */
-    .tabs{scroll-snap-type:x proximity;padding-bottom:2px;}
-    .tab{scroll-snap-align:start;min-height:48px;}
+    .tabs{display:none;}
+    .mobile-nav{display:block;}
     .overview-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
     .assistant-row{align-items:stretch;flex-direction:column;}
     .assistant-row .addbtn{width:100%;}
+    .assistant summary{padding:13px 15px;}
+    .assistant-summary-copy span{display:none;}
+    .assistant-content{padding:0 15px 15px;}
+    .metric{min-height:98px;}
+    .notice{line-height:1.55;}
+    .mobile-actions{position:fixed;display:grid;grid-template-columns:1fr 1fr;gap:8px;left:12px;right:12px;bottom:10px;z-index:8;
+      padding:8px;background:rgba(255,252,247,.94);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:13px;box-shadow:0 10px 30px rgba(33,30,26,.18);}
+    .mobile-actions button{min-height:44px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink);font-family:inherit;font-weight:600;}
+    .mobile-actions button:first-child{background:var(--accent);color:#fff;border-color:var(--accent);}
   }
 </style>
 </head>
@@ -163,8 +198,9 @@
 <div class="wrap">
   <header>
     <div>
-      <div class="eyebrow">Private Workspace &middot; Shared with Principal</div>
-      <h1 id="page-title">Household Operations</h1>
+      <div class="eyebrow">Keating Estate Management &middot; Private Workspace</div>
+      <h1 id="page-title">Keating Multi-Estate Dashboard</h1>
+      <div class="section-context" id="section-context">Executive overview across properties, projects, and assets</div>
     </div>
     <div style="display:flex;gap:8px;">
       <button class="addbtn" id="add-btn" disabled title="Choose a section before adding an item">+ Add</button>
@@ -174,9 +210,10 @@
 
   <div class="banner">This workspace is shared — entries added by anyone with the link are visible to everyone with access.</div>
 
-  <section class="assistant" aria-labelledby="assistant-title">
-    <h2 id="assistant-title">Operations Assistant</h2>
-    <p>Ask about projects, schedules, maintenance, SOPs, hours, or receipts. Sensitive identifiers and attachments are not sent.</p>
+  <details class="assistant" id="assistant-panel">
+    <summary><span class="assistant-summary-copy"><h2 id="assistant-title">Ask Operations</h2><span>Query projects, schedules, maintenance, SOPs, hours, and receipts</span></span></summary>
+    <div class="assistant-content">
+    <p>Sensitive identifiers and attachments are not sent.</p>
     <div class="assistant-row">
       <div class="assistant-input">
         <label for="assistant-question">Question</label>
@@ -185,25 +222,38 @@
       <button class="addbtn" id="assistant-submit" type="button" onclick="askAssistant()">Ask</button>
     </div>
     <div class="assistant-answer" id="assistant-answer" role="status" aria-live="polite"></div>
-  </section>
+    </div>
+  </details>
 
   <nav class="tabs" role="tablist" aria-label="Household operations sections">
     <button class="tab active" id="tab-overview" role="tab" aria-selected="true" aria-controls="panel-overview" data-tab="overview">Overview</button>
+    <span class="tab-group" aria-hidden="true">Operations</span>
     <button class="tab" id="tab-sops" role="tab" aria-selected="false" aria-controls="panel-sops" data-tab="sops">SOPs</button>
     <button class="tab" id="tab-calendar" role="tab" aria-selected="false" aria-controls="panel-calendar" data-tab="calendar">Monthly Calendar</button>
     <button class="tab" id="tab-projects" role="tab" aria-selected="false" aria-controls="panel-projects" data-tab="projects">Projects</button>
     <button class="tab" id="tab-hours" role="tab" aria-selected="false" aria-controls="panel-hours" data-tab="hours">Hours Log</button>
     <button class="tab" id="tab-pm" role="tab" aria-selected="false" aria-controls="panel-pm" data-tab="pm">Preventative Maintenance</button>
+    <span class="tab-group" aria-hidden="true">Assets</span>
     <button class="tab" id="tab-vendors" role="tab" aria-selected="false" aria-controls="panel-vendors" data-tab="vendors">Vendors</button>
     <button class="tab" id="tab-properties" role="tab" aria-selected="false" aria-controls="panel-properties" data-tab="properties">Properties</button>
     <button class="tab" id="tab-vehicles" role="tab" aria-selected="false" aria-controls="panel-vehicles" data-tab="vehicles">Vehicles</button>
+    <span class="tab-group" aria-hidden="true">Records</span>
     <button class="tab" id="tab-receipts" role="tab" aria-selected="false" aria-controls="panel-receipts" data-tab="receipts">Receipts</button>
     <button class="tab" id="tab-propdetails" role="tab" aria-selected="false" aria-controls="panel-propdetails" data-tab="propdetails">Property Details</button>
   </nav>
+  <div class="mobile-nav">
+    <label for="mobile-section">Dashboard section</label>
+    <select id="mobile-section" onchange="selectDashboardTab(this.value)">
+      <option value="overview">Overview</option>
+      <optgroup label="Operations"><option value="sops">SOPs</option><option value="calendar">Monthly Calendar</option><option value="projects">Projects</option><option value="hours">Hours Log</option><option value="pm">Preventative Maintenance</option></optgroup>
+      <optgroup label="Assets"><option value="vendors">Vendors</option><option value="properties">Properties</option><option value="vehicles">Vehicles</option></optgroup>
+      <optgroup label="Records"><option value="receipts">Receipts</option><option value="propdetails">Property Details</option></optgroup>
+    </select>
+  </div>
 
   <main id="main-content">
   <section class="panel active" id="panel-overview" role="tabpanel" aria-labelledby="tab-overview">
-    <div id="overview-content"></div>
+    <div id="overview-content"><div class="overview-grid" aria-label="Loading dashboard"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div></div>
   </section>
 
   <section class="panel" id="panel-sops" role="tabpanel" aria-labelledby="tab-sops">
@@ -283,6 +333,11 @@
     <div id="propdetail-list"></div>
   </section>
   </main>
+</div>
+
+<div class="mobile-actions" aria-label="Quick actions">
+  <button type="button" onclick="openQuickAdd()">Add record</button>
+  <button type="button" onclick="openAssistant()">Ask Operations</button>
 </div>
 
 <div class="status" id="status" role="status" aria-live="polite" aria-atomic="true"></div>
@@ -474,13 +529,36 @@ document.querySelectorAll('.tab').forEach(t=>{
     t.classList.add('active'); t.setAttribute('aria-selected','true'); t.tabIndex=0;
     const panel = document.getElementById('panel-'+t.dataset.tab); panel.classList.add('active'); panel.hidden=false;
     activeTab = t.dataset.tab;
-    const titles = {overview:"Household Operations", sops:"Vendor Access & SOPs", calendar:"Monthly Calendar", projects:"Project Pipeline & History", hours:"Monthly Hours Log", pm:"Preventative Maintenance", vendors:"Vendor Directory", properties:"Property Catalog", vehicles:"Vehicle Catalog", receipts:"Receipts", propdetails:"Property Details"};
-    document.getElementById('page-title').textContent = titles[activeTab];
+    const titles = {overview:"Executive overview across properties, projects, and assets", sops:"Vendor access standards and operating procedures", calendar:"Monthly schedule across all estates", projects:"Project pipeline, vendors, costs, and history", hours:"Monthly estate-management hours", pm:"Preventative maintenance schedules and status", vendors:"Approved vendor and trade directory", properties:"Multi-estate property catalog", vehicles:"Household vehicle catalog and usage", receipts:"Monthly receipts and project expenses", propdetails:"Equipment, systems, and property records"};
+    document.getElementById('section-context').textContent = titles[activeTab];
+    document.getElementById('mobile-section').value = activeTab;
     document.getElementById('add-btn').disabled = activeTab==='overview';
     document.getElementById('add-btn').title = activeTab==='overview' ? 'Choose a section before adding an item' : '';
   };
   t.tabIndex = t.classList.contains('active') ? 0 : -1;
 });
+function selectDashboardTab(tabName){
+  const tab = document.querySelector(`.tab[data-tab="${tabName}"]`);
+  if(tab) tab.click();
+}
+function openAssistant(){
+  const panel = document.getElementById('assistant-panel');
+  panel.open = true;
+  panel.scrollIntoView({behavior:'smooth',block:'start'});
+  setTimeout(()=>document.getElementById('assistant-question').focus(),350);
+}
+function openQuickAdd(){
+  const choices = [
+    ['projects','Project'],['calendar','Calendar event'],['pm','Maintenance'],['hours','Hours'],
+    ['vendors','Vendor'],['receipts','Receipt'],['sops','SOP'],['propdetails','Property detail']
+  ];
+  showModal(`<h2>Add a record</h2><p style="color:var(--muted);font-size:13px;">Choose where the new record belongs.</p><div class="quick-add-grid">${choices.map(choice=>`<button type="button" onclick="quickAdd('${choice[0]}')">${choice[1]}</button>`).join('')}</div><div class="modal-actions"><div></div><button class="cancel" onclick="closeModal()">Cancel</button></div>`);
+}
+function quickAdd(tabName){
+  closeModal();
+  selectDashboardTab(tabName);
+  document.getElementById('add-btn').click();
+}
 document.querySelector('.tabs').addEventListener('keydown', event=>{
   const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
   const current = tabs.indexOf(document.activeElement);
@@ -525,18 +603,17 @@ function renderOverview(){
   });
   root.innerHTML = `
     <div class="overview-grid" aria-label="Current operational summary">
-      <div class="metric"><div class="metric-label">Active projects</div><div class="metric-value">${activeProjects.length}</div></div>
-      <div class="metric"><div class="metric-label">Maintenance overdue</div><div class="metric-value">${overdue.length}</div></div>
-      <div class="metric"><div class="metric-label">Hours this month</div><div class="metric-value">${thisMonthHours.toFixed(2)}</div></div>
-      <div class="metric"><div class="metric-label">Receipts this month</div><div class="metric-value">$${currentMonthSpend.toLocaleString(undefined,{maximumFractionDigits:0})}</div></div>
+      <div class="metric" data-icon="◆"><div class="metric-label">Active projects</div><div class="metric-value">${activeProjects.length}</div><div class="metric-detail">In progress across all estates</div></div>
+      <div class="metric" data-icon="△"><div class="metric-label">Maintenance overdue</div><div class="metric-value">${overdue.length}</div><div class="metric-detail">${overdue.length?'Requires attention':'All schedules current'}</div></div>
+      <div class="metric" data-icon="◷"><div class="metric-label">Hours this month</div><div class="metric-value">${thisMonthHours.toFixed(2)}</div><div class="metric-detail">Recorded management time</div></div>
+      <div class="metric" data-icon="$"><div class="metric-label">Receipts this month</div><div class="metric-value">$${currentMonthSpend.toLocaleString(undefined,{maximumFractionDigits:0})}</div><div class="metric-detail">Logged project expenses</div></div>
     </div>
     ${dueSoon.length ? `<div class="notice"><b>Due in the next 7 days:</b> ${dueSoon.map(x=>escapeHtml(x.title)).join(', ')}</div>` : ''}
     ${overdue.length ? `<div class="notice high"><b>Overdue maintenance:</b> ${overdue.map(x=>escapeHtml(x.title)).join(', ')}</div>` : ''}
-    <div class="card">
-      <div class="card-title">Data checks</div>
-      <div class="card-body">${warnings.length ? `${warnings.length} item${warnings.length===1?'':'s'} need review. Existing records have not been changed.` : 'No stage, date, or vendor-link inconsistencies detected.'}</div>
+    <details class="card review-details">
+      <summary class="review-summary"><div><div class="card-title">Records requiring review</div><div class="card-body">${warnings.length ? 'Stage, date, or vendor links may need attention. Existing records have not been changed.' : 'No stage, date, or vendor-link inconsistencies detected.'}</div></div><span class="review-count">${warnings.length} ${warnings.length===1?'item':'items'}</span></summary>
       ${warnings.slice(0,8).map(w=>`<div class="notice">${w}</div>`).join('')}
-    </div>`;
+    </details>`;
 }
 
 /* ---------- SOPs ---------- */
