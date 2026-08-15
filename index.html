@@ -461,7 +461,7 @@ function buildAssistantContext(){
     generatedAt: new Date().toISOString(),
     sops: assistantRows(sops, ['title','category','priority','body','vendor'], 60),
     calendar: assistantRows(calEvents, ['date','startTime','title','vendor','notes','recurring'], 100),
-    projects: assistantRows(projects, ['title','area','stage','vendor','proposal','estimate','cost','completedDate','warrantyExpires','notes'], 80),
+    projects: assistantRows(projects, ['title','area','stage','priority','vendor','proposal','estimate','cost','completedDate','warrantyExpires','notes'], 80),
     hours: assistantRows(hoursLog, ['date','start','finish','notes'], 100),
     maintenance: assistantRows(pmTasks, ['title','frequency','body','vendor','cost','nextDue'], 80),
     vendors: assistantRows(vendorDirectory, ['name','specialty'], 80),
@@ -860,6 +860,7 @@ function renderProjects(){
       <div class="card-top">
         <div><div class="card-title">${escapeHtml(e.title)}</div><div class="card-area">${escapeHtml(e.area)} &middot; ${escapeHtml(e.vendor||'No vendor listed')}</div></div>
         <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+          ${e.priority ? `<span class="tag ${e.priority.toLowerCase()}">${escapeHtml(e.priority)}</span>` : ''}
           <span class="stage-badge ${STAGE_CLASS[stage]}">${stage}</span>
           ${warrantyBadge}
         </div>
@@ -889,7 +890,7 @@ function renderProjects(){
 }
 function openProjModal(id){
   editing = {type:'proj', id: id||null};
-  const e = id ? projects.find(x=>x.id===id) : {title:'',area:PROJ_AREAS[0],stage:PROJ_STAGES[0],vendor:'',completedDate:'',cost:'',invoiceRef:'',warrantyExpires:'',notes:'',proposal:'',attachments:[]};
+  const e = id ? projects.find(x=>x.id===id) : {title:'',area:PROJ_AREAS[0],stage:PROJ_STAGES[0],priority:'Medium',vendor:'',completedDate:'',cost:'',invoiceRef:'',warrantyExpires:'',notes:'',proposal:'',attachments:[]};
   window._projAttachments = (e.attachments || []).slice();
   showModal(`
     <h2>${id?'Edit Project':'Add Project'}</h2>
@@ -898,7 +899,7 @@ function openProjModal(id){
       <div><label>Area / Location</label><input id="f-area" list="area-datalist" value="${escapeHtml(e.area||'')}" placeholder="e.g. Main Home, Julian Home"><datalist id="area-datalist">${getKnownAreas().map(a=>`<option value="${escapeHtml(a)}">`).join('')}</datalist></div>
       <div><label>Stage</label><select id="f-stage">${PROJ_STAGES.map(s=>`<option ${s===(e.stage||PROJ_STAGES[0])?'selected':''}>${s}</option>`).join('')}</select></div>
     </div>
-    <label>Vendor</label><input id="f-vendor" list="vendor-datalist" value="${escapeHtml(e.vendor)}" placeholder="e.g. Endless Pools"><datalist id="vendor-datalist">${getKnownVendors().map(v=>`<option value="${escapeHtml(v)}">`).join('')}</datalist>
+    <div class="row2"><div><label>Vendor</label><input id="f-vendor" list="vendor-datalist" value="${escapeHtml(e.vendor)}" placeholder="e.g. Endless Pools"><datalist id="vendor-datalist">${getKnownVendors().map(v=>`<option value="${escapeHtml(v)}">`).join('')}</datalist></div><div><label>Priority</label><select id="f-proj-priority">${PRIORITIES.map(p=>`<option ${p===(e.priority||'Medium')?'selected':''}>${p}</option>`).join('')}</select></div></div>
     <label>Proposal</label><textarea id="f-proposal" placeholder="What was proposed/scoped for this project.">${escapeHtml(e.proposal||'')}</textarea>
     <div class="row3">
       <div><label>Completed Date</label><input type="date" id="f-completed" value="${e.completedDate||''}"></div>
@@ -995,7 +996,7 @@ async function submitProj(){
   if(stage==='Project completed' && !completedDate){ toast("A completed project needs a completion date"); return; }
   if(stage!=='Project completed' && completedDate){ toast("Set the stage to Project completed or remove the completion date"); return; }
   const data = {
-    title, area: val('f-area'), stage, vendor: val('f-vendor'), completedDate,
+    title, area: val('f-area'), stage, priority: val('f-proj-priority'), vendor: val('f-vendor'), completedDate,
     cost: val('f-cost'), estimate: val('f-estimate'), invoiceRef: val('f-invoice'), warrantyExpires: val('f-warranty'), notes: val('f-notes'), proposal: val('f-proposal'),
     attachments: window._projAttachments || []
   };
@@ -1196,7 +1197,7 @@ async function pushPMToCalendar(id){
 
 /* ---------- IMPORT DATA (deterministic, no API needed) ---------- */
 const HEADER_MAPS = {
-  projects: {title:['project name','title','project'], area:['area','location','property'], stage:['stage','status'], vendor:['vendor name','vendor','contractor','vendor contact'], completedDate:['completion date','completed date','completed'], cost:['actual cost ($)','actual cost','cost'], estimate:['estimate received ($)','estimate','estimate received'], invoiceRef:['invoice #','invoice ref','invoice'], notes:['notes'], proposal:['proposal']},
+  projects: {title:['project name','title','project'], area:['area','location','property'], stage:['stage','status'], priority:['priority'], vendor:['vendor name','vendor','contractor','vendor contact'], completedDate:['completion date','completed date','completed'], cost:['actual cost ($)','actual cost','cost'], estimate:['estimate received ($)','estimate','estimate received'], invoiceRef:['invoice #','invoice ref','invoice'], notes:['notes'], proposal:['proposal']},
   pm: {title:['title','task'], frequency:['frequency'], body:['instructions','body','description','statement'], vendor:['vendor'], cost:['cost','estimated cost','estimate'], nextDue:['next due','due date','next due date']},
   sops: {title:['title'], category:['category'], priority:['priority'], body:['instructions','body'], vendor:['vendor','applies to']},
   hours: {date:['date'], start:['start','start time','time start'], finish:['end','finish','end time','time finish'], notes:['notes','note']},
@@ -1375,7 +1376,13 @@ async function commitImport(){
   if(!records) return;
 
   if(target==='projects'){
-    records.forEach(function(r){ projects.push({id:cryptoId(), title:r.title||'Untitled', area:r.area||'Main Home', stage:r.stage||'Vendor identified', vendor:r.vendor||'', completedDate:r.completedDate||'', cost:r.cost||'', estimate:r.estimate||'', invoiceRef:r.invoiceRef||'', warrantyExpires:'', notes:r.notes||'', proposal:r.proposal||'', attachments:[]}); });
+    records.forEach(function(r){
+      const normalizedTitle = (r.title||'Untitled').trim().toLowerCase();
+      const existingIndex = projects.findIndex(function(p){ return (p.title||'').trim().toLowerCase()===normalizedTitle; });
+      const data = {title:r.title||'Untitled', area:r.area||'Main Home', stage:r.stage||'Vendor identified', priority:PRIORITIES.includes(r.priority)?r.priority:'Medium', vendor:r.vendor||'', completedDate:r.completedDate||'', cost:r.cost||'', estimate:r.estimate||'', invoiceRef:r.invoiceRef||'', warrantyExpires:'', notes:r.notes||'', proposal:r.proposal||''};
+      if(existingIndex>=0) projects[existingIndex] = {...projects[existingIndex], ...data};
+      else projects.push({id:cryptoId(), ...data, attachments:[]});
+    });
     await saveKey('completed-projects', projects); renderProjects();
   } else if(target==='pm'){
     records.forEach(function(r){ pmTasks.push({id:cryptoId(), title:r.title||'Untitled', frequency:r.frequency||'Quarterly', body:r.body||'', vendor:r.vendor||'', cost:r.cost||'', nextDue:r.nextDue||''}); });
