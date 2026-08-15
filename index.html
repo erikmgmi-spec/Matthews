@@ -137,6 +137,10 @@
   .quick-add-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px;}
   .quick-add-grid button{background:var(--paper);border:1px solid var(--line);border-radius:9px;padding:12px;text-align:left;font-family:inherit;cursor:pointer;}
   .quick-add-grid button:hover{border-color:var(--accent);color:var(--accent);}
+  .vendor-status{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:4px 8px;font-size:10.5px;font-weight:600;}
+  .vendor-status.yes{background:#E9EFE9;color:var(--low);}
+  .vendor-status.no{background:#FBEAE6;color:var(--high);}
+  .vendor-status.na{background:#F1EEE7;color:var(--muted);}
 
   /* Calendar */
   .cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
@@ -300,7 +304,7 @@
   <section class="panel" id="panel-vendors" role="tabpanel" aria-labelledby="tab-vendors">
     <div id="vendor-search-row" style="margin-bottom:14px;">
       <label for="vendor-search" class="sr-only">Search vendors</label>
-      <input id="vendor-search" placeholder="Search vendors by name, specialty, or phone…" style="width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:8px;font-family:'Inter',sans-serif;font-size:14px;" oninput="renderVendors()">
+      <input id="vendor-search" placeholder="Search vendors by name, service, contact, phone, or notes…" style="width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:8px;font-family:'Inter',sans-serif;font-size:14px;" oninput="renderVendors()">
     </div>
     <div id="vendor-list"></div>
   </section>
@@ -1197,7 +1201,7 @@ const HEADER_MAPS = {
   sops: {title:['title'], category:['category'], priority:['priority'], body:['instructions','body'], vendor:['vendor','applies to']},
   hours: {date:['date'], start:['start','start time','time start'], finish:['end','finish','end time','time finish'], notes:['notes','note']},
   calendar: {date:['date'], title:['title'], vendor:['vendor'], recurring:['recurring']},
-  vendors: {name:['name','company','vendor name'], phone:['phone','phone number'], specialty:['specialty','trade','category'], notes:['notes']},
+  vendors: {name:['name','company','vendor name'], specialty:['service type','specialty','trade','category'], primaryContact:['primary contact','contact'], phone:['phone','phone number'], email:['email','email address'], insuranceVerified:['insurance verified','insurance'], w9OnFile:['w9 on file','w-9 on file','w9'], notes:['notes']},
   properties: {name:['name','property name'], address:['address'], type:['type'], sqft:['sqft','square footage','sq ft'], acreage:['acreage'], notes:['notes']},
   receipts: {date:['date'], price:['price','amount','cost'], notes:['notes','for','description']},
   propdetails: {property:['property'], category:['category','section'], item:['item','equipment','component','name'], makeModel:['make','model','make/model','make, model'], serial:['serial','serial number','sn'], location:['location'], notes:['notes']}
@@ -1389,7 +1393,13 @@ async function commitImport(){
     });
     await saveKey('monthly-calendar', calEvents); renderCalendar();
   } else if(target==='vendors'){
-    records.forEach(function(r){ vendorDirectory.push({id:cryptoId(), name:r.name||'Untitled', phone:r.phone||'', specialty:r.specialty||'', notes:r.notes||''}); });
+    records.forEach(function(r){
+      const normalizedName = (r.name||'Untitled').trim().toLowerCase();
+      const existingIndex = vendorDirectory.findIndex(function(v){ return (v.name||'').trim().toLowerCase()===normalizedName; });
+      const data = {name:r.name||'Untitled', specialty:r.specialty||'', primaryContact:r.primaryContact||'', phone:r.phone||'', email:r.email||'', insuranceVerified:r.insuranceVerified||'', w9OnFile:r.w9OnFile||'', notes:r.notes||''};
+      if(existingIndex>=0) vendorDirectory[existingIndex] = {...vendorDirectory[existingIndex], ...data};
+      else vendorDirectory.push({id:cryptoId(), ...data});
+    });
     await saveKey('vendor-directory', vendorDirectory); renderVendors();
   } else if(target==='properties'){
     records.forEach(function(r){ properties.push({id:cryptoId(), name:r.name||'Untitled', address:r.address||'', type:r.type||'', sqft:r.sqft||'', acreage:r.acreage||'', notes:r.notes||'', attachments:[]}); });
@@ -1411,7 +1421,7 @@ function renderVendors(){
   const searchEl = document.getElementById('vendor-search');
   const q = (searchEl ? searchEl.value : '').toLowerCase().trim();
   const shown = !q ? vendorDirectory : vendorDirectory.filter(v=>
-    (v.name||'').toLowerCase().includes(q) || (v.specialty||'').toLowerCase().includes(q) || (v.phone||'').includes(q));
+    [v.name,v.specialty,v.primaryContact,v.phone,v.email,v.notes].some(function(value){ return (value||'').toLowerCase().includes(q); }));
 
   const list = document.getElementById('vendor-list');
   if(vendorDirectory.length===0){ list.innerHTML = `<div class="empty"><h3>No vendors yet</h3><p>Add contacts here — they'll auto-suggest anywhere a vendor field appears in this tool.</p></div>`; return; }
@@ -1423,20 +1433,31 @@ function renderVendors(){
         <div><div class="card-title">${escapeHtml(v.name)}</div><div class="card-area">${escapeHtml(v.specialty||'')}</div></div>
         ${v.phone ? `<a href="tel:${escapeHtml(v.phone)}" style="font-size:13px;color:var(--blue);white-space:nowrap;">${escapeHtml(v.phone)}</a>` : ''}
       </div>
+      <div class="card-meta">
+        <span>Primary contact: <b>${escapeHtml(v.primaryContact)||'—'}</b></span>
+        ${v.email ? `<span>Email: <b><a href="mailto:${escapeHtml(v.email)}" style="color:var(--blue);">${escapeHtml(v.email)}</a></b></span>` : ''}
+        ${v.insuranceVerified ? `<span class="vendor-status ${vendorStatusClass(v.insuranceVerified)}">Insurance: ${escapeHtml(v.insuranceVerified)}</span>` : ''}
+        ${v.w9OnFile ? `<span class="vendor-status ${vendorStatusClass(v.w9OnFile)}">W-9: ${escapeHtml(v.w9OnFile)}</span>` : ''}
+      </div>
       ${v.notes ? `<div class="card-body">${escapeHtml(v.notes)}</div>` : ''}
       <div class="card-actions"><button onclick="openVendorModal('${v.id}')">Edit</button></div>
     </div>`).join('');
 }
+function vendorStatusClass(value){
+  const normalized = (value||'').toLowerCase().trim();
+  if(normalized==='yes' || normalized==='y') return 'yes';
+  if(normalized==='no' || normalized==='n') return 'no';
+  return 'na';
+}
 function openVendorModal(id){
   editing = {type:'vendor', id: id||null};
-  const v = id ? vendorDirectory.find(x=>x.id===id) : {name:'',phone:'',specialty:'',notes:''};
+  const v = id ? vendorDirectory.find(x=>x.id===id) : {name:'',phone:'',specialty:'',primaryContact:'',email:'',insuranceVerified:'',w9OnFile:'',notes:''};
   showModal(`
     <h2>${id?'Edit Vendor':'Add Vendor'}</h2>
     <label>Name / Company</label><input id="f-v-name" value="${escapeHtml(v.name)}" placeholder="e.g. KCS Restoration">
-    <div class="row2">
-      <div><label>Phone</label><input id="f-v-phone" value="${escapeHtml(v.phone)}" placeholder="e.g. 619.946.3279"></div>
-      <div><label>Specialty / Trade</label><input id="f-v-specialty" value="${escapeHtml(v.specialty)}" placeholder="e.g. HVAC, Pool, Landscape"></div>
-    </div>
+    <div class="row2"><div><label>Service Type</label><input id="f-v-specialty" value="${escapeHtml(v.specialty)}" placeholder="e.g. HVAC, Pool, Landscape"></div><div><label>Primary Contact</label><input id="f-v-contact" value="${escapeHtml(v.primaryContact||'')}" placeholder="Contact name"></div></div>
+    <div class="row2"><div><label>Phone</label><input id="f-v-phone" value="${escapeHtml(v.phone)}" placeholder="e.g. 619.946.3279"></div><div><label>Email</label><input type="email" id="f-v-email" value="${escapeHtml(v.email||'')}" placeholder="name@company.com"></div></div>
+    <div class="row2"><div><label>Insurance Verified</label><select id="f-v-insurance"><option value=""></option>${['Yes','No','N/A'].map(x=>`<option ${x===(v.insuranceVerified||'')?'selected':''}>${x}</option>`).join('')}</select></div><div><label>W-9 On File</label><select id="f-v-w9"><option value=""></option>${['Yes','No','N/A'].map(x=>`<option ${x===(v.w9OnFile||'')?'selected':''}>${x}</option>`).join('')}</select></div></div>
     <label>Notes</label><textarea id="f-v-notes" placeholder="Access notes, preferred contact, reliability, etc.">${escapeHtml(v.notes)}</textarea>
     ${modalActions(id, 'submitVendor', 'deleteVendor')}
   `);
@@ -1444,7 +1465,7 @@ function openVendorModal(id){
 async function submitVendor(){
   const name = val('f-v-name');
   if(!name){ toast("Name is required"); return; }
-  const data = {name, phone: val('f-v-phone'), specialty: val('f-v-specialty'), notes: val('f-v-notes')};
+  const data = {name, specialty: val('f-v-specialty'), primaryContact: val('f-v-contact'), phone: val('f-v-phone'), email: val('f-v-email'), insuranceVerified: val('f-v-insurance'), w9OnFile: val('f-v-w9'), notes: val('f-v-notes')};
   if(editing.id){ const i = vendorDirectory.findIndex(x=>x.id===editing.id); vendorDirectory[i] = {...vendorDirectory[i], ...data}; }
   else { vendorDirectory.push({id:cryptoId(), ...data}); }
   await saveKey('vendor-directory', vendorDirectory); closeModal(); renderVendors();
