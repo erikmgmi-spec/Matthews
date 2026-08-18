@@ -385,7 +385,11 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 </script>
 <script>
-const AUTHORIZED_OWNER_EMAIL = 'erikmgmi@gmail.com';
+const AUTHORIZED_OWNER_EMAILS = [
+  'erikmgmi@gmail.com',
+  'info@handgraafestates.com',
+  'brianucsd@gmail.com'
+];
 const authGate = document.getElementById('auth-gate');
 const appShell = document.getElementById('app-shell');
 const authMessage = document.getElementById('auth-message');
@@ -401,10 +405,9 @@ async function signInOwnerWithGoogle(){
   setAuthMessage('Opening secure Google sign-in…', false);
   try{
     const provider = new firebase.auth.GoogleAuthProvider();
-    provider.setCustomParameters({ login_hint: AUTHORIZED_OWNER_EMAIL });
     const result = await auth.signInWithPopup(provider);
     const email = result.user && result.user.email ? result.user.email.toLowerCase() : '';
-    if(email !== AUTHORIZED_OWNER_EMAIL){
+    if(!AUTHORIZED_OWNER_EMAILS.includes(email)){
       await auth.signOut();
       throw new Error('Unauthorized account');
     }
@@ -2006,7 +2009,7 @@ auth.onAuthStateChanged(async function(user){
     user &&
     user.emailVerified &&
     user.email &&
-    user.email.toLowerCase() === AUTHORIZED_OWNER_EMAIL
+    AUTHORIZED_OWNER_EMAILS.includes(user.email.toLowerCase())
   );
   authGate.hidden = authorized;
   appShell.hidden = !authorized;
