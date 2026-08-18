@@ -14,6 +14,16 @@
   }
   *{box-sizing:border-box;}
   body{margin:0;background:var(--cream);color:var(--ink);font-family:'Inter',sans-serif;}
+  .auth-gate{min-height:100vh;display:grid;place-items:center;padding:24px;}
+  .auth-card{width:min(460px,100%);background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:30px;box-shadow:var(--shadow);}
+  .auth-card h1{font-size:28px;margin-bottom:10px;}
+  .auth-card p{color:var(--muted);font-size:14px;line-height:1.55;}
+  .auth-card .addbtn{width:100%;margin-top:14px;}
+  .auth-message{min-height:22px;margin-top:12px;font-size:13px;color:var(--muted);}
+  .auth-message.error{color:var(--high);}
+  .auth-user{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--muted);}
+  .auth-user button{background:#fff;border:1px solid var(--line);border-radius:7px;padding:8px 12px;cursor:pointer;color:var(--ink);}
+  [hidden]{display:none !important;}
   .skip-link{position:fixed;left:12px;top:12px;z-index:30;background:var(--ink);color:#fff;padding:10px 14px;border-radius:8px;transform:translateY(-160%);}
   .skip-link:focus{transform:translateY(0);}
   button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[role="tab"]:focus-visible{outline:3px solid #C98A7E;outline-offset:2px;}
@@ -199,20 +209,32 @@
 </head>
 <body>
 <a class="skip-link" href="#main-content">Skip to main content</a>
-<div class="wrap">
+<section class="auth-gate" id="auth-gate" aria-labelledby="auth-title">
+  <div class="auth-card">
+    <div class="eyebrow">Handgraaf Estates &middot; Owner Access</div>
+    <h1 id="auth-title">Secure estate login</h1>
+    <p>Enter the authorized owner email. A one-time sign-in link will be sent to that mailbox. Estate records remain unavailable until Firebase verifies the sign-in.</p>
+    <label for="auth-email">Owner email</label>
+    <input id="auth-email" type="email" inputmode="email" autocomplete="email" value="erik@handgraafestates.com" readonly>
+    <button class="addbtn" id="auth-submit" type="button">Send secure login link</button>
+    <div class="auth-message" id="auth-message" role="status" aria-live="polite"></div>
+  </div>
+</section>
+<div class="wrap" id="app-shell" hidden>
   <header>
     <div>
       <div class="eyebrow">Keating Estate Management &middot; Private Workspace</div>
       <h1 id="page-title">Keating Multi-Estate Dashboard</h1>
       <div class="section-context" id="section-context">Executive overview across properties, projects, and assets</div>
     </div>
-    <div style="display:flex;gap:8px;">
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+      <div class="auth-user"><span id="auth-user-email"></span><button type="button" id="auth-signout">Sign out</button></div>
       <button class="addbtn" id="add-btn" disabled title="Choose a section before adding an item">+ Add</button>
       <button class="addbtn" id="import-btn" style="background:#fff;color:var(--ink);border:1px solid var(--line);" onclick="openImportModal()">Import Data</button>
     </div>
   </header>
 
-  <div class="banner">This workspace is shared — entries added by anyone with the link are visible to everyone with access.</div>
+  <div class="banner">Private owner workspace — Firebase Authentication protects estate records and verifies access before loading.</div>
 
   <details class="assistant" id="assistant-panel">
     <summary><span class="assistant-summary-copy"><h2 id="assistant-title">Ask Operations</h2><span>Query projects, schedules, maintenance, SOPs, hours, and receipts</span></span></summary>
@@ -347,6 +369,7 @@
 <div class="status" id="status" role="status" aria-live="polite" aria-atomic="true"></div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
@@ -360,9 +383,60 @@ const firebaseConfig = {
   measurementId: "G-H8EN1QMM7G"
 };
 firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
 const db = firebase.firestore();
 </script>
 <script>
+const AUTHORIZED_OWNER_EMAIL = 'erik@handgraafestates.com';
+const authGate = document.getElementById('auth-gate');
+const appShell = document.getElementById('app-shell');
+const authMessage = document.getElementById('auth-message');
+const authSubmit = document.getElementById('auth-submit');
+
+function setAuthMessage(message, isError){
+  authMessage.textContent = message;
+  authMessage.className = 'auth-message' + (isError ? ' error' : '');
+}
+
+async function sendOwnerSignInLink(){
+  authSubmit.disabled = true;
+  setAuthMessage('Sending a one-time login link…', false);
+  try{
+    await auth.sendSignInLinkToEmail(AUTHORIZED_OWNER_EMAIL, {
+      url: 'https://keatingestate.netlify.app/',
+      handleCodeInApp: true
+    });
+    localStorage.setItem('estateSignInEmail', AUTHORIZED_OWNER_EMAIL);
+    setAuthMessage('Login link sent. Open it from erik@handgraafestates.com on this device.', false);
+  }catch(error){
+    console.error(error);
+    setAuthMessage('The secure login link could not be sent. Contact the administrator.', true);
+  }finally{
+    authSubmit.disabled = false;
+  }
+}
+
+async function completeEmailLinkSignIn(){
+  if(!auth.isSignInWithEmailLink(window.location.href)) return;
+  const storedEmail = localStorage.getItem('estateSignInEmail');
+  if(storedEmail !== AUTHORIZED_OWNER_EMAIL){
+    setAuthMessage('This login link must be opened on the device that requested it.', true);
+    return;
+  }
+  setAuthMessage('Verifying secure login…', false);
+  try{
+    await auth.signInWithEmailLink(storedEmail, window.location.href);
+    localStorage.removeItem('estateSignInEmail');
+    history.replaceState({}, document.title, location.pathname);
+  }catch(error){
+    console.error(error);
+    setAuthMessage('This login link is invalid or expired. Request a new link.', true);
+  }
+}
+
+authSubmit.addEventListener('click', sendOwnerSignInLink);
+document.getElementById('auth-signout').addEventListener('click', () => auth.signOut());
+
 const SOP_CATEGORIES = ["Security","Access","Supervision","Vehicle Use & Notation","Facilities & Guest Use","General Household Standards"];
 const PRIORITIES = ["High","Medium","Low"];
 const PROJ_AREAS = ["Main Home","Julian Main House","Vehicles","Hangar"];
@@ -416,7 +490,10 @@ async function loadKey(key, fallback){
     const snap = await db.collection('household-ops').doc(key).get();
     if(snap.exists && snap.data().value) return snap.data().value;
     return fallback;
-  }catch(e){ console.error(e); return fallback; }
+  }catch(e){
+    console.error(e);
+    throw new Error('Estate records could not be loaded securely. Sign out and request a new login link.');
+  }
 }
 async function saveKey(key, data){
   try{
@@ -1941,7 +2018,34 @@ function showModal(html){
 function closeModal(){ const o = document.getElementById('overlay'); if(o) o.remove(); }
 document.addEventListener('keydown', event=>{ if(event.key==='Escape' && document.getElementById('overlay')) closeModal(); });
 
-loadAll();
+let appLoaded = false;
+auth.onAuthStateChanged(async function(user){
+  const authorized = Boolean(
+    user &&
+    user.emailVerified &&
+    user.email &&
+    user.email.toLowerCase() === AUTHORIZED_OWNER_EMAIL
+  );
+  authGate.hidden = authorized;
+  appShell.hidden = !authorized;
+  if(!authorized){
+    appLoaded = false;
+    if(user) await auth.signOut();
+    return;
+  }
+  document.getElementById('auth-user-email').textContent = user.email;
+  if(appLoaded) return;
+  try{
+    await loadAll();
+    appLoaded = true;
+  }catch(error){
+    appShell.hidden = true;
+    authGate.hidden = false;
+    setAuthMessage(error.message || 'Estate records could not be loaded securely.', true);
+  }
+});
+
+completeEmailLinkSignIn();
 </script>
 </body>
 </html>
