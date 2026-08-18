@@ -213,10 +213,8 @@
   <div class="auth-card">
     <div class="eyebrow">Handgraaf Estates &middot; Owner Access</div>
     <h1 id="auth-title">Secure estate login</h1>
-    <p>Enter the authorized owner email. A one-time sign-in link will be sent to that mailbox. Estate records remain unavailable until Firebase verifies the sign-in.</p>
-    <label for="auth-email">Owner email</label>
-    <input id="auth-email" type="email" inputmode="email" autocomplete="email" value="erik@handgraafestates.com" readonly>
-    <button class="addbtn" id="auth-submit" type="button">Send secure login link</button>
+    <p>Sign in with the authorized Google account. Estate records remain unavailable until Firebase verifies the owner identity.</p>
+    <button class="addbtn" id="auth-submit" type="button">Sign in securely with Google</button>
     <div class="auth-message" id="auth-message" role="status" aria-live="polite"></div>
   </div>
 </section>
@@ -387,7 +385,7 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 </script>
 <script>
-const AUTHORIZED_OWNER_EMAIL = 'erik@handgraafestates.com';
+const AUTHORIZED_OWNER_EMAIL = 'erikmgmi@gmail.com';
 const authGate = document.getElementById('auth-gate');
 const appShell = document.getElementById('app-shell');
 const authMessage = document.getElementById('auth-message');
@@ -398,39 +396,27 @@ function setAuthMessage(message, isError){
   authMessage.className = 'auth-message' + (isError ? ' error' : '');
 }
 
-async function sendOwnerSignInLink(){
+async function signInOwnerWithGoogle(){
   authSubmit.disabled = true;
-  setAuthMessage('Sending a one-time login link…', false);
+  setAuthMessage('Opening secure Google sign-in…', false);
   try{
-    await auth.sendSignInLinkToEmail(AUTHORIZED_OWNER_EMAIL, {
-      url: 'https://keatingestate.netlify.app/',
-      handleCodeInApp: true
-    });
-    localStorage.setItem('estateSignInEmail', AUTHORIZED_OWNER_EMAIL);
-    setAuthMessage('Login link sent. Open it from erik@handgraafestates.com on this device.', false);
+    const provider = new firebase.auth.GoogleAuthProvider();
+    provider.setCustomParameters({ login_hint: AUTHORIZED_OWNER_EMAIL });
+    const result = await auth.signInWithPopup(provider);
+    const email = result.user && result.user.email ? result.user.email.toLowerCase() : '';
+    if(email !== AUTHORIZED_OWNER_EMAIL){
+      await auth.signOut();
+      throw new Error('Unauthorized account');
+    }
   }catch(error){
     console.error(error);
-    setAuthMessage('The secure login link could not be sent. Contact the administrator.', true);
+    setAuthMessage('Sign-in was cancelled or this Google account is not authorized.', true);
   }finally{
     authSubmit.disabled = false;
   }
 }
 
-async function completeEmailLinkSignIn(){
-  if(!auth.isSignInWithEmailLink(window.location.href)) return;
-  const storedEmail = localStorage.getItem('estateSignInEmail') || AUTHORIZED_OWNER_EMAIL;
-  setAuthMessage('Verifying secure login…', false);
-  try{
-    await auth.signInWithEmailLink(storedEmail, window.location.href);
-    localStorage.removeItem('estateSignInEmail');
-    history.replaceState({}, document.title, location.pathname);
-  }catch(error){
-    console.error(error);
-    setAuthMessage('This login link is invalid or expired. Request a new link.', true);
-  }
-}
-
-authSubmit.addEventListener('click', sendOwnerSignInLink);
+authSubmit.addEventListener('click', signInOwnerWithGoogle);
 document.getElementById('auth-signout').addEventListener('click', () => auth.signOut());
 
 const SOP_CATEGORIES = ["Security","Access","Supervision","Vehicle Use & Notation","Facilities & Guest Use","General Household Standards"];
@@ -2041,7 +2027,6 @@ auth.onAuthStateChanged(async function(user){
   }
 });
 
-completeEmailLinkSignIn();
 </script>
 </body>
 </html>
