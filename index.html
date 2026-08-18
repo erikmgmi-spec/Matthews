@@ -418,11 +418,7 @@ async function sendOwnerSignInLink(){
 
 async function completeEmailLinkSignIn(){
   if(!auth.isSignInWithEmailLink(window.location.href)) return;
-  const storedEmail = localStorage.getItem('estateSignInEmail');
-  if(storedEmail !== AUTHORIZED_OWNER_EMAIL){
-    setAuthMessage('This login link must be opened on the device that requested it.', true);
-    return;
-  }
+  const storedEmail = localStorage.getItem('estateSignInEmail') || AUTHORIZED_OWNER_EMAIL;
   setAuthMessage('Verifying secure login…', false);
   try{
     await auth.signInWithEmailLink(storedEmail, window.location.href);

@@ -10,6 +10,7 @@ test('dashboard requires the approved verified owner identity', () => {
   assert.match(html, /firebase-auth-compat\.js/);
   assert.match(html, /user\.emailVerified/);
   assert.match(html, /user\.email\.toLowerCase\(\) === AUTHORIZED_OWNER_EMAIL/);
+  assert.match(html, /localStorage\.getItem\('estateSignInEmail'\) \|\| AUTHORIZED_OWNER_EMAIL/);
   assert.match(html, /id="app-shell" hidden/);
   assert.doesNotMatch(html, /entries added by anyone with the link are visible to everyone/);
 });
