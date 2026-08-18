@@ -9,8 +9,10 @@ const assistant = await readFile(new URL('../netlify/functions/assistant.mjs', i
 test('dashboard requires the approved verified owner identity', () => {
   assert.match(html, /firebase-auth-compat\.js/);
   assert.match(html, /user\.emailVerified/);
-  assert.match(html, /user\.email\.toLowerCase\(\) === AUTHORIZED_OWNER_EMAIL/);
-  assert.match(html, /const AUTHORIZED_OWNER_EMAIL = 'erikmgmi@gmail\.com'/);
+  assert.match(html, /AUTHORIZED_OWNER_EMAILS\.includes\(user\.email\.toLowerCase\(\)\)/);
+  assert.match(html, /'erikmgmi@gmail\.com'/);
+  assert.match(html, /'info@handgraafestates\.com'/);
+  assert.match(html, /'brianucsd@gmail\.com'/);
   assert.match(html, /new firebase\.auth\.GoogleAuthProvider\(\)/);
   assert.match(html, /auth\.signInWithPopup\(provider\)/);
   assert.doesNotMatch(html, /sendSignInLinkToEmail|signInWithEmailLink/);
@@ -21,7 +23,10 @@ test('dashboard requires the approved verified owner identity', () => {
 test('Firestore grants only the verified owner access to household records', () => {
   assert.match(rules, /request\.auth != null/);
   assert.match(rules, /request\.auth\.token\.email_verified == true/);
-  assert.match(rules, /request\.auth\.token\.email == 'erikmgmi@gmail\.com'/);
+  assert.match(rules, /request\.auth\.token\.email in \[/);
+  assert.match(rules, /'erikmgmi@gmail\.com'/);
+  assert.match(rules, /'info@handgraafestates\.com'/);
+  assert.match(rules, /'brianucsd@gmail\.com'/);
   assert.match(rules, /match \/household-ops\/\{recordId\}/);
   assert.match(rules, /match \/\{document=\*\*\}[\s\S]*allow read, write: if false/);
 });
