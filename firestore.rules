@@ -5,7 +5,7 @@ service cloud.firestore {
     function isVerifiedEstateOwner() {
       return request.auth != null
         && request.auth.token.email_verified == true
-        && request.auth.token.email == 'erik@handgraafestates.com';
+        && request.auth.token.email == 'erikmgmi@gmail.com';
     }
 
     match /household-ops/{recordId} {
