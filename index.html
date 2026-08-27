@@ -160,7 +160,48 @@
   .asset-row-top{display:flex;justify-content:space-between;align-items:center;gap:12px;}
   .asset-name{font-size:14px;color:var(--ink);font-weight:500;}
   .asset-details{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;font-size:11.5px;color:var(--muted);}
-  .financial-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:18px;}
+  .financial-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px;margin-bottom:18px;}
+  /* KEATING_FINANCIALS_V2 */
+  .fin-zone{border:1px solid var(--line);border-radius:10px;background:#fff;margin-bottom:12px;overflow:hidden;}
+  .fin-zhead{width:100%;display:grid;grid-template-columns:1fr 118px 108px 20px;gap:12px;align-items:center;
+    padding:14px 16px;background:none;border:none;font:inherit;color:inherit;text-align:left;cursor:pointer;}
+  .fin-zhead:hover{background:#FBF7EF;}
+  .fin-zhead:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;}
+  .fin-zname{font-family:'Playfair Display',serif;font-size:16px;font-weight:600;display:block;}
+  .fin-zdesc{font-size:11.5px;color:var(--muted);display:block;}
+  .fin-zmeta{font-size:11px;color:var(--muted);opacity:.8;margin-top:4px;display:block;}
+  .fin-num{text-align:right;}
+  .fin-num .n{font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;}
+  .fin-num .l{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+  .fin-num.comm .n{color:var(--med);font-size:13.5px;font-weight:500;}
+  .fin-num.zero .n{color:var(--muted);font-weight:400;}
+  .fin-chev{color:var(--muted);font-size:11px;transition:transform .16s ease;}
+  .fin-zone.open .fin-chev{transform:rotate(90deg);}
+  .fin-bar{height:4px;background:#EDE5D6;border-radius:2px;overflow:hidden;display:flex;margin-top:8px;}
+  .fin-bar i{display:block;height:100%;}
+  .fin-bar .sp{background:var(--accent);}
+  .fin-bar .cm{background:repeating-linear-gradient(135deg,var(--brass) 0 3px,#E4D6BC 3px 6px);}
+  .fin-body{display:none;padding:0 16px 14px;}
+  .fin-zone.open .fin-body{display:block;}
+  .fin-line{display:grid;grid-template-columns:1fr auto;gap:12px;padding:10px 0;border-bottom:1px solid #EDE6D8;}
+  .fin-line:last-child{border-bottom:none;}
+  .fin-lt{font-size:13.5px;font-weight:500;}
+  .fin-ls{font-size:11px;color:var(--muted);margin-top:2px;}
+  .fin-la{font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap;}
+  .fin-docs{margin:8px 0 0;padding:8px 0 0 12px;border-left:2px solid #E6DCC8;list-style:none;}
+  .fin-docs li{display:flex;justify-content:space-between;gap:10px;font-size:11.5px;color:var(--muted);padding:2px 0;}
+  .fin-matched{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--low);margin-right:6px;}
+  .fin-note{margin:6px 0 0 12px;font-size:10.5px;color:var(--muted);font-style:italic;}
+  .fin-warn{background:#FBEAE6;border:1px solid #EBD3CC;border-radius:8px;padding:10px 13px;
+    font-size:12px;color:var(--high);margin-bottom:12px;}
+  .fin-warn b{font-weight:600;}
+  .fin-src{display:inline-block;font-size:10px;letter-spacing:.05em;font-weight:600;
+    padding:2px 7px;border-radius:20px;margin-right:6px;}
+  .fin-src.p{color:var(--accent);background:#F2E5E1;}
+  .fin-src.m{color:#7A6027;background:#F4EDDD;}
+  .fin-src.r{color:var(--blue);background:#E3EAEF;}
+  .rc-doc{opacity:.72;}
+  .rc-doc .card-title{font-weight:400;}
 
   /* Calendar */
   .cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
@@ -450,9 +491,31 @@ document.getElementById('auth-signout').addEventListener('click', () => auth.sig
 
 const SOP_CATEGORIES = ["Security","Access","Supervision","Vehicle Use & Notation","Facilities & Guest Use","General Household Standards"];
 const PRIORITIES = ["High","Medium","Low"];
-const PROJ_AREAS = ["Main Home","Julian Main House","Vehicles","Hangar"];
+const PROJ_AREAS = ["Main Home","Julian Ranch","Hangar","Office","Vehicles"];
 const PROJ_STAGES = ["Vendor identified","Vendor contacted","Vendor scheduled","Project commenced","Project completed"];
 const PM_FREQUENCIES = ["Weekly","Monthly","Quarterly","Semi-Annual","Annual"];
+const CAP_OPEX = ["Unclassified","CapEx","OpEx"];
+const ZONES = ["Main Home","Julian Ranch","Hangar","Office","Vehicles"];
+const ZONE_DESCRIPTORS = {
+  "Main Home":"9633 La Jolla Farms Road \u2014 residence, guest house and grounds",
+  "Julian Ranch":"3515 HWY 78, Julian \u2014 39.57-acre secondary estate",
+  "Hangar":"Hangar property \u2014 sale, rental and staging",
+  "Office":"UCSD SERF Room 332A \u2014 principal's university office",
+  "Vehicles":"Household vehicle fleet",
+  "Needs a zone":"Records with no zone set. Assign one to roll these into a property."
+};
+const ZONE_UNASSIGNED = "Needs a zone";
+function finNum(v){
+  if(typeof v === 'number') return isFinite(v) ? v : 0;
+  if(!v) return 0;
+  var n = parseFloat(String(v).replace(/[$,\s]/g,''));
+  return isFinite(n) ? n : 0;
+}
+function normalizeZone(name){
+  var k = String(name || '').trim().toLowerCase();
+  for(var i=0;i<ZONES.length;i++){ if(ZONES[i].toLowerCase() === k) return ZONES[i]; }
+  return ZONE_UNASSIGNED;
+}
 const PM_CATEGORIES = ["Water & Plumbing","HVAC & Air Systems","Electrical & Power","Appliances & Kitchen","Roof, Exterior & Structure","Grounds & Exterior","Pest & Termite Control","Pool & Aquatics","Wellness & Recreation","Smart Home, AV & Security","Wine & Specialty Rooms","Vehicles & Garage","General"];
 const STAGE_CLASS = {
   "Vendor identified":"stage-identified", "Vendor contacted":"stage-contacted",
@@ -986,7 +1049,7 @@ function renderProjects(){
 }
 function openProjModal(id){
   editing = {type:'proj', id: id||null};
-  const e = id ? projects.find(x=>x.id===id) : {title:'',area:PROJ_AREAS[0],stage:PROJ_STAGES[0],priority:'Medium',vendor:'',completedDate:'',cost:'',invoiceRef:'',warrantyExpires:'',notes:'',proposal:'',attachments:[]};
+  const e = id ? projects.find(x=>x.id===id) : {title:'',area:PROJ_AREAS[0],stage:PROJ_STAGES[0],priority:'Medium',vendor:'',completedDate:'',cost:'',invoiceRef:'',warrantyExpires:'',notes:'',proposal:'',capOpEx:'Unclassified',pmTaskId:'',attachments:[]};
   window._projAttachments = (e.attachments || []).slice();
   showModal(`
     <h2>${id?'Edit Project':'Add Project'}</h2>
@@ -996,6 +1059,10 @@ function openProjModal(id){
       <div><label>Stage</label><select id="f-stage">${PROJ_STAGES.map(s=>`<option ${s===(e.stage||PROJ_STAGES[0])?'selected':''}>${s}</option>`).join('')}</select></div>
     </div>
     <div class="row2"><div><label>Vendor</label><input id="f-vendor" list="vendor-datalist" value="${escapeHtml(e.vendor)}" placeholder="e.g. Endless Pools"><datalist id="vendor-datalist">${getKnownVendors().map(v=>`<option value="${escapeHtml(v)}">`).join('')}</datalist></div><div><label>Priority</label><select id="f-proj-priority">${PRIORITIES.map(p=>`<option ${p===(e.priority||'Medium')?'selected':''}>${p}</option>`).join('')}</select></div></div>
+    <div class="row2">
+      <div><label>Capital or Operating</label><select id="f-capopex">${CAP_OPEX.map(c=>`<option ${c===(e.capOpEx||'Unclassified')?'selected':''}>${c}</option>`).join('')}</select></div>
+      <div><label>Fulfils a maintenance task</label><select id="f-pmtask"><option value="">— None —</option>${pmTasks.map(t=>`<option value="${t.id}" ${t.id===e.pmTaskId?'selected':''}>${escapeHtml(t.title)}</option>`).join('')}</select></div>
+    </div>
     <label>Proposal</label><textarea id="f-proposal" placeholder="What was proposed/scoped for this project.">${escapeHtml(e.proposal||'')}</textarea>
     <div class="row3">
       <div><label>Completed Date</label><input type="date" id="f-completed" value="${e.completedDate||''}"></div>
@@ -1094,6 +1161,7 @@ async function submitProj(){
   const data = {
     title, area: val('f-area'), stage, priority: val('f-proj-priority'), vendor: val('f-vendor'), completedDate,
     cost: val('f-cost'), estimate: val('f-estimate'), invoiceRef: val('f-invoice'), warrantyExpires: val('f-warranty'), notes: val('f-notes'), proposal: val('f-proposal'),
+    capOpEx: val('f-capopex'), pmTaskId: val('f-pmtask'),
     attachments: window._projAttachments || []
   };
   if(editing.id){ const i = projects.findIndex(x=>x.id===editing.id); projects[i] = {...projects[i], ...data}; }
@@ -1266,12 +1334,13 @@ function renderPM(){
 
 function openPMModal(id){
   editing = {type:'pm', id: id||null};
-  const e = id ? pmTasks.find(x=>x.id===id) : {title:'',category:'General',frequency:PM_FREQUENCIES[1],body:'',vendor:'',cost:'',nextDue:''};
+  const e = id ? pmTasks.find(x=>x.id===id) : {title:'',category:'General',area:ZONES[0],frequency:PM_FREQUENCIES[1],body:'',vendor:'',cost:'',nextDue:''};
   showModal(`
     <h2>${id?'Edit Maintenance Item':'Add Maintenance Item'}</h2>
     <label>Title</label><input id="f-title" value="${escapeHtml(e.title)}" placeholder="e.g. HVAC filter replacement">
     <div class="row2">
       <div><label>Category</label><select id="f-category">${PM_CATEGORIES.map(c=>`<option ${c===(e.category||'General')?'selected':''}>${c}</option>`).join('')}</select></div>
+      <div><label>Zone</label><select id="f-pm-area">${ZONES.map(z=>`<option ${z===(e.area||ZONES[0])?'selected':''}>${z}</option>`).join('')}</select></div>
       <div><label>Frequency</label><select id="f-freq">${PM_FREQUENCIES.map(f=>`<option ${f===e.frequency?'selected':''}>${f}</option>`).join('')}</select></div>
     </div>
     <label>Next Due Date</label><input type="date" id="f-nextdue" value="${e.nextDue||''}">
@@ -1284,11 +1353,11 @@ function openPMModal(id){
   `);
 }
 async function submitPM(){
-  const title = val('f-title'), category = val('f-category'), frequency = val('f-freq'), body = val('f-body'),
+  const title = val('f-title'), category = val('f-category'), area = val('f-pm-area'), frequency = val('f-freq'), body = val('f-body'),
         vendor = val('f-vendor'), cost = val('f-cost'), nextDue = val('f-nextdue');
   if(!title){ toast("Title is required"); return; }
-  if(editing.id){ const i = pmTasks.findIndex(x=>x.id===editing.id); pmTasks[i] = {...pmTasks[i], title,category,frequency,body,vendor,cost,nextDue}; }
-  else { pmTasks.push({id:cryptoId(), title,category,frequency,body,vendor,cost,nextDue}); }
+  if(editing.id){ const i = pmTasks.findIndex(x=>x.id===editing.id); pmTasks[i] = {...pmTasks[i], title,category,area,frequency,body,vendor,cost,nextDue}; }
+  else { pmTasks.push({id:cryptoId(), title,category,area,frequency,body,vendor,cost,nextDue}); }
   await saveKey('pm-tasks', pmTasks); closeModal(); renderPM();
 }
 async function deletePM(){ pmTasks = pmTasks.filter(e=>e.id!==editing.id); await saveKey('pm-tasks', pmTasks); closeModal(); renderPM(); }
@@ -1371,29 +1440,218 @@ async function submitAsset(){
   closeModal(); renderAssetRegistry();
 }
 
+function computeFinancials(){
+  var projectById = {};
+  projects.forEach(function(p){ projectById[p.id] = p; });
+
+  // A PM budget line is replaced only by a project that is BOTH completed and
+  // actually carries a cost. Otherwise the budget vanishes with no spend to
+  // replace it.
+  var fulfilled = {};
+  projects.forEach(function(p){
+    if(p.pmTaskId && p.stage === 'Project completed' && finNum(p.cost) !== 0) fulfilled[p.pmTaskId] = true;
+  });
+
+  // A receipt is documentation only when its project exists AND has a cost.
+  function receiptRole(r){
+    if(!r.projectId) return {role:'standalone', parent:null};
+    var parent = projectById[r.projectId];
+    if(!parent) return {role:'orphan', parent:null};
+    if(finNum(parent.cost) === 0) return {role:'covering', parent:parent};
+    return {role:'documentation', parent:parent};
+  }
+
+  var zones = {};
+  function zoneOf(name){
+    var key = normalizeZone(name);
+    if(!zones[key]) zones[key] = {zone:key, descriptor:ZONE_DESCRIPTORS[key],
+      projectSpend:0, maintenanceSpend:0, receiptSpend:0, capex:0, opex:0, unclassified:0,
+      committed:0, projectCount:0, openCount:0, lines:[], warnings:[]};
+    return zones[key];
+  }
+  function classify(z, amount, tag){
+    if(tag === 'CapEx') z.capex += amount;
+    else if(tag === 'OpEx') z.opex += amount;
+    else z.unclassified += amount;
+  }
+
+  projects.forEach(function(p){
+    var z = zoneOf(p.area), cost = finNum(p.cost), est = finNum(p.estimate);
+    var open = p.stage !== 'Project completed';
+    z.projectCount++; if(open) z.openCount++;
+    if(cost !== 0){
+      z.projectSpend += cost; classify(z, cost, p.capOpEx);
+      z.lines.push({type:'Project', label:p.title, amount:cost, stage:p.stage,
+        capOpEx:p.capOpEx || null, id:p.id, docs:[]});
+    }
+    // Committed keys on stage, never on cost.
+    if(open && est !== 0) z.committed += Math.max(est - cost, 0);
+  });
+
+  pmTasks.forEach(function(t){
+    var cost = finNum(t.cost);
+    if(cost === 0 || fulfilled[t.id]) return;
+    var z = zoneOf(t.area);
+    z.maintenanceSpend += cost; classify(z, cost, t.capOpEx || 'OpEx');
+    z.lines.push({type:'Maintenance', label:t.title, amount:cost,
+      stage:t.frequency, capOpEx:'OpEx', id:t.id, docs:[]});
+  });
+
+  receipts.forEach(function(r){
+    var price = finNum(r.price), info = receiptRole(r);
+    if(info.role === 'documentation'){
+      var pz = zoneOf(info.parent.area), line = null;
+      pz.lines.forEach(function(l){ if(l.id === info.parent.id) line = l; });
+      if(line) line.docs.push({label:r.notes || 'Receipt', amount:price, date:r.date});
+      return;
+    }
+    if(price === 0) return;
+    var z = zoneOf(info.role === 'covering' ? info.parent.area : r.area);
+    z.receiptSpend += price; classify(z, price, r.capOpEx || 'OpEx');
+    z.lines.push({type:'Receipt', label:r.notes || 'Receipt', amount:price,
+      stage:info.role === 'covering' ? 'Covering: ' + info.parent.title : 'Standalone',
+      capOpEx:r.capOpEx || null, id:r.id, docs:[], orphan:info.role === 'orphan'});
+    if(info.role === 'covering')
+      z.warnings.push(escapeHtml(info.parent.title) + ': no project cost recorded — counting its receipts instead');
+    if(info.role === 'orphan')
+      z.warnings.push('"' + escapeHtml(r.notes || 'Receipt') + '" was attached to a project that has been deleted');
+  });
+
+  var ordered = [];
+  ZONES.forEach(function(n){ if(zones[n]) ordered.push(zones[n]); });
+  if(zones[ZONE_UNASSIGNED]) ordered.push(zones[ZONE_UNASSIGNED]);
+  ordered.forEach(function(z){
+    z.total = z.projectSpend + z.maintenanceSpend + z.receiptSpend;
+    z.lines.sort(function(a,b){ return Math.abs(b.amount) - Math.abs(a.amount); });
+  });
+
+  var grand = {projectSpend:0, maintenanceSpend:0, receiptSpend:0, capex:0, opex:0,
+    unclassified:0, committed:0, total:0};
+  ordered.forEach(function(z){
+    for(var k in grand) grand[k] += z[k] || 0;
+  });
+
+  var docs = receipts.filter(function(r){ return receiptRole(r).role === 'documentation'; });
+  return {zones:ordered, grand:grand,
+    documentationCount: docs.filter(function(r){ return finNum(r.price) !== 0; }).length,
+    documentationValue: docs.reduce(function(s,r){ return s + finNum(r.price); }, 0),
+    warnings: ordered.reduce(function(a,z){ return a.concat(z.warnings); }, [])};
+}
+
+function finMoney(v){
+  return '$' + v.toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2});
+}
+
 function renderFinancials(){
-  const root = document.getElementById('financials-content');
+  var root = document.getElementById('financials-content');
   if(!root) return;
-  const number = value=>parseFloat(value)||0;
-  const money = value=>'$'+value.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
-  const projectSpend = projects.reduce((sum,item)=>sum+number(item.cost),0);
-  const maintenanceSpend = pmTasks.reduce((sum,item)=>sum+number(item.cost),0);
-  const receiptSpend = receipts.reduce((sum,item)=>sum+number(item.price),0);
-  let capex=0, opex=maintenanceSpend+receiptSpend;
-  projects.forEach(item=>{ if(item.capOpEx==='CapEx') capex+=number(item.cost); else opex+=number(item.cost); });
-  const cards = [['Project Spend',projectSpend],['Maintenance Spend',maintenanceSpend],['Receipt Spend',receiptSpend],['Total Spend',projectSpend+maintenanceSpend+receiptSpend],['CapEx',capex],['OpEx',opex]];
-  root.innerHTML = `<div class="banner">Read-only summary calculated from existing Projects, Preventative Maintenance, and Receipts. No accounting records are moved or rewritten.</div><div class="financial-grid">${cards.map(([label,value])=>`<div class="metric"><div class="metric-label">${label}</div><div class="metric-value">${money(value)}</div></div>`).join('')}</div>`;
+  var f = computeFinancials(), g = f.grand;
+
+  var cards = [
+    ['Actual Spend', finMoney(g.total), 'Distinct money out'],
+    ['Committed', finMoney(g.committed), 'Quoted, not yet paid'],
+    ['Documentation', finMoney(f.documentationValue), f.documentationCount + ' receipts backing invoices'],
+    ['Needs Classifying', finMoney(g.unclassified), 'No CapEx / OpEx set'],
+    ['CapEx', finMoney(g.capex), 'Capital'],
+    ['OpEx', finMoney(g.opex), 'Operating']
+  ];
+
+  var maxv = 1;
+  f.zones.forEach(function(z){ maxv = Math.max(maxv, z.total + z.committed); });
+
+  var warn = f.warnings.length
+    ? '<div class="fin-warn"><b>' + f.warnings.length + ' item' +
+      (f.warnings.length === 1 ? '' : 's') + ' need attention.</b> ' +
+      f.warnings.slice(0,3).join(' · ') +
+      (f.warnings.length > 3 ? ' · and ' + (f.warnings.length - 3) + ' more' : '') + '</div>'
+    : '';
+
+  var zonesHtml = f.zones.map(function(z, i){
+    var lines = z.lines.length
+      ? z.lines.map(function(l){
+          var cls = l.type === 'Project' ? 'p' : (l.type === 'Maintenance' ? 'm' : 'r');
+          var docs = l.docs.length
+            ? '<ul class="fin-docs">' + l.docs.map(function(d){
+                return '<li><span><span class="fin-matched">Matched</span>' +
+                  escapeHtml(d.label) + '</span><span>' + finMoney(d.amount) + '</span></li>';
+              }).join('') + '</ul><p class="fin-note">Proof of the invoice above — shown, not added.</p>'
+            : '';
+          return '<div class="fin-line"><div><div class="fin-lt">' +
+            '<span class="fin-src ' + cls + '">' + l.type + '</span>' + escapeHtml(l.label) +
+            '</div><div class="fin-ls">' + escapeHtml(l.stage || '') +
+            (l.capOpEx ? ' · ' + escapeHtml(l.capOpEx) : ' · Unclassified') +
+            '</div>' + docs + '</div><div class="fin-la">' + finMoney(l.amount) + '</div></div>';
+        }).join('')
+      : '<div class="empty"><h3>Nothing recorded in this zone yet</h3><p>' + z.projectCount +
+        ' item' + (z.projectCount === 1 ? '' : 's') + ' tracked here with no cost entered.</p></div>';
+
+    return '<div class="fin-zone' + (i === 0 ? ' open' : '') + '">' +
+      '<button class="fin-zhead" type="button" aria-expanded="' + (i === 0) + '" ' +
+        'onclick="toggleFinZone(this)">' +
+        '<span><span class="fin-zname">' + escapeHtml(z.zone) + '</span>' +
+        '<span class="fin-zdesc">' + escapeHtml(z.descriptor || '') + '</span>' +
+        '<span class="fin-zmeta">' + z.projectCount + ' item' + (z.projectCount === 1 ? '' : 's') +
+          ' · ' + z.openCount + ' open</span>' +
+        '<span class="fin-bar"><i class="sp" style="width:' + (z.total / maxv * 100) + '%"></i>' +
+          '<i class="cm" style="width:' + (z.committed / maxv * 100) + '%"></i></span></span>' +
+        '<span class="fin-num' + (z.total === 0 ? ' zero' : '') + '"><span class="n">' +
+          finMoney(z.total) + '</span><br><span class="l">Spent</span></span>' +
+        '<span class="fin-num comm' + (z.committed === 0 ? ' zero' : '') + '"><span class="n">' +
+          finMoney(z.committed) + '</span><br><span class="l">Committed</span></span>' +
+        '<span class="fin-chev">&#9654;</span></button>' +
+      '<div class="fin-body">' + lines + '</div></div>';
+  }).join('');
+
+  root.innerHTML =
+    '<div class="banner">Every figure is computed from records you already entered. ' +
+    'A receipt attached to a costed project is proof of that cost, not extra spend. ' +
+    'A maintenance budget stands until a completed project with a real cost replaces it.</div>' +
+    warn +
+    '<div class="financial-grid">' + cards.map(function(c){
+      return '<div class="metric"><div class="metric-label">' + c[0] +
+        '</div><div class="metric-value">' + c[1] +
+        '</div><div class="card-area" style="margin-top:4px;">' + c[2] + '</div></div>';
+    }).join('') + '</div>' + zonesHtml;
+}
+
+function toggleFinZone(btn){
+  var open = btn.parentNode.classList.toggle('open');
+  btn.setAttribute('aria-expanded', open);
 }
 
 function exportFinancialSummary(){
-  const number=value=>parseFloat(value)||0;
-  const rows = [['Type','Item','Category','Amount']];
-  projects.forEach(item=>rows.push(['Project',item.title||'',item.capOpEx||'Unclassified',number(item.cost).toFixed(2)]));
-  pmTasks.forEach(item=>rows.push(['Maintenance',item.title||'',item.category||'General',number(item.cost).toFixed(2)]));
-  receipts.forEach(item=>rows.push(['Receipt',item.notes||'',item.date||'',number(item.price).toFixed(2)]));
-  const csv=rows.map(row=>row.map(value=>'"'+String(value).replace(/"/g,'""')+'"').join(',')).join('\n');
-  const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
-  const link=document.createElement('a'); link.href=url; link.download='estate-financial-summary.csv'; link.click(); URL.revokeObjectURL(url);
+  var f = computeFinancials();
+  var rows = [['Zone','Type','Item','Detail','CapEx/OpEx','Amount']];
+  f.zones.forEach(function(z){
+    z.lines.forEach(function(l){
+      rows.push([z.zone, l.type, l.label || '', l.stage || '', l.capOpEx || 'Unclassified',
+        l.amount.toFixed(2)]);
+      l.docs.forEach(function(d){
+        rows.push([z.zone, 'Documentation', d.label || '',
+          'Proof of: ' + (l.label || '') + ' — not counted', '', d.amount.toFixed(2)]);
+      });
+    });
+    rows.push([z.zone, 'Zone total', '', z.openCount + ' open · committed ' +
+      f.grand.committed.toFixed(2), '', z.total.toFixed(2)]);
+  });
+  rows.push([]);
+  rows.push(['ALL','Actual spend','','Excludes documentation and replaced budgets','',
+    f.grand.total.toFixed(2)]);
+  rows.push(['ALL','Committed','','Quoted on open items','', f.grand.committed.toFixed(2)]);
+  rows.push(['ALL','Documentation held','', f.documentationCount + ' receipts, counted zero times',
+    '', f.documentationValue.toFixed(2)]);
+  rows.push(['ALL','CapEx','','','CapEx', f.grand.capex.toFixed(2)]);
+  rows.push(['ALL','OpEx','','','OpEx', f.grand.opex.toFixed(2)]);
+  rows.push(['ALL','Unclassified','','Needs a CapEx/OpEx decision','',
+    f.grand.unclassified.toFixed(2)]);
+
+  var csv = rows.map(function(row){
+    return row.map(function(v){ return '"' + String(v).replace(/"/g,'""') + '"'; }).join(',');
+  }).join('\n');
+  var url = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8;'}));
+  var link = document.createElement('a');
+  link.href = url; link.download = 'estate-financial-summary.csv'; link.click();
+  URL.revokeObjectURL(url);
 }
 
 /* ---------- IMPORT DATA (deterministic, no API needed) ---------- */
@@ -1580,13 +1838,13 @@ async function commitImport(){
     records.forEach(function(r){
       const normalizedTitle = (r.title||'Untitled').trim().toLowerCase();
       const existingIndex = projects.findIndex(function(p){ return (p.title||'').trim().toLowerCase()===normalizedTitle; });
-      const data = {title:r.title||'Untitled', area:r.area||'Main Home', stage:r.stage||'Vendor identified', priority:PRIORITIES.includes(r.priority)?r.priority:'Medium', vendor:r.vendor||'', completedDate:r.completedDate||'', cost:r.cost||'', estimate:r.estimate||'', invoiceRef:r.invoiceRef||'', warrantyExpires:'', notes:r.notes||'', proposal:r.proposal||''};
+      const data = {title:r.title||'Untitled', area:normalizeZone(r.area||'Main Home'), stage:r.stage||'Vendor identified', priority:PRIORITIES.includes(r.priority)?r.priority:'Medium', vendor:r.vendor||'', completedDate:r.completedDate||'', cost:r.cost||'', estimate:r.estimate||'', invoiceRef:r.invoiceRef||'', warrantyExpires:'', notes:r.notes||'', proposal:r.proposal||''};
       if(existingIndex>=0) projects[existingIndex] = {...projects[existingIndex], ...data};
       else projects.push({id:cryptoId(), ...data, attachments:[]});
     });
     await saveKey('completed-projects', projects); renderProjects();
   } else if(target==='pm'){
-    records.forEach(function(r){ pmTasks.push({id:cryptoId(), title:r.title||'Untitled', frequency:r.frequency||'Quarterly', body:r.body||'', vendor:r.vendor||'', cost:r.cost||'', nextDue:r.nextDue||''}); });
+    records.forEach(function(r){ pmTasks.push({id:cryptoId(), title:r.title||'Untitled', area:normalizeZone(r.area||ZONES[0]), frequency:r.frequency||'Quarterly', body:r.body||'', vendor:r.vendor||'', cost:String(r.cost||'').replace(/[$,]/g,''), nextDue:r.nextDue||''}); });
     await saveKey('pm-tasks', pmTasks); renderPM();
   } else if(target==='sops'){
     records.forEach(function(r){ sops.push({id:cryptoId(), title:r.title||'Untitled', category:r.category||'General Household Standards', priority:r.priority||'Medium', body:r.body||'', vendor:r.vendor||'', miles:'',location:'',purpose:'',photo:''}); });
@@ -1952,12 +2210,20 @@ function renderReceipts(){
     return d.getFullYear()===receiptsDate.getFullYear() && d.getMonth()===receiptsDate.getMonth();
   }).sort(function(a,b){ return a.date.localeCompare(b.date); });
 
-  const total = monthReceipts.reduce(function(sum,r){ return sum + (parseFloat(r.price)||0); }, 0);
+  const countedIds = {};
+  projects.forEach(function(p){ if(finNum(p.cost) !== 0) countedIds[p.id] = true; });
+  function isDocumentation(r){ return !!r.projectId && countedIds[r.projectId]; }
+  const total = monthReceipts.reduce(function(sum,r){
+    return isDocumentation(r) ? sum : sum + finNum(r.price);
+  }, 0);
+  const docTotal = monthReceipts.reduce(function(sum,r){
+    return isDocumentation(r) ? sum + finNum(r.price) : sum;
+  }, 0);
   document.getElementById('receipts-total').innerHTML =
     `<div class="card" style="display:flex;justify-content:space-between;align-items:center;">
        <span style="font-family:'Playfair Display',serif;font-size:18px;">Total for ${label}</span>
        <span style="font-family:'Playfair Display',serif;font-size:22px;font-weight:600;">$${total.toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2})}</span>
-     </div>`;
+     </div>` + (docTotal > 0 ? `<div class="banner">Plus ${finMoney(docTotal)} of receipts documenting invoices already recorded on their projects. Shown below, counted zero times.</div>` : '');
 
   const list = document.getElementById('receipts-list');
   if(monthReceipts.length===0){
@@ -1967,11 +2233,12 @@ function renderReceipts(){
   list.innerHTML = monthReceipts.map(function(r){
     const dateLabel = new Date(r.date+'T00:00:00').toLocaleDateString('default',{weekday:'short', month:'short', day:'numeric'});
     const linkedProject = r.projectId ? projects.find(function(p){ return p.id===r.projectId; }) : null;
+    const doc = isDocumentation(r);
     return `
-    <div class="card">
+    <div class="card${doc ? ' rc-doc' : ''}">
       <div class="card-top">
-        <div><div class="card-title">${escapeHtml(r.notes||'Receipt')}</div><div class="card-area">${dateLabel}${linkedProject?' &middot; Linked to '+escapeHtml(linkedProject.title):''}</div></div>
-        <span class="tag low">$${Number(r.price||0).toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2})}</span>
+        <div><div class="card-title">${escapeHtml(r.notes||'Receipt')}</div><div class="card-area">${dateLabel}${linkedProject?' &middot; '+(doc?'Proof for ':'Covering ')+escapeHtml(linkedProject.title):(r.area?' &middot; '+escapeHtml(r.area):'')}</div></div>
+        <span class="tag ${doc ? 'na' : 'low'}">${doc ? 'Matched &middot; ' : ''}$${Number(r.price||0).toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2})}</span>
       </div>
       ${r.photo ? `<img src="${r.photo}" alt="Receipt for ${escapeHtml(r.notes||'purchase')}" style="max-width:220px;border-radius:8px;margin-top:10px;border:1px solid var(--line);">` : ''}
       <div class="card-actions"><button onclick="openReceiptModal('${r.id}')">Edit</button></div>
@@ -1981,7 +2248,7 @@ function renderReceipts(){
 
 function openReceiptModal(id){
   editing = {type:'receipt', id: id||null};
-  const r = id ? receipts.find(function(x){ return x.id===id; }) : {date: fmtDate(new Date()), price:'', notes:'', photo:'', projectId:''};
+  const r = id ? receipts.find(function(x){ return x.id===id; }) : {date: fmtDate(new Date()), price:'', notes:'', photo:'', projectId:'', area:ZONES[0]};
   const projectOptions = projects.map(function(p){ return `<option value="${p.id}" ${p.id===r.projectId?'selected':''}>${escapeHtml(p.title)}</option>`; }).join('');
   showModal(`
     <h2>${id?'Edit Receipt':'Log Receipt'}</h2>
@@ -1990,6 +2257,8 @@ function openReceiptModal(id){
     <label>Notes — What was this for?</label><textarea id="f-r-notes" placeholder="e.g. Pool chemicals, Home Depot run for gate hardware">${escapeHtml(r.notes||'')}</textarea>
     <label>Link to a Project (optional)</label>
     <select id="f-r-project"><option value="">— None —</option>${projectOptions}</select>
+    <label>Zone <span style="color:var(--muted);font-weight:400;">— used only when no project is linked</span></label>
+    <select id="f-r-area">${ZONES.map(z=>`<option ${z===(r.area||ZONES[0])?'selected':''}>${z}</option>`).join('')}</select>
     <label>Receipt Photo</label>
     <input type="file" id="f-r-photo" accept="image/*" capture="environment" onchange="handleReceiptPhoto(event)">
     <div id="receipt-photo-preview">${r.photo?`<img src="${r.photo}" style="max-width:180px;border-radius:8px;margin-top:8px;">`:''}</div>
@@ -2018,10 +2287,10 @@ function handleReceiptPhoto(evt){
   reader.readAsDataURL(file);
 }
 async function submitReceipt(){
-  const date = val('f-r-date'), price = val('f-r-price'), notes = val('f-r-notes'), projectId = val('f-r-project');
+  const date = val('f-r-date'), price = val('f-r-price'), notes = val('f-r-notes'), projectId = val('f-r-project'), area = val('f-r-area');
   if(!date){ toast("Date is required"); return; }
   const photo = document.getElementById('f-r-photo-data').value;
-  const data = {date, price, notes, projectId, photo};
+  const data = {date, price, notes, projectId, area, photo};
   if(editing.id){ const i = receipts.findIndex(function(x){ return x.id===editing.id; }); receipts[i] = {...receipts[i], ...data}; }
   else { receipts.push({id:cryptoId(), ...data}); }
   await saveKey('receipts-log', receipts); closeModal();
