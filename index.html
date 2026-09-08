@@ -436,6 +436,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 const firebaseConfig = {
@@ -450,6 +451,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
+const storage = firebase.storage();
 </script>
 <script>
 const AUTHORIZED_OWNER_EMAILS = [
@@ -574,8 +576,45 @@ async function loadKey(key, fallback){
     throw new Error('Estate records could not be loaded securely. Sign out and request a new login link.');
   }
 }
+/* Photos used to live inside the record itself, as base64. Firestore caps a
+   document at 1 MiB (1,048,576 bytes) and saveKey writes each tab's whole array
+   as one document, so nine receipts carrying ~111 KB of image each filled
+   receipts-log to 96% of the ceiling and the tenth save was rejected. The
+   failure surfaced as "Save failed - check connection", which it was not.
+
+   Photos now go to Cloud Storage and the record keeps only the download URL:
+   about 100 bytes in place of 111 KB. Records written before this change still
+   hold inline data: URLs -- they render exactly as before, and each one is
+   converted the next time its tab is saved. Nothing needs migrating by hand. */
+function dataUrlToBlob(dataUrl){
+  var parts = dataUrl.split(',');
+  var mime = (parts[0].match(/:(.*?);/) || [])[1] || 'image/jpeg';
+  var bin = atob(parts[1]);
+  var arr = new Uint8Array(bin.length);
+  for(var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+  return new Blob([arr], {type: mime});
+}
+async function uploadDataUrl(dataUrl, folder){
+  var ref = storage.ref('estate-photos/' + folder + '/' + cryptoId() + '.jpg');
+  await ref.put(dataUrlToBlob(dataUrl), {contentType: 'image/jpeg'});
+  return await ref.getDownloadURL();
+}
+/* Walks a tab's records and lifts out any photo still stored inline. Runs
+   before every write, so it covers new photos and legacy ones alike. Every
+   upload finishes before the document is written -- a partial run leaves the
+   stored record untouched rather than half-converted. */
+async function offloadPhotos(key, data){
+  if(!Array.isArray(data)) return;
+  for(var i = 0; i < data.length; i++){
+    var rec = data[i];
+    if(rec && typeof rec.photo === 'string' && rec.photo.indexOf('data:') === 0){
+      rec.photo = await uploadDataUrl(rec.photo, key);
+    }
+  }
+}
 async function saveKey(key, data){
   try{
+    await offloadPhotos(key, data);
     await db.collection('household-ops').doc(key).set({ value: data, updatedAt: new Date().toISOString() });
     renderOverview();
     toast("Saved");

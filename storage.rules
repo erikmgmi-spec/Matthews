@@ -1,0 +1,30 @@
+rules_version = '2';
+
+/* The same three addresses as firestore.rules. Change them together or they
+   drift: the app decides what to draw, these rules decide what is handed over.
+
+   Note on download URLs: getDownloadURL() mints a URL carrying a token, and
+   that token grants read of that one object to anyone holding the link,
+   regardless of the read rule below. That is what lets an <img> tag render the
+   photo without an auth header. Treat a copied photo link as shareable. */
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isVerifiedEstateOwner() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email in [
+          'erikmgmi@gmail.com',
+          'info@handgraafestates.com',
+          'brianucsd@gmail.com'
+        ];
+    }
+
+    match /estate-photos/{allPaths=**} {
+      allow read, write: if isVerifiedEstateOwner();
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
