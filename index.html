@@ -607,8 +607,20 @@ async function offloadPhotos(key, data){
   if(!Array.isArray(data)) return;
   for(var i = 0; i < data.length; i++){
     var rec = data[i];
-    if(rec && typeof rec.photo === 'string' && rec.photo.indexOf('data:') === 0){
+    if(!rec) continue;
+    if(typeof rec.photo === 'string' && rec.photo.indexOf('data:') === 0){
       rec.photo = await uploadDataUrl(rec.photo, key);
+    }
+    /* Projects and properties do not use rec.photo - they keep images in
+       attachments[] as {type:'image', data:'data:...'}. Invoice and url
+       entries hold real links, and the data: test leaves those untouched. */
+    if(Array.isArray(rec.attachments)){
+      for(var j = 0; j < rec.attachments.length; j++){
+        var att = rec.attachments[j];
+        if(att && typeof att.data === 'string' && att.data.indexOf('data:') === 0){
+          att.data = await uploadDataUrl(att.data, key);
+        }
+      }
     }
   }
 }
