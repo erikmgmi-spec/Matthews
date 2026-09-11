@@ -609,7 +609,11 @@ async function offloadPhotos(key, data){
     var rec = data[i];
     if(!rec) continue;
     if(typeof rec.photo === 'string' && rec.photo.indexOf('data:') === 0){
-      rec.photo = await uploadDataUrl(rec.photo, key);
+      try{
+        rec.photo = await uploadDataUrl(rec.photo, key);
+      }catch(e){
+        console.warn('Photo upload failed; leaving inline photo unchanged', e);
+      }
     }
     /* Projects and properties do not use rec.photo - they keep images in
        attachments[] as {type:'image', data:'data:...'}. Invoice and url
@@ -618,7 +622,11 @@ async function offloadPhotos(key, data){
       for(var j = 0; j < rec.attachments.length; j++){
         var att = rec.attachments[j];
         if(att && typeof att.data === 'string' && att.data.indexOf('data:') === 0){
-          att.data = await uploadDataUrl(att.data, key);
+          try{
+            att.data = await uploadDataUrl(att.data, key);
+          }catch(e){
+            console.warn('Attachment upload failed; leaving inline image unchanged', e);
+          }
         }
       }
     }
