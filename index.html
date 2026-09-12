@@ -816,7 +816,7 @@ function renderOverview(){
   const overdue = pmTasks.filter(p=>p.nextDue && new Date(p.nextDue+'T00:00:00') < today);
   const dueSoon = pmTasks.filter(p=>{ if(!p.nextDue) return false; const d=new Date(p.nextDue+'T00:00:00'); return d>=today && d<=weekEnd; });
   const thisMonthHours = hoursLog.filter(h=>{ const d=new Date(h.date+'T00:00:00'); return d.getMonth()===today.getMonth() && d.getFullYear()===today.getFullYear(); }).reduce((sum,h)=>sum+calcHours(h.start,h.finish),0);
-  const currentMonthSpend = receipts.filter(r=>{ const d=new Date(r.date+'T00:00:00'); return d.getMonth()===today.getMonth() && d.getFullYear()===today.getFullYear(); }).reduce((sum,r)=>sum+(parseFloat(r.price)||0),0);
+  const currentMonthSpend = receipts.filter(r=>{ const d=new Date(r.date+'T00:00:00'); return d.getMonth()===today.getMonth() && d.getFullYear()===today.getFullYear(); }).reduce((sum,r)=>sum+finNum(r.price),0);
   const warnings = [];
   projects.forEach(p=>{
     if(p.completedDate && (p.stage||PROJ_STAGES[0])!=='Project completed') warnings.push(`<b>${escapeHtml(p.title)}</b> has a completion date but is still marked ${escapeHtml(p.stage||PROJ_STAGES[0])}.`);
@@ -1085,8 +1085,8 @@ function renderProjects(){
       </div>
       <div class="card-meta">
         <span>Completed: <b>${e.completedDate ? new Date(e.completedDate+'T00:00:00').toLocaleDateString('default',{month:'short',day:'numeric',year:'numeric'}) : '—'}</b></span>
-        <span>Estimate: <b>${e.estimate ? '$'+Number(e.estimate).toLocaleString() : '—'}</b></span>
-        <span>Actual Cost: <b>${e.cost ? '$'+Number(e.cost).toLocaleString() : '—'}</b></span>
+        <span>Estimate: <b>${e.estimate ? '$'+finNum(e.estimate).toLocaleString() : '—'}</b></span>
+        <span>Actual Cost: <b>${e.cost ? '$'+finNum(e.cost).toLocaleString() : '—'}</b></span>
         <span>Invoice #: <b>${escapeHtml(e.invoiceRef) || '—'}</b></span>
       </div>
       ${e.proposal ? `<div class="card-body" style="font-style:italic;color:var(--muted);">${escapeHtml(e.proposal)}</div>` : ''}
@@ -1255,7 +1255,7 @@ function renderHours(){
     const d = new Date(r.date+'T00:00:00');
     return d.getFullYear()===hoursDate.getFullYear() && d.getMonth()===hoursDate.getMonth();
   });
-  const receiptsTotal = monthReceipts.reduce(function(sum,r){ return sum + (parseFloat(r.price)||0); }, 0);
+  const receiptsTotal = monthReceipts.reduce(function(sum,r){ return sum + finNum(r.price); }, 0);
   document.getElementById('hours-total').innerHTML =
     `<div class="card" style="display:flex;justify-content:space-between;align-items:center;">
        <span style="font-family:'Playfair Display',serif;font-size:18px;">Total Hours for ${label}</span>
@@ -1380,7 +1380,7 @@ function renderPM(){
       <div class="card-body">${escapeHtml(e.body)}</div>
       <div class="card-meta">
         <span>Vendor: <b>${escapeHtml(e.vendor)||'—'}</b></span>
-        <span>Est. Cost: <b>${e.cost ? '$'+Number(e.cost).toLocaleString() : '—'}</b></span>
+        <span>Est. Cost: <b>${e.cost ? '$'+finNum(e.cost).toLocaleString() : '—'}</b></span>
         <span>Next Due: <b>${e.nextDue ? new Date(e.nextDue+'T00:00:00').toLocaleDateString('default',{month:'short',day:'numeric',year:'numeric'}) : '—'}</b></span>
       </div>
       <div class="card-actions">
@@ -2297,7 +2297,7 @@ function renderReceipts(){
     <div class="card${doc ? ' rc-doc' : ''}">
       <div class="card-top">
         <div><div class="card-title">${escapeHtml(r.notes||'Receipt')}</div><div class="card-area">${dateLabel}${linkedProject?' &middot; '+(doc?'Proof for ':'Covering ')+escapeHtml(linkedProject.title):(r.area?' &middot; '+escapeHtml(r.area):'')}</div></div>
-        <span class="tag ${doc ? 'na' : 'low'}">${doc ? 'Matched &middot; ' : ''}$${Number(r.price||0).toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2})}</span>
+        <span class="tag ${doc ? 'na' : 'low'}">${doc ? 'Matched &middot; ' : ''}$${finNum(r.price).toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2})}</span>
       </div>
       ${r.photo ? `<img src="${r.photo}" alt="Receipt for ${escapeHtml(r.notes||'purchase')}" style="max-width:220px;border-radius:8px;margin-top:10px;border:1px solid var(--line);">` : ''}
       <div class="card-actions"><button onclick="openReceiptModal('${r.id}')">Edit</button></div>

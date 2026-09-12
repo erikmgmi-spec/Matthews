@@ -35,3 +35,18 @@ test('assistant remains disabled before any provider call', () => {
   assert.match(assistant, /status|410/);
   assert.doesNotMatch(assistant, /OPENAI_API_KEY|fetch\(/);
 });
+
+test('dollar amounts use finNum, not raw Number()/parseFloat() on comma-formatted strings', () => {
+  // A price/cost/estimate like "1,180" silently breaks under plain
+  // Number()/parseFloat() (Number -> NaN, parseFloat -> 1) since neither
+  // strips the thousands comma. finNum() does. Every one of these display
+  // sites must go through it, or a value >= $1,000 renders wrong again.
+  assert.match(html, /function finNum\(/);
+  assert.doesNotMatch(html, /Number\(e\.estimate\)/);
+  assert.doesNotMatch(html, /Number\(e\.cost\)/);
+  assert.doesNotMatch(html, /Number\(r\.price/);
+  assert.doesNotMatch(html, /parseFloat\(r\.price\)/);
+  assert.match(html, /finNum\(e\.estimate\)/);
+  assert.match(html, /finNum\(e\.cost\)/);
+  assert.match(html, /finNum\(r\.price\)/);
+});
