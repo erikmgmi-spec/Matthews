@@ -256,6 +256,145 @@
     .mobile-actions button{min-height:44px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--ink);font-family:inherit;font-weight:600;}
     .mobile-actions button:first-child{background:var(--accent);color:#fff;border-color:var(--accent);}
   }
+  /* BIDS */
+  .pipeline{display:flex;margin:0 0 16px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--paper);}
+  .pipe-stage{flex:1;padding:10px 8px;text-align:center;border-right:1px solid var(--line);background:var(--paper);cursor:pointer;border-top:0;border-bottom:0;border-left:0;font-family:inherit;color:inherit;}
+  .pipe-stage:last-child{border-right:0;}
+  .pipe-stage:hover{background:var(--cream);}
+  .pipe-stage.active{background:var(--ink);}
+  .pipe-stage .ps-count{display:block;font-family:'Playfair Display',serif;font-size:20px;font-weight:600;color:var(--muted);line-height:1;}
+  .pipe-stage .ps-label{display:block;font-size:10px;font-weight:600;color:var(--muted);margin-top:4px;letter-spacing:.04em;}
+  .pipe-stage.active .ps-count{color:#fff;} .pipe-stage.active .ps-label{color:rgba(255,255,255,.65);}
+  .pipe-stage.has-action .ps-count,.pipe-stage.has-action .ps-label{color:var(--high);}
+  .pipe-stage.active.has-action .ps-count,.pipe-stage.active.has-action .ps-label{color:#fff;}
+  .bids-wrap{border-top:1px solid var(--line);margin-top:14px;padding-top:4px;}
+  .bids-header{display:flex;align-items:center;justify-content:space-between;padding:10px 0 8px;}
+  .bids-title{font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;}
+  .add-bid-btn{font-size:12px;font-weight:600;color:var(--accent);background:none;border:none;cursor:pointer;font-family:inherit;padding:4px 0;}
+  .bids-scroll{overflow-x:auto;}
+  .bids-table{width:100%;border-collapse:collapse;min-width:560px;}
+  .bids-table th{font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;background:var(--cream);}
+  .bids-table td{padding:10px;border-bottom:1px solid var(--line);font-size:12.5px;vertical-align:top;}
+  .bids-table th.n,.bids-table td.n{text-align:right;}
+  .bids-table tr:last-child td{border-bottom:0;}
+  .bids-table tr.recommended td{background:#F4F9F3;}
+  .bid-vendor{font-weight:600;} .bid-notes{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.4;}
+  .bid-amount{font-family:'Playfair Display',serif;font-size:16px;font-weight:600;white-space:nowrap;}
+  .bid-amount.lowest{color:var(--low);}
+  .bid-badges{display:flex;flex-direction:column;gap:4px;align-items:flex-start;}
+  .bid-badge{display:inline-block;font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:3px;letter-spacing:.04em;white-space:nowrap;}
+  .bid-badge.rec{background:#E9EFE9;color:var(--low);} .bid-badge.warn{background:#FBEAE6;color:var(--high);} .bid-badge.info{background:#F5EEDD;color:var(--med);}
+  .bid-actions{display:flex;gap:10px;} .bid-actions button{background:none;border:none;padding:0;font:inherit;font-size:11.5px;color:var(--muted);text-decoration:underline;cursor:pointer;}
+  .decision-panel{margin-top:12px;border:1px solid var(--line);border-radius:10px;background:var(--cream);padding:13px 15px;}
+  .decision-panel h4{margin:0 0 8px;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;}
+  .decision-flags{list-style:none;margin:0 0 10px;padding:0;display:flex;flex-direction:column;gap:5px;}
+  .decision-flags li{font-size:12px;padding-left:13px;position:relative;line-height:1.4;}
+  .decision-flags li::before{content:"";position:absolute;left:0;top:6px;width:5px;height:5px;border-radius:50%;background:var(--high);}
+  .decision-flags li.ok::before{background:var(--low);}
+  .decision-done{font-size:12.5px;line-height:1.5;} .decision-done b{font-weight:600;}
+  .decision-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+  .approve-btn{font-size:12.5px;font-weight:600;padding:8px 16px;border-radius:8px;background:var(--ink);color:#fff;border:0;cursor:pointer;font-family:inherit;}
+  .approve-btn:hover{opacity:.85;}
+  .bid-hint{font-size:11.5px;color:var(--muted);font-style:italic;margin-top:10px;}
+    /* ── OVERVIEW REDESIGN ── */
+    .ov-decision{border-radius:12px;padding:16px 20px;margin-bottom:18px;display:flex;align-items:flex-start;justify-content:space-between;gap:18px;background:var(--ink);}
+    .ov-decision.clear{background:#E9EFE8;border:1px solid rgba(73,102,84,.2);}
+    .ov-decision-left{display:flex;gap:13px;align-items:flex-start;}
+    .ov-decision-icon{font-size:20px;margin-top:1px;flex-shrink:0;}
+    .ov-decision-heading{font-size:14.5px;font-weight:600;color:#fff;margin-bottom:5px;}
+    .ov-decision.clear .ov-decision-heading{color:var(--low);}
+    .ov-decision-items{display:flex;flex-direction:column;gap:6px;}
+    .ov-decision-item{display:flex;align-items:baseline;gap:9px;}
+    .ov-decision-tag{font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:3px;flex-shrink:0;}
+    .ov-tag-proposal{background:rgba(255,255,255,.15);color:rgba(255,255,255,.9);}
+    .ov-tag-overdue{background:#FBEAE6;color:var(--high);}
+    .ov-decision-text{font-size:12.5px;color:rgba(255,255,255,.75);}
+    .ov-decision.clear .ov-decision-text{color:var(--low);}
+    .ov-decision-count{font-family:'Playfair Display',serif;font-size:34px;font-weight:600;color:rgba(255,255,255,.18);align-self:center;flex-shrink:0;}
+
+    .ov-sec{font-size:10px;font-weight:600;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin:22px 0 10px;border-bottom:1px solid var(--line);padding-bottom:6px;}
+    .ov-decision + .ov-sec{margin-top:0;}
+
+    .ov-proj-list{display:flex;flex-direction:column;gap:8px;}
+    .ov-proj-card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 15px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start;}
+    .ov-proj-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px;}
+    .ov-proj-meta{font-size:11px;color:var(--muted);}
+    .ov-proj-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
+    .ov-stage-pill{font-size:9.5px;font-weight:600;letter-spacing:.03em;padding:3px 9px;border-radius:20px;white-space:nowrap;}
+    .ov-stage-scoping{background:#EEF2F8;color:var(--blue);}
+    .ov-stage-scheduled{background:#F5EEDD;color:var(--med);}
+    .ov-stage-progress{background:#E9EFE8;color:var(--low);}
+    .ov-stage-complete{background:var(--line);color:var(--muted);}
+    .ov-prog-wrap{width:110px;}
+    .ov-prog-track{height:4px;background:var(--line);border-radius:2px;overflow:hidden;}
+    .ov-prog-fill{height:100%;border-radius:2px;background:var(--low);}
+    .ov-prog-fill.med{background:var(--med);}
+    .ov-proj-budget{font-size:11px;color:var(--muted);text-align:right;}
+    .ov-proj-budget b{color:var(--ink);font-weight:600;}
+    .ov-empty{font-size:12.5px;color:var(--muted);padding:10px 2px;}
+
+    .ov-maint-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+    .ov-maint-band{border-radius:10px;padding:12px 14px;}
+    .ov-maint-band.overdue{background:#FBEAE6;border:1px solid rgba(122,46,35,.2);}
+    .ov-maint-band.due{background:#F5EEDD;border:1px solid rgba(154,117,55,.2);}
+    .ov-maint-band.current{background:#E9EFE8;border:1px solid rgba(63,97,68,.2);}
+    .ov-maint-count{font-family:'Playfair Display',serif;font-size:26px;font-weight:600;line-height:1;}
+    .ov-maint-band.overdue .ov-maint-count{color:var(--high);}
+    .ov-maint-band.due .ov-maint-count{color:var(--med);}
+    .ov-maint-band.current .ov-maint-count{color:var(--low);}
+    .ov-maint-label{font-size:11px;font-weight:500;margin-top:4px;color:var(--ink);}
+    .ov-maint-items{margin-top:8px;display:flex;flex-direction:column;gap:3px;}
+    .ov-maint-item{font-size:11px;color:var(--muted);}
+
+    .ov-stay-list{display:flex;flex-direction:column;gap:6px;}
+    .ov-stay-card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:11px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+    .ov-stay-loc{font-size:13px;font-weight:600;}
+    .ov-stay-dates{font-size:11.5px;color:var(--muted);}
+    .ov-stay-nights{font-size:11px;font-weight:600;color:var(--ink);background:var(--cream);padding:3px 9px;border-radius:20px;white-space:nowrap;}
+
+    .ov-fin-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .ov-fin-card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;}
+    .ov-fin-title{font-size:10px;font-weight:600;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin-bottom:12px;}
+    .ov-spend-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+    .ov-spend-label{font-size:11.5px;color:var(--ink);width:130px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .ov-spend-track{flex:1;height:6px;background:var(--line);border-radius:3px;overflow:hidden;}
+    .ov-spend-fill{height:100%;border-radius:3px;background:var(--brass);}
+    .ov-spend-amt{font-size:11.5px;font-weight:600;color:var(--ink);text-align:right;width:64px;flex-shrink:0;}
+    .ov-spend-total{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);}
+    .ov-spend-total-label{font-size:11px;color:var(--muted);font-weight:500;}
+    .ov-spend-total-amt{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;}
+
+    .ov-receipt-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);}
+    .ov-receipt-row:last-child{border-bottom:none;}
+    .ov-receipt-title{font-size:12px;color:var(--ink);font-weight:500;}
+    .ov-receipt-sub{font-size:11px;color:var(--muted);}
+    .ov-receipt-meta{display:flex;align-items:baseline;gap:12px;flex-shrink:0;}
+    .ov-receipt-amt{font-size:12.5px;font-weight:600;color:var(--ink);}
+    .ov-receipt-date{font-size:10.5px;color:var(--muted);}
+
+    .ov-hours-card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;}
+    .ov-hours-row{display:flex;align-items:baseline;gap:8px;margin-bottom:2px;}
+    .ov-hours-big{font-family:'Playfair Display',serif;font-size:30px;font-weight:600;color:var(--ink);}
+    .ov-hours-label{font-size:12px;color:var(--muted);}
+    .ov-hours-note{font-size:11px;color:var(--muted);margin-bottom:10px;}
+    .ov-hours-entry{display:flex;justify-content:space-between;font-size:11.5px;padding:6px 0;border-top:1px solid var(--line);}
+    .ov-hours-entry .ov-muted{color:var(--muted);}
+
+    @media (max-width:700px){
+      .ov-maint-grid{grid-template-columns:1fr;}
+      .ov-fin-row{grid-template-columns:1fr;}
+    }
+    @media (max-width:480px){
+      .ov-proj-card{grid-template-columns:1fr;}
+      .ov-proj-right{align-items:flex-start;}
+      .ov-prog-wrap{width:100%;}
+      .ov-spend-label{width:auto;flex:1;}
+      .ov-spend-amt{width:auto;}
+      .ov-decision{flex-direction:column;}
+      .ov-stay-card,.ov-receipt-row{flex-wrap:wrap;}
+    }
+    .ov-proj-meta,.ov-spend-label,.ov-receipt-title,.ov-receipt-sub{min-width:0;overflow:hidden;text-overflow:ellipsis;}
+
 </style>
 </head>
 <body>
@@ -349,8 +488,7 @@
   </section>
 
   <section class="panel" id="panel-projects" role="tabpanel" aria-labelledby="tab-projects">
-    <div style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Stage</div>
-    <div class="filters" id="proj-stage-filters" style="margin-bottom:14px;"></div>
+    <div class="pipeline" id="proj-stage-filters" role="group" aria-label="Filter projects by stage"></div>
     <div style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Area</div>
     <div class="filters" id="proj-filters"></div>
     <div id="proj-list"></div>
@@ -526,6 +664,7 @@ const STAGE_CLASS = {
 };
 
 let sops = [], calEvents = [], projects = [], hoursLog = [], pmTasks = [];
+let principalStays = [], pendingProjects = []; /* not part of Keating's data model; kept empty so the shared Overview renders without those sections */
 let vendorDirectory = [], properties = [], vehicles = [], vehicleTrips = [], receipts = [], propertyDetails = [], homeAssets = [];
 let activeTab = 'overview';
 let sopFilter = 'All';
@@ -812,30 +951,196 @@ function renderOverview(){
   if(!root) return;
   const today = new Date(); today.setHours(0,0,0,0);
   const weekEnd = new Date(today); weekEnd.setDate(weekEnd.getDate()+7);
+  const thisMonth = today.getMonth(), thisYear = today.getFullYear();
+  const lastMonthDate = new Date(thisYear, thisMonth-1, 1);
+
   const activeProjects = projects.filter(p=>(p.stage||PROJ_STAGES[0])!=='Project completed');
+  const recentlyCompleted = projects.filter(p=>p.stage==='Project completed' && p.completedDate)
+    .sort((a,b)=>new Date(b.completedDate+'T00:00:00')-new Date(a.completedDate+'T00:00:00')).slice(0,2);
   const overdue = pmTasks.filter(p=>p.nextDue && new Date(p.nextDue+'T00:00:00') < today);
   const dueSoon = pmTasks.filter(p=>{ if(!p.nextDue) return false; const d=new Date(p.nextDue+'T00:00:00'); return d>=today && d<=weekEnd; });
-  const thisMonthHours = hoursLog.filter(h=>{ const d=new Date(h.date+'T00:00:00'); return d.getMonth()===today.getMonth() && d.getFullYear()===today.getFullYear(); }).reduce((sum,h)=>sum+calcHours(h.start,h.finish),0);
-  const currentMonthSpend = receipts.filter(r=>{ const d=new Date(r.date+'T00:00:00'); return d.getMonth()===today.getMonth() && d.getFullYear()===today.getFullYear(); }).reduce((sum,r)=>sum+finNum(r.price),0);
+  const onSchedule = pmTasks.filter(p=>p.nextDue && !overdue.includes(p) && !dueSoon.includes(p));
+
+  const thisMonthHours = hoursLog.filter(h=>{ const d=new Date(h.date+'T00:00:00'); return d.getMonth()===thisMonth && d.getFullYear()===thisYear; }).reduce((sum,h)=>sum+calcHours(h.start,h.finish),0);
+  const lastMonthHours = hoursLog.filter(h=>{ const d=new Date(h.date+'T00:00:00'); return d.getMonth()===lastMonthDate.getMonth() && d.getFullYear()===lastMonthDate.getFullYear(); }).reduce((sum,h)=>sum+calcHours(h.start,h.finish),0);
+  const recentHours = hoursLog.slice().sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,3);
+
+  const currentMonthSpend = receipts.filter(r=>{ const d=new Date(r.date+'T00:00:00'); return d.getMonth()===thisMonth && d.getFullYear()===thisYear; }).reduce((sum,r)=>sum+finNum(r.price),0);
+  const spendByZone = {};
+  receipts.filter(r=>{ const d=new Date(r.date+'T00:00:00'); return d.getMonth()===thisMonth && d.getFullYear()===thisYear; }).forEach(r=>{
+    const linkedProj = r.projectId ? projects.find(p=>p.id===r.projectId) : null;
+    const zone = (linkedProj && linkedProj.area) || r.area || 'Unspecified';
+    spendByZone[zone] = (spendByZone[zone]||0) + finNum(r.price);
+  });
+  const zoneRows = Object.entries(spendByZone).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const maxZone = Math.max(0, ...zoneRows.map(([,amt])=>amt));
+  const recentReceipts = receipts.filter(r=>r.date && !isNaN(new Date(r.date+'T00:00:00')))
+    .sort((a,b)=>new Date(b.date+'T00:00:00')-new Date(a.date+'T00:00:00')).slice(0,5);
+
+  const validDate = d => d && !isNaN(new Date(d+'T00:00:00'));
+  const upcomingStays = principalStays.filter(s=>validDate(s.startDate) && validDate(s.endDate) && new Date(s.endDate+'T00:00:00') >= today)
+    .sort((a,b)=>new Date(a.startDate+'T00:00:00')-new Date(b.startDate+'T00:00:00')).slice(0,3);
+
+  const STAGE_META = {
+    'Vendor identified': {cls:'scoping', pct:20},
+    'Vendor contacted': {cls:'scoping', pct:40},
+    'Vendor scheduled': {cls:'scheduled', pct:60},
+    'Project commenced': {cls:'progress', pct:85},
+    'Project completed': {cls:'complete', pct:100},
+  };
+  const shortDate = d => (d && !isNaN(new Date(d+'T00:00:00'))) ? new Date(d+'T00:00:00').toLocaleDateString('default',{month:'short',day:'numeric'}) : '';
+
+  const decisionItems = [];
+  pendingProjects.forEach(p=>decisionItems.push({tag:'Proposal', cls:'proposal',
+    text: `<b>${escapeHtml(p.title)}</b> — proposed by review agent, awaiting your decision${p.vendorActionLikely ? ' (vendor work likely)' : ''}`}));
+  projects.filter(bidsAwaitingDecision).forEach(p=>decisionItems.push({tag:'Bids', cls:'proposal',
+    text: `<b>${escapeHtml(p.title)}</b> \u2014 ${bidsOf(p).length} bids received, awaiting your decision`}));
+  overdue.forEach(t=>decisionItems.push({tag:'Overdue', cls:'overdue',
+    text: `<b>${escapeHtml(t.title)}</b> — was due ${t.nextDue ? shortDate(t.nextDue) : ''}, now overdue`}));
+
+  const decisionHtml = decisionItems.length ? `
+    <div class="ov-decision">
+      <div class="ov-decision-left">
+        <div class="ov-decision-icon">&#9873;</div>
+        <div>
+          <div class="ov-decision-heading">${decisionItems.length} thing${decisionItems.length===1?'':'s'} need${decisionItems.length===1?'s':''} your decision</div>
+          <div class="ov-decision-items">
+            ${decisionItems.slice(0,6).map(d=>`<div class="ov-decision-item"><span class="ov-decision-tag ov-tag-${d.cls}">${d.tag}</span><span class="ov-decision-text">${d.text}</span></div>`).join('')}
+          </div>
+        </div>
+      </div>
+      <div class="ov-decision-count">${decisionItems.length}</div>
+    </div>` : `
+    <div class="ov-decision clear">
+      <div class="ov-decision-left">
+        <div class="ov-decision-icon">&#10003;</div>
+        <div>
+          <div class="ov-decision-heading">Nothing needs your decision right now</div>
+        </div>
+      </div>
+    </div>`;
+
+  const has = v => v !== undefined && v !== null && v !== '';
+  const projectRows = [...activeProjects.slice(0,4), ...recentlyCompleted.slice(0,2)].map(p=>{
+    const meta = STAGE_META[p.stage] || STAGE_META['Vendor identified'];
+    const budget = has(p.cost) ? `Actual <b>$${finNum(p.cost).toLocaleString()}</b>` : has(p.estimate) ? `Est. <b>$${finNum(p.estimate).toLocaleString()}</b>` : `Budget <b>TBD</b>`;
+    const metaLine = [p.vendor, p.area].filter(Boolean).map(escapeHtml).join(' &middot; ') || 'Unassigned';
+    return `
+    <div class="ov-proj-card">
+      <div>
+        <div class="ov-proj-title">${escapeHtml(p.title)}</div>
+        <div class="ov-proj-meta">${metaLine}</div>
+      </div>
+      <div class="ov-proj-right">
+        <span class="ov-stage-pill ov-stage-${meta.cls}">${escapeHtml(p.stage||PROJ_STAGES[0])}</span>
+        <div class="ov-prog-wrap">
+          <div class="ov-prog-track"><div class="ov-prog-fill${meta.cls==='scoping'||meta.cls==='scheduled'?' med':''}" style="width:${meta.pct}%"></div></div>
+        </div>
+        <div class="ov-proj-budget">${budget}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const maintBand = (list, cls, label, limit) => `
+    <div class="ov-maint-band ${cls}">
+      <div class="ov-maint-count">${list.length}</div>
+      <div class="ov-maint-label">${label}</div>
+      <div class="ov-maint-items">
+        ${list.slice(0,limit).map(t=>`<div class="ov-maint-item">${escapeHtml(t.title)}${t.nextDue?' &middot; '+shortDate(t.nextDue):''}</div>`).join('')}
+        ${list.length>limit ? `<div class="ov-maint-item">+ ${list.length-limit} more</div>` : ''}
+      </div>
+    </div>`;
+
+  const stayRows = upcomingStays.map(s=>{
+    const start = new Date(s.startDate+'T00:00:00'), end = new Date(s.endDate+'T00:00:00');
+    const nights = Math.max(1, Math.round((end-start)/86400000));
+    const timeBits = [s.arrivalTime ? `arr ${escapeHtml(s.arrivalTime)}` : '', s.departTime ? `dep ${escapeHtml(s.departTime)}` : ''].filter(Boolean).join(' &middot; ');
+    return `
+    <div class="ov-stay-card">
+      <div>
+        <div class="ov-stay-loc">&#127968; ${escapeHtml(s.location||'')}</div>
+        <div class="ov-stay-dates">${shortDate(s.startDate)} &mdash; ${shortDate(s.endDate)}${timeBits?' &nbsp;&middot;&nbsp; '+timeBits:''}</div>
+      </div>
+      <div class="ov-stay-nights">${nights} night${nights===1?'':'s'}</div>
+    </div>`;
+  }).join('');
+
   const warnings = [];
   projects.forEach(p=>{
     if(p.completedDate && (p.stage||PROJ_STAGES[0])!=='Project completed') warnings.push(`<b>${escapeHtml(p.title)}</b> has a completion date but is still marked ${escapeHtml(p.stage||PROJ_STAGES[0])}.`);
     if((p.stage||PROJ_STAGES[0])==='Project completed' && !p.completedDate) warnings.push(`<b>${escapeHtml(p.title)}</b> is marked complete without a completion date.`);
     if(p.vendor && !vendorDirectory.some(v=>(v.name||'').trim().toLowerCase()===p.vendor.trim().toLowerCase())) warnings.push(`<b>${escapeHtml(p.title)}</b> references ${escapeHtml(p.vendor)}, which is not yet linked to the Vendor Directory.`);
   });
-  root.innerHTML = `
-    <div class="overview-grid" aria-label="Current operational summary">
-      <div class="metric" data-icon="◆"><div class="metric-label">Active projects</div><div class="metric-value">${activeProjects.length}</div><div class="metric-detail">In progress across all estates</div></div>
-      <div class="metric" data-icon="△"><div class="metric-label">Maintenance overdue</div><div class="metric-value">${overdue.length}</div><div class="metric-detail">${overdue.length?'Requires attention':'All schedules current'}</div></div>
-      <div class="metric" data-icon="◷"><div class="metric-label">Hours this month</div><div class="metric-value">${thisMonthHours.toFixed(2)}</div><div class="metric-detail">Recorded management time</div></div>
-      <div class="metric" data-icon="$"><div class="metric-label">Receipts this month</div><div class="metric-value">$${currentMonthSpend.toLocaleString(undefined,{maximumFractionDigits:0})}</div><div class="metric-detail">Logged project expenses</div></div>
-    </div>
-    ${dueSoon.length ? `<div class="notice"><b>Due in the next 7 days:</b> ${dueSoon.map(x=>escapeHtml(x.title)).join(', ')}</div>` : ''}
-    ${overdue.length ? `<div class="notice high"><b>Overdue maintenance:</b> ${overdue.map(x=>escapeHtml(x.title)).join(', ')}</div>` : ''}
-    <details class="card review-details">
+  const reviewHtml = `
+    <details class="card review-details" style="margin-top:22px;">
       <summary class="review-summary"><div><div class="card-title">Records requiring review</div><div class="card-body">${warnings.length ? 'Stage, date, or vendor links may need attention. Existing records have not been changed.' : 'No stage, date, or vendor-link inconsistencies detected.'}</div></div><span class="review-count">${warnings.length} ${warnings.length===1?'item':'items'}</span></summary>
       ${warnings.slice(0,8).map(w=>`<div class="notice">${w}</div>`).join('')}
     </details>`;
+
+  root.innerHTML = `
+    ${decisionHtml}
+
+    <div class="ov-sec">Projects</div>
+    <div class="ov-proj-list">
+      ${projectRows || '<div class="ov-empty">No projects logged yet.</div>'}
+    </div>
+
+    <div class="ov-sec">Maintenance</div>
+    <div class="ov-maint-grid">
+      ${maintBand(overdue, 'overdue', 'Overdue', 4)}
+      ${maintBand(dueSoon, 'due', 'Due in 7 days', 4)}
+      ${maintBand(onSchedule, 'current', 'On schedule', 3)}
+    </div>
+
+    ${upcomingStays.length ? `
+    <div class="ov-sec">Upcoming Stays</div>
+    <div class="ov-stay-list">${stayRows}</div>` : ''}
+
+    <div class="ov-sec">Financials &mdash; ${today.toLocaleDateString('default',{month:'long',year:'numeric'})}</div>
+    <div class="ov-fin-row">
+      <div class="ov-fin-card">
+        <div class="ov-fin-title">Month-to-date spend by zone</div>
+        ${zoneRows.length ? zoneRows.map(([zone,amt])=>`
+          <div class="ov-spend-row">
+            <div class="ov-spend-label">${escapeHtml(zone)}</div>
+            <div class="ov-spend-track"><div class="ov-spend-fill" style="width:${maxZone>0 ? Math.min(100,Math.max(4,Math.round(amt/maxZone*100))) : 0}%"></div></div>
+            <div class="ov-spend-amt">$${amt.toLocaleString(undefined,{maximumFractionDigits:0})}</div>
+          </div>`).join('') : '<div class="ov-empty">No receipts logged this month.</div>'}
+        <div class="ov-spend-total">
+          <span class="ov-spend-total-label">${today.toLocaleDateString('default',{month:'long'})} total</span>
+          <span class="ov-spend-total-amt">$${currentMonthSpend.toLocaleString(undefined,{maximumFractionDigits:0})}</span>
+        </div>
+      </div>
+      <div class="ov-fin-card">
+        <div class="ov-fin-title">Recent receipts</div>
+        ${recentReceipts.length ? recentReceipts.map(r=>{
+          const linkedProj = r.projectId ? projects.find(p=>p.id===r.projectId) : null;
+          return `
+          <div class="ov-receipt-row">
+            <div>
+              <div class="ov-receipt-title">${escapeHtml(r.notes || (linkedProj ? linkedProj.title : 'Receipt'))}</div>
+              ${linkedProj ? `<div class="ov-receipt-sub">${escapeHtml(linkedProj.title)}</div>` : ''}
+            </div>
+            <div class="ov-receipt-meta">
+              <div class="ov-receipt-amt">$${finNum(r.price).toLocaleString()}</div>
+              <div class="ov-receipt-date">${shortDate(r.date)}</div>
+            </div>
+          </div>`;
+        }).join('') : '<div class="ov-empty">No receipts logged yet.</div>'}
+      </div>
+    </div>
+
+    <div class="ov-sec">Management Hours</div>
+    <div class="ov-hours-card">
+      <div class="ov-hours-row">
+        <div class="ov-hours-big">${thisMonthHours.toFixed(1)}</div>
+        <div class="ov-hours-label">hours logged this month</div>
+      </div>
+      <div class="ov-hours-note">${lastMonthHours.toFixed(1)} hrs logged ${lastMonthDate.toLocaleDateString('default',{month:'long'})}</div>
+      ${recentHours.map(h=>`<div class="ov-hours-entry"><span>${shortDate(h.date)}${h.notes?' &middot; '+escapeHtml(h.notes):''}</span><span class="ov-muted">${calcHours(h.start,h.finish).toFixed(2)} hrs</span></div>`).join('')}
+    </div>
+  
+    ${reviewHtml}`;
 }
 
 /* ---------- SOPs ---------- */
@@ -1048,13 +1353,14 @@ function renderProjects(){
     filters.appendChild(chip);
   });
   const stageFilters = document.getElementById('proj-stage-filters');
-  stageFilters.innerHTML = '';
-  ["All Stages", ...PROJ_STAGES].forEach(st=>{
-    const chip = document.createElement('div');
-    chip.className = 'chip' + (projStageFilter===st ? ' active' : '');
-    chip.textContent = st;
-    chip.onclick = ()=>{ projStageFilter = st; renderProjects(); };
-    stageFilters.appendChild(chip);
+  const areaScoped = projFilter==="All" ? projects : projects.filter(e=>e.area===projFilter);
+  stageFilters.innerHTML = PROJ_STAGES.map(st=>{
+    const inStage = areaScoped.filter(e=>(e.stage||PROJ_STAGES[0])===st);
+    const action = inStage.some(bidsAwaitingDecision);
+    return `<button type="button" class="pipe-stage${projStageFilter===st?' active':''}${action?' has-action':''}" data-stage="${escapeHtml(st)}" aria-pressed="${projStageFilter===st}"><span class="ps-count">${inStage.length}</span><span class="ps-label">${escapeHtml(st)}</span></button>`;
+  }).join('');
+  stageFilters.querySelectorAll('.pipe-stage').forEach(btn=>{
+    btn.onclick = ()=>{ projStageFilter = projStageFilter===btn.dataset.stage ? "All Stages" : btn.dataset.stage; renderProjects(); };
   });
 
   const list = document.getElementById('proj-list');
@@ -1091,6 +1397,7 @@ function renderProjects(){
       </div>
       ${e.proposal ? `<div class="card-body" style="font-style:italic;color:var(--muted);">${escapeHtml(e.proposal)}</div>` : ''}
       ${e.notes ? `<div class="card-body">${escapeHtml(e.notes)}</div>` : ''}
+      ${renderBidsSection(e)}
       ${e.attachments && e.attachments.length ? `
         <div class="card-meta" style="flex-direction:column;align-items:flex-start;gap:6px;margin-top:10px;">
           <span style="text-transform:uppercase;font-size:10.5px;letter-spacing:.06em;color:var(--muted);">Invoices &amp; Attachments</span>
@@ -1225,6 +1532,125 @@ async function submitProj(){
   };
   if(editing.id){ const i = projects.findIndex(x=>x.id===editing.id); projects[i] = {...projects[i], ...data}; }
   else { projects.push({id:cryptoId(), ...data}); }
+  await saveKey('completed-projects', projects); closeModal(); renderProjects();
+}
+/* ---------- PROJECT BIDS ---------- */
+function bidAmount(b){ return finNum(b.amount); }
+function bidsOf(p){ return Array.isArray(p.bids) ? p.bids : []; }
+function bidsAwaitingDecision(p){ return bidsOf(p).length>=2 && !(p.decision && p.decision.bidId) && (p.stage||PROJ_STAGES[0])!=='Project completed'; }
+function isKnownVendor(name){
+  const n=(name||'').trim().toLowerCase();
+  return !!n && vendorDirectory.some(v=>(v.name||'').trim().toLowerCase()===n);
+}
+function bidFlags(p){
+  const bids=bidsOf(p), flags=[];
+  if(!bids.length) return flags;
+  const lowest=Math.min(...bids.map(bidAmount));
+  const budget=finNum(p.estimate);
+  bids.forEach(b=>{
+    const who=b.vendor||'A bidder';
+    if(b.insured!=='Yes') flags.push(`${who}: insurance not verified`);
+    if(budget && bidAmount(b)>budget) flags.push(`${who}: $${(bidAmount(b)-budget).toLocaleString()} over the $${budget.toLocaleString()} budget`);
+    if(b.flag) flags.push(`${who}: ${b.flag}`);
+  });
+  if(bids.length>=2 && bids.filter(b=>bidAmount(b)===lowest).length===1){
+    const lb=bids.find(b=>bidAmount(b)===lowest);
+    if(lb && lb.flag) flags.push(`Lowest bid (${lb.vendor||'bidder'}) has a scope flag — compare like for like`);
+  }
+  return flags;
+}
+function renderBidsSection(p){
+  const bids=bidsOf(p), d=p.decision||null, done=(p.stage||PROJ_STAGES[0])==='Project completed';
+  if(!bids.length && done) return '';
+  const lowest=bids.length?Math.min(...bids.map(bidAmount)):0;
+  const rows=bids.map(b=>{
+    const vendorNote=[isKnownVendor(b.vendor)?'Existing vendor':'New vendor', b.insured==='Yes'?'insured':'insurance not verified'].join(' · ');
+    const chosen=d && d.bidId===b.id;
+    return `<tr class="${b.recommended||chosen?'recommended':''}">
+      <td><div class="bid-vendor">${escapeHtml(b.vendor)}</div><div class="bid-notes">${escapeHtml(vendorNote)}</div></td>
+      <td><div class="bid-notes" style="margin:0;color:var(--ink);">${escapeHtml(b.scope||'—')}</div></td>
+      <td class="n"><div class="bid-amount${bids.length>1 && bidAmount(b)===lowest?' lowest':''}">$${bidAmount(b).toLocaleString()}</div></td>
+      <td>${b.submitted?escapeHtml(new Date(b.submitted+'T00:00:00').toLocaleDateString('default',{month:'short',day:'numeric'})):'—'}</td>
+      <td><div class="bid-badges">
+        ${chosen?'<span class="bid-badge rec">✓ Approved</span>':(b.recommended?'<span class="bid-badge rec">✓ Recommended</span>':'')}
+        ${b.flag?'<span class="bid-badge warn">⚠ '+escapeHtml(b.flag.length>28?b.flag.slice(0,26)+'…':b.flag)+'</span>':''}
+        ${bids.length>1 && bidAmount(b)===lowest?'<span class="bid-badge info">Lowest</span>':''}</div></td>
+      <td><div class="bid-actions"><button onclick="openBidModal('${escapeHtml(p.id)}','${escapeHtml(b.id)}')">Edit</button>${b.id&&!d?`<button onclick="toggleRecommend('${escapeHtml(p.id)}','${escapeHtml(b.id)}')">${b.recommended?'Unrecommend':'Recommend'}</button>`:''}</div></td>
+    </tr>`;
+  }).join('');
+  const flags=bidFlags(p);
+  let panel='';
+  if(d && d.bidId){
+    const wb=bids.find(b=>b.id===d.bidId);
+    panel=`<div class="decision-panel"><h4>Decision</h4><div class="decision-done"><b>${escapeHtml(wb?wb.vendor:'Bid')}</b> approved by ${escapeHtml(d.approvedBy||'owner')} on ${escapeHtml(d.approvedAt||'')}.${d.rationale?'<br>'+escapeHtml(d.rationale):''}</div></div>`;
+  } else if(bids.length>=2){
+    const rec=bids.find(b=>b.recommended);
+    panel=`<div class="decision-panel"><h4>Compare &amp; decide</h4>
+      <ul class="decision-flags">${flags.length?flags.map(f=>`<li>${escapeHtml(f)}</li>`).join(''):'<li class="ok">No flags: all bids insured and within budget.</li>'}</ul>
+      <div class="decision-row">${rec?`<button class="approve-btn" onclick="openApproveModal('${escapeHtml(p.id)}')">Approve ${escapeHtml(rec.vendor)}</button>`:'<span class="bid-notes" style="margin:0;">Mark one bid Recommended to enable approval.</span>'}</div></div>`;
+  } else if(bids.length===1){
+    panel=`<div class="bid-hint">Comparison and approval unlock once a second bid is added.</div>`;
+  }
+  return `<div class="bids-wrap"><div class="bids-header"><div class="bids-title">Bids received — ${bids.length}</div>${d&&d.bidId?'':`<button class="add-bid-btn" onclick="openBidModal('${escapeHtml(p.id)}')">+ ${bids.length?'Add Bid':'Add First Bid'}</button>`}</div>
+    ${bids.length?`<div class="bids-scroll"><table class="bids-table"><thead><tr><th>Vendor</th><th>Scope notes</th><th class="n">Amount</th><th>Submitted</th><th></th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`:'<div class="bid-hint" style="margin-top:0;">No bids yet.</div>'}
+    ${panel}</div>`;
+}
+function openBidModal(projId, bidId){
+  const p=projects.find(x=>x.id===projId); if(!p) return;
+  editing={type:'bid', id:bidId||null, projId};
+  const b=bidId?bidsOf(p).find(x=>x.id===bidId):{vendor:'',scope:'',amount:'',submitted:'',insured:'',flag:''};
+  if(!b) return;
+  showModal(`
+    <h2>${bidId?'Edit Bid':'Add Bid'} <span style="font-size:14px;color:var(--muted);font-family:Inter,sans-serif;">— ${escapeHtml(p.title)}</span></h2>
+    <label>Vendor</label><input id="f-bid-vendor" list="vendor-datalist-bid" value="${escapeHtml(b.vendor)}"><datalist id="vendor-datalist-bid">${getKnownVendors().map(v=>`<option value="${escapeHtml(v)}">`).join('')}</datalist>
+    <div class="row2">
+      <div><label>Amount ($)</label><input id="f-bid-amount" type="number" min="0" step="0.01" value="${escapeHtml(String(b.amount||''))}"></div>
+      <div><label>Submitted</label><input id="f-bid-submitted" type="date" value="${escapeHtml(b.submitted||'')}"></div>
+    </div>
+    <div class="row2">
+      <div><label>Insurance verified</label><select id="f-bid-insured">${['','Yes','No'].map(o=>`<option value="${o}" ${o===(b.insured||'')?'selected':''}>${o||'Unknown'}</option>`).join('')}</select></div>
+      <div><label>Scope flag (optional)</label><input id="f-bid-flag" value="${escapeHtml(b.flag||'')}" placeholder="e.g. heater not included"></div>
+    </div>
+    <label>Scope notes</label><textarea id="f-bid-scope" placeholder="What the bid includes and excludes, warranty terms.">${escapeHtml(b.scope||'')}</textarea>
+    ${modalActions(bidId,'submitBid','deleteBid')}`);
+}
+async function submitBid(){
+  const p=projects.find(x=>x.id===editing.projId); if(!p) return;
+  const vendor=val('f-bid-vendor'), amount=val('f-bid-amount');
+  if(!vendor){ toast('Vendor required'); return; }
+  if(amount===''||!isFinite(Number(amount))||Number(amount)<0){ toast('Enter a valid amount'); return; }
+  const rec={vendor, amount:Number(amount), submitted:val('f-bid-submitted'), insured:val('f-bid-insured'), flag:val('f-bid-flag'), scope:val('f-bid-scope')};
+  const bids=bidsOf(p).slice();
+  if(editing.id){ const i=bids.findIndex(x=>x.id===editing.id); bids[i]={...bids[i],...rec}; }
+  else bids.push({id:cryptoId(), recommended:false, ...rec});
+  p.bids=bids;
+  await saveKey('completed-projects', projects); closeModal(); renderProjects();
+}
+async function deleteBid(){
+  const p=projects.find(x=>x.id===editing.projId); if(!p) return;
+  p.bids=bidsOf(p).filter(x=>x.id!==editing.id);
+  await saveKey('completed-projects', projects); closeModal(); renderProjects();
+}
+async function toggleRecommend(projId,bidId){
+  const p=projects.find(x=>x.id===projId); if(!p) return;
+  const was=bidsOf(p).find(b=>b.id===bidId)?.recommended;
+  p.bids=bidsOf(p).map(b=>({...b, recommended: !was && b.id===bidId}));
+  await saveKey('completed-projects', projects); renderProjects();
+}
+function openApproveModal(projId){
+  const p=projects.find(x=>x.id===projId); const rec=p&&bidsOf(p).find(b=>b.recommended); if(!rec) return;
+  editing={type:'approve', id:null, projId};
+  showModal(`<h2>Approve ${escapeHtml(rec.vendor)}?</h2>
+    <p style="font-size:13px;color:var(--muted);line-height:1.5;">$${bidAmount(rec).toLocaleString()} for ${escapeHtml(p.title)}. This records the decision and sets the project vendor. It does not contact anyone.</p>
+    <label>Approved by</label><input id="f-appr-by" value="Owner">
+    <label>Rationale (optional)</label><textarea id="f-appr-why" placeholder="Why this bid."></textarea>
+    <div class="modal-actions"><div></div><div style="display:flex;gap:10px;"><button class="cancel" onclick="closeModal()">Cancel</button><button class="save" onclick="submitApproval()">Approve</button></div></div>`);
+}
+async function submitApproval(){
+  const p=projects.find(x=>x.id===editing.projId); const rec=p&&bidsOf(p).find(b=>b.recommended); if(!rec) return;
+  p.decision={bidId:rec.id, approvedBy:val('f-appr-by')||'Owner', approvedAt:new Date().toISOString().slice(0,10), rationale:val('f-appr-why')};
+  p.vendor=rec.vendor;
+  if(!p.estimate) p.estimate=String(bidAmount(rec));
   await saveKey('completed-projects', projects); closeModal(); renderProjects();
 }
 async function deleteProj(){ projects = projects.filter(e=>e.id!==editing.id); await saveKey('completed-projects', projects); closeModal(); renderProjects(); }
