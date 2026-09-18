@@ -296,6 +296,8 @@
   .approve-btn{font-size:12.5px;font-weight:600;padding:8px 16px;border-radius:8px;background:var(--ink);color:#fff;border:0;cursor:pointer;font-family:inherit;}
   .approve-btn:hover{opacity:.85;}
   .bid-hint{font-size:11.5px;color:var(--muted);font-style:italic;margin-top:10px;}
+  .pipe-stage:focus-visible{outline:2px solid var(--accent);outline-offset:-3px;}
+  @media (max-width:640px){.pipeline{overflow-x:auto;}.pipe-stage{flex:1 0 auto;min-width:92px;}}
     /* ── OVERVIEW REDESIGN ── */
     .ov-decision{border-radius:12px;padding:16px 20px;margin-bottom:18px;display:flex;align-items:flex-start;justify-content:space-between;gap:18px;background:var(--ink);}
     .ov-decision.clear{background:#E9EFE8;border:1px solid rgba(73,102,84,.2);}
@@ -1535,6 +1537,7 @@ async function submitProj(){
   await saveKey('completed-projects', projects); closeModal(); renderProjects();
 }
 /* ---------- PROJECT BIDS ---------- */
+function escAttr(s){ return escapeHtml(s).replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 function bidAmount(b){ return finNum(b.amount); }
 function bidsOf(p){ return Array.isArray(p.bids) ? p.bids : []; }
 function bidsAwaitingDecision(p){ return bidsOf(p).length>=2 && !(p.decision && p.decision.bidId) && (p.stage||PROJ_STAGES[0])!=='Project completed'; }
@@ -1582,7 +1585,7 @@ function renderBidsSection(p){
   let panel='';
   if(d && d.bidId){
     const wb=bids.find(b=>b.id===d.bidId);
-    panel=`<div class="decision-panel"><h4>Decision</h4><div class="decision-done"><b>${escapeHtml(wb?wb.vendor:'Bid')}</b> approved by ${escapeHtml(d.approvedBy||'owner')} on ${escapeHtml(d.approvedAt||'')}.${d.rationale?'<br>'+escapeHtml(d.rationale):''}</div></div>`;
+    panel=`<div class="decision-panel"><h4>Decision</h4><div class="decision-done"><b>${escapeHtml(wb?wb.vendor:'Bid')}</b> approved by ${escapeHtml(d.approvedBy||'owner')} on ${escapeHtml(d.approvedAt||'')}.${d.rationale?'<br>'+escapeHtml(d.rationale):''}</div>${done?'':`<div class="decision-row" style="margin-top:8px;"><button class="add-bid-btn" onclick="reopenDecision('${escapeHtml(p.id)}')">Reopen decision</button></div>`}</div>`;
   } else if(bids.length>=2){
     const rec=bids.find(b=>b.recommended);
     panel=`<div class="decision-panel"><h4>Compare &amp; decide</h4>
@@ -1602,14 +1605,14 @@ function openBidModal(projId, bidId){
   if(!b) return;
   showModal(`
     <h2>${bidId?'Edit Bid':'Add Bid'} <span style="font-size:14px;color:var(--muted);font-family:Inter,sans-serif;">— ${escapeHtml(p.title)}</span></h2>
-    <label>Vendor</label><input id="f-bid-vendor" list="vendor-datalist-bid" value="${escapeHtml(b.vendor)}"><datalist id="vendor-datalist-bid">${getKnownVendors().map(v=>`<option value="${escapeHtml(v)}">`).join('')}</datalist>
+    <label>Vendor</label><input id="f-bid-vendor" list="vendor-datalist-bid" value="${escAttr(b.vendor)}"><datalist id="vendor-datalist-bid">${getKnownVendors().map(v=>`<option value="${escAttr(v)}">`).join('')}</datalist>
     <div class="row2">
-      <div><label>Amount ($)</label><input id="f-bid-amount" type="number" min="0" step="0.01" value="${escapeHtml(String(b.amount||''))}"></div>
-      <div><label>Submitted</label><input id="f-bid-submitted" type="date" value="${escapeHtml(b.submitted||'')}"></div>
+      <div><label>Amount ($)</label><input id="f-bid-amount" type="number" min="0" step="0.01" value="${escAttr(String(b.amount||''))}"></div>
+      <div><label>Submitted</label><input id="f-bid-submitted" type="date" value="${escAttr(b.submitted||'')}"></div>
     </div>
     <div class="row2">
       <div><label>Insurance verified</label><select id="f-bid-insured">${['','Yes','No'].map(o=>`<option value="${o}" ${o===(b.insured||'')?'selected':''}>${o||'Unknown'}</option>`).join('')}</select></div>
-      <div><label>Scope flag (optional)</label><input id="f-bid-flag" value="${escapeHtml(b.flag||'')}" placeholder="e.g. heater not included"></div>
+      <div><label>Scope flag (optional)</label><input id="f-bid-flag" value="${escAttr(b.flag||'')}" placeholder="e.g. heater not included"></div>
     </div>
     <label>Scope notes</label><textarea id="f-bid-scope" placeholder="What the bid includes and excludes, warranty terms.">${escapeHtml(b.scope||'')}</textarea>
     ${modalActions(bidId,'submitBid','deleteBid')}`);
@@ -1624,10 +1627,19 @@ async function submitBid(){
   if(editing.id){ const i=bids.findIndex(x=>x.id===editing.id); bids[i]={...bids[i],...rec}; }
   else bids.push({id:cryptoId(), recommended:false, ...rec});
   p.bids=bids;
+  if(editing.id && p.decision && p.decision.bidId===editing.id) p.vendor=rec.vendor;
   await saveKey('completed-projects', projects); closeModal(); renderProjects();
+}
+async function reopenDecision(projId){
+  const p=projects.find(x=>x.id===projId); if(!p||!p.decision) return;
+  const wb=bidsOf(p).find(b=>b.id===p.decision.bidId);
+  if(wb && p.vendor===wb.vendor) p.vendor='';
+  p.decision=null;
+  await saveKey('completed-projects', projects); renderProjects();
 }
 async function deleteBid(){
   const p=projects.find(x=>x.id===editing.projId); if(!p) return;
+  if(p.decision && p.decision.bidId===editing.id){ toast('Reopen the decision before deleting the approved bid'); return; }
   p.bids=bidsOf(p).filter(x=>x.id!==editing.id);
   await saveKey('completed-projects', projects); closeModal(); renderProjects();
 }
