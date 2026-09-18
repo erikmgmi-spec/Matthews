@@ -222,190 +222,6 @@
   .cal-event.recurring{background:#E9EFE9;color:var(--low);}
 
   /* Mobile responsiveness */
-/* PMAAS CSS START */
-    .pm-inspection-bar{display:flex;align-items:center;justify-content:space-between;background:var(--paper);border:1px solid var(--line);padding:10px 16px;margin-bottom:16px;border-radius:8px;}
-    .pm-inspection-bar-left{font-size:12px;color:var(--muted);}
-    .pm-inspection-bar-left b{color:var(--ink);}
-    .pm-inspection-toggle{font-size:11px;color:var(--accent);font-weight:600;cursor:pointer;background:none;border:none;font-family:inherit;}
-    .pm-rubric-detail{display:none;background:var(--paper);border:1px solid var(--line);border-top:none;margin-top:-16px;margin-bottom:16px;border-radius:0 0 8px 8px;}
-    .pm-rubric-detail.open{display:block;}
-    .pm-rubric-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);}
-    .pm-rubric-cell{padding:12px 16px;background:var(--cream);}
-    .pm-rubric-cell.mid{background:var(--paper);}
-    .pm-rubric-lv{font-size:10px;font-weight:700;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;}
-    .pm-rubric-lv.gold{color:var(--brass);}
-    .pm-rubric-name{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:3px;}
-    .pm-rubric-cadence{font-size:11px;color:var(--muted);}
-    .pm-triggers{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--brass);padding:12px 16px;margin-bottom:16px;display:flex;gap:20px;flex-wrap:wrap;border-radius:0 8px 8px 0;}
-    .pm-trigger-col .pm-trigger-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--brass);margin-bottom:5px;}
-    .pm-trigger-item{font-size:11px;color:var(--ink);margin-bottom:3px;display:flex;align-items:center;gap:6px;}
-    .pm-trigger-item::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--brass);flex-shrink:0;}
-    .pm-health-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-bottom:16px;border-radius:8px;overflow:hidden;}
-    .pm-health-cell{background:var(--paper);padding:10px 8px;text-align:center;cursor:pointer;transition:background 0.1s;}
-    .pm-health-cell:hover{background:var(--cream);}
-    .pm-health-icon{font-size:18px;margin-bottom:4px;}
-    .pm-health-name{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:2px;line-height:1.3;}
-    .pm-health-status{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);}
-    .pm-area-wrap{margin-bottom:6px;}
-    .pm-area-head{display:flex;align-items:center;gap:12px;padding:13px 16px;background:var(--paper);border:1px solid var(--line);border-radius:10px;cursor:pointer;transition:background 0.1s;}
-    .pm-area-head:hover{background:var(--cream);}
-    .pm-area-head.open{background:var(--ink);border-color:var(--ink);border-radius:10px 10px 0 0;}
-    .pm-area-icon{width:32px;height:32px;background:var(--cream);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
-    .pm-area-head.open .pm-area-icon{background:rgba(255,255,255,.12);}
-    .pm-area-info{flex:1;min-width:0;}
-    .pm-area-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:1px;}
-    .pm-area-head.open .pm-area-title{color:#fff;}
-    .pm-area-desc{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .pm-area-head.open .pm-area-desc{color:rgba(255,255,255,.4);}
-    .pm-area-pills{display:flex;gap:4px;flex-shrink:0;}
-    .pm-area-chev{font-size:11px;color:var(--muted);flex-shrink:0;transition:transform .15s;}
-    .pm-area-head.open .pm-area-chev{color:var(--brass);transform:rotate(180deg);}
-    .pm-area-body{display:none;border:1px solid var(--line);border-top:none;background:var(--paper);border-radius:0 0 10px 10px;overflow:hidden;}
-    .pm-area-body.open{display:block;}
-    .pm-svc-table{width:100%;border-collapse:collapse;}
-    .pm-svc-table thead tr{background:var(--cream);border-bottom:1px solid var(--line);}
-    .pm-svc-table th{padding:8px 14px;text-align:left;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
-    .pm-svc-table td{padding:10px 14px;font-size:13px;color:var(--ink);border-bottom:1px solid var(--line);vertical-align:middle;}
-    .pm-svc-table tr:last-child td{border-bottom:none;}
-    .pm-empty-row td{text-align:center;padding:24px;color:var(--muted);font-style:italic;font-size:13px;}
-    .pm-log-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--cream);border-top:1px solid var(--line);}
-    .pm-log-note{font-size:10px;color:var(--muted);font-style:italic;}
-    .pm-report-preview{margin-top:24px;border:1px solid var(--line);background:var(--paper);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);}
-    .pm-report-hdr{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:var(--ink);}
-    .pm-report-hdr-left{font-family:'Playfair Display',serif;font-size:17px;font-weight:500;color:#fff;}
-    .pm-report-hdr-right{font-size:10px;color:rgba(255,255,255,.35);}
-    .pm-report-empty{padding:36px;text-align:center;color:var(--muted);font-style:italic;line-height:1.8;font-size:13px;}
-    .pm-report-footer{padding:10px 16px;font-size:10px;color:var(--muted);font-style:italic;border-top:1px solid var(--line);display:flex;justify-content:space-between;}
-    @media(max-width:640px){.pm-health-strip{grid-template-columns:repeat(3,1fr);}.pm-rubric-grid{grid-template-columns:1fr;}.pm-triggers{flex-direction:column;gap:10px;}}
-    
-    .pm-view{display:none;} .pm-view.pm-view-active{display:block;}
-    .pm-hist-summary{display:flex;gap:1px;background:var(--line);border:1px solid var(--line);margin-bottom:16px;border-radius:8px;overflow:hidden;}
-    .pm-hist-stat{flex:1;background:var(--paper);padding:12px 16px;}
-    .pm-hist-stat-l{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:3px;}
-    .pm-hist-stat-v{font-family:'Playfair Display',serif;font-size:20px;color:var(--ink);}
-    .pm-modal-overlay{display:none;position:fixed;inset:0;background:rgba(33,30,26,.65);z-index:200;align-items:center;justify-content:center;}
-    .pm-modal-overlay.open{display:flex;}
-    .pm-modal{background:var(--cream);width:500px;max-width:94vw;border-radius:14px;border-top:3px solid var(--brass);max-height:90vh;overflow-y:auto;}
-    .pm-modal-hdr{padding:16px 20px;background:var(--ink);display:flex;justify-content:space-between;align-items:center;border-radius:11px 11px 0 0;position:sticky;top:0;}
-    .pm-modal-title{font-family:'Playfair Display',serif;font-size:18px;color:#fff;font-weight:500;}
-    .pm-modal-close{background:none;border:none;color:rgba(255,255,255,.4);font-size:18px;cursor:pointer;}
-    .pm-modal-body{padding:20px;display:flex;flex-direction:column;gap:14px;}
-    .pm-field-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
-    .pm-field-input,.pm-field-select,.pm-field-textarea{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:14px;background:#fff;color:var(--ink);}
-    .pm-modal-footer{display:flex;gap:8px;padding:14px 20px;border-top:1px solid var(--line);position:sticky;bottom:0;background:var(--cream);}
-    .pm-save-flash{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--cream);padding:9px 18px;border-radius:20px;font-size:12.5px;opacity:0;transition:opacity .3s;pointer-events:none;}
-    .pm-save-flash.show{opacity:1;}
-    .pm-footer{background:var(--ink);padding:14px 36px;display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.25);}
-    
-    .pm-cal-due{background:#FBF0E0 !important;color:var(--med) !important;border-left:3px solid var(--med);}
-    .pm-cal-overdue{background:#FBEAE6 !important;color:var(--high) !important;border-left:3px solid var(--high);}
-    
-    /* PMaaS Zone Filter */
-    .pm-zone-filter{display:flex;gap:6px;flex-wrap:wrap;padding:0 0 14px;}
-    .pm-zone-chip{padding:6px 14px;border:1px solid var(--line);border-radius:20px;font-size:12px;
-      font-weight:500;cursor:pointer;background:var(--paper);color:var(--muted);transition:all .12s;}
-    .pm-zone-chip:hover{border-color:var(--ink);color:var(--ink);}
-    .pm-zone-chip.active{background:var(--ink);color:#fff;border-color:var(--ink);}
-    
-    /* ── Principal Stay Bars ── */
-    .stay-bar{background:var(--ink);color:#fff;font-size:10px;font-weight:600;
-      padding:2px 7px;letter-spacing:.04em;border-radius:3px;margin-top:2px;
-      display:flex;align-items:center;gap:4px;cursor:pointer;white-space:nowrap;
-      overflow:hidden;text-overflow:ellipsis;}
-    .stay-bar.stay-start{border-radius:6px 2px 2px 6px;}
-    .stay-bar.stay-mid{border-radius:2px;opacity:.7;}
-    .stay-bar.stay-end{border-radius:2px 6px 6px 2px;opacity:.85;}
-    .add-stay-btn{background:var(--ink);color:#fff;border:none;
-      padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;
-      cursor:pointer;font-family:inherit;letter-spacing:.02em;}
-    .add-stay-btn:hover{opacity:.85;}
-
-    
-    /* ── Bid System ── */
-    .bids-section{border-top:1px solid var(--line);padding:0 16px;}
-    .bids-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 0 8px;}
-    .bids-hdr-title{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
-    .add-bid-btn{font-size:12px;font-weight:600;color:var(--accent);background:none;border:none;cursor:pointer;font-family:inherit;padding:0;}
-    .bids-tbl{width:100%;border-collapse:collapse;margin-bottom:10px;font-size:12px;}
-    .bids-tbl th{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;background:var(--cream);}
-    .bids-tbl td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.4;}
-    .bids-tbl tr:last-child td{border-bottom:none;}
-    .bids-tbl tr.bid-rec td{background:#F7FCF6;}
-    .bid-vendor-name{font-weight:600;color:var(--ink);}
-    .bid-vendor-note{font-size:10.5px;color:var(--muted);margin-top:1px;}
-    .bid-scope{font-size:11px;color:var(--muted);line-height:1.4;}
-    .bid-amt{font-family:'Playfair Display',serif;font-size:15px;font-weight:600;white-space:nowrap;}
-    .bid-rec-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;background:var(--low-bg,#E9EFE8);color:var(--low);}
-    .bid-flag-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;background:var(--high-bg,#FBEAE6);color:var(--high);}
-    .ai-bar{display:flex;align-items:center;justify-content:space-between;padding:9px 16px;background:var(--cream);border-top:1px solid var(--line);}
-    .ai-bar p{font-size:11.5px;color:var(--muted);}
-    .ai-run-btn{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:6px 13px;border-radius:8px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;font-family:inherit;}
-    .ai-run-btn:disabled{opacity:.4;cursor:default;}
-    .ai-run-btn .ai-spin{display:none;width:11px;height:11px;border:2px solid var(--line);border-top-color:var(--ink);border-radius:50%;animation:aispin .7s linear infinite;}
-    .ai-run-btn.loading .ai-spin{display:block;}
-    @keyframes aispin{to{transform:rotate(360deg);}}
-    .ai-panel{border-top:1px solid var(--line);padding:14px 16px;background:#FAFDF9;display:none;}
-    .ai-panel.open{display:block;}
-    .ai-panel-hd{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
-    .ai-panel-hd h4{font-size:13px;font-weight:600;}
-    .ai-panel-hd .ai-ts{font-size:10px;color:var(--muted);margin-left:auto;}
-    .ai-rec-box{background:var(--low-bg,#E9EFE8);border:1px solid rgba(63,97,68,.2);border-radius:8px;padding:10px 13px;margin-bottom:10px;}
-    .ai-rec-lbl{font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--low);margin-bottom:3px;}
-    .ai-rec-text{font-size:12.5px;color:var(--ink);line-height:1.5;}
-    .ai-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
-    .ai-col h5{font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
-    .ai-col ul{list-style:none;display:flex;flex-direction:column;gap:4px;}
-    .ai-col ul li{font-size:11.5px;color:var(--ink);padding-left:10px;position:relative;line-height:1.4;}
-    .ai-col ul li::before{content:'';position:absolute;left:0;top:5px;width:4px;height:4px;border-radius:50%;}
-    .ai-flags li::before{background:var(--high);}
-    .ai-qs li::before{background:var(--blue);}
-    .ai-footer-row{display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid var(--line);}
-    .ai-footer-note{font-size:10.5px;color:var(--muted);}
-    .approve-proj-btn{font-size:12px;font-weight:600;padding:7px 16px;border-radius:8px;background:var(--ink);color:#fff;border:none;cursor:pointer;font-family:inherit;}
-    
-        /* ── Bid System ── */
-    .bids-section{border-top:1px solid var(--line);padding:0 16px;}
-    .bids-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 0 8px;}
-    .bids-hdr-title{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
-    .add-bid-btn{font-size:12px;font-weight:600;color:var(--accent);background:none;border:none;cursor:pointer;font-family:inherit;padding:0;}
-    .bids-tbl{width:100%;border-collapse:collapse;margin-bottom:10px;font-size:12px;}
-    .bids-tbl th{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;background:var(--cream);}
-    .bids-tbl td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.4;}
-    .bids-tbl tr:last-child td{border-bottom:none;}
-    .bids-tbl tr.bid-rec td{background:#F7FCF6;}
-    .bid-vendor-name{font-weight:600;color:var(--ink);}
-    .bid-vendor-note{font-size:10.5px;color:var(--muted);margin-top:1px;}
-    .bid-scope{font-size:11px;color:var(--muted);line-height:1.4;}
-    .bid-amt{font-family:'Playfair Display',serif;font-size:15px;font-weight:600;white-space:nowrap;}
-    .bid-rec-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;background:var(--low-bg,#E9EFE8);color:var(--low);}
-    .bid-flag-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;background:var(--high-bg,#FBEAE6);color:var(--high);}
-    .ai-bar{display:flex;align-items:center;justify-content:space-between;padding:9px 16px;background:var(--cream);border-top:1px solid var(--line);}
-    .ai-bar p{font-size:11.5px;color:var(--muted);}
-    .ai-run-btn{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:6px 13px;border-radius:8px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;font-family:inherit;}
-    .ai-run-btn:disabled{opacity:.4;cursor:default;}
-    .ai-run-btn .ai-spin{display:none;width:11px;height:11px;border:2px solid var(--line);border-top-color:var(--ink);border-radius:50%;animation:aispin .7s linear infinite;}
-    .ai-run-btn.loading .ai-spin{display:block;}
-    @keyframes aispin{to{transform:rotate(360deg);}}
-    .ai-panel{border-top:1px solid var(--line);padding:14px 16px;background:#FAFDF9;display:none;}
-    .ai-panel.open{display:block;}
-    .ai-panel-hd{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
-    .ai-panel-hd h4{font-size:13px;font-weight:600;}
-    .ai-panel-hd .ai-ts{font-size:10px;color:var(--muted);margin-left:auto;}
-    .ai-rec-box{background:var(--low-bg,#E9EFE8);border:1px solid rgba(63,97,68,.2);border-radius:8px;padding:10px 13px;margin-bottom:10px;}
-    .ai-rec-lbl{font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--low);margin-bottom:3px;}
-    .ai-rec-text{font-size:12.5px;color:var(--ink);line-height:1.5;}
-    .ai-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
-    .ai-col h5{font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
-    .ai-col ul{list-style:none;display:flex;flex-direction:column;gap:4px;}
-    .ai-col ul li{font-size:11.5px;color:var(--ink);padding-left:10px;position:relative;line-height:1.4;}
-    .ai-col ul li::before{content:'';position:absolute;left:0;top:5px;width:4px;height:4px;border-radius:50%;}
-    .ai-flags li::before{background:var(--high);}
-    .ai-qs li::before{background:var(--blue);}
-    .ai-footer-row{display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid var(--line);}
-    .ai-footer-note{font-size:10.5px;color:var(--muted);}
-    .approve-proj-btn{font-size:12px;font-weight:600;padding:7px 16px;border-radius:8px;background:var(--ink);color:#fff;border:none;cursor:pointer;font-family:inherit;}
-    
-    /* PMAAS CSS END */
   @media (max-width: 640px){
     .wrap{padding:20px 14px 70px;}
     header{align-items:flex-start;}
@@ -557,180 +373,10 @@
       <button class="subtab active" id="pm-subtab-tasks" type="button" onclick="switchPMSubView('tasks')">Maintenance Tasks</button>
       <button class="subtab" id="pm-subtab-assets" type="button" onclick="switchPMSubView('assets')">Appliance &amp; Amenity Registry</button>
     </div>
-<div id="pm-tasks-view">
-      <div class="pm-zone-filter" id="pm-zone-filter"></div>
-      <!-- PMAAS INSERT START 2026-09-12 — REVERT: restore original 3 filter divs below, delete to PMAAS INSERT END
-           Original:
-             <div class="filters" id="pm-category-filters"></div>
-             <div class="filters" id="pm-filters"></div>
-             <div id="pm-list"></div>
-      -->
-<div class="pm-view pm-view-active" id="pm-view-service">
-
-    <div style="display:flex;align-items:center;justify-content:space-between;background:var(--paper);border:1px solid var(--line);padding:10px 16px;margin-bottom:20px;">
-      <div style="font-size:11px;color:var(--muted);">
-        <span style="font-weight:600;color:var(--ink);">Inspection levels:</span>
-        &nbsp;L1 Property Walk &nbsp;·&nbsp; L2 System Check &nbsp;·&nbsp; L3 Full Estate Audit
-      </div>
-      <div style="font-size:10px;color:var(--brass);font-weight:600;letter-spacing:0.06em;cursor:pointer;" onclick="pmToggleRubric()">What's included ▾</div>
-    </div>
-    <div id="pm-rubric-detail" style="display:none;background:var(--paper);border:1px solid var(--line);border-top:none;margin-top:-20px;margin-bottom:20px;">
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);">
-        <div style="padding:12px 16px;background:var(--paper);">
-          <div style="font-size:10px;font-weight:700;color:var(--muted);margin-bottom:4px;">L1 — Property Walk</div>
-          <div style="font-size:11px;color:var(--ink);margin-bottom:6px;">Any visit · visual only · no tools</div>
-          <div style="font-size:10px;color:var(--muted);">Exterior · Grounds · Access Points · Vehicles</div>
-        </div>
-        <div style="padding:12px 16px;background:var(--cream);">
-          <div style="font-size:10px;font-weight:700;color:var(--brass);margin-bottom:4px;">L2 — System Check</div>
-          <div style="font-size:11px;color:var(--ink);margin-bottom:6px;">Quarterly · all six areas · hands-on</div>
-          <div style="font-size:10px;color:var(--muted);">All Systems · Status Update · Condition Report</div>
-        </div>
-        <div style="padding:12px 16px;background:var(--paper);">
-          <div style="font-size:10px;font-weight:700;color:var(--muted);margin-bottom:4px;">L3 — Full Estate Audit</div>
-          <div style="font-size:11px;color:var(--ink);margin-bottom:6px;">Annual · specialist-assisted · CapEx</div>
-          <div style="font-size:10px;color:var(--muted);">Structural · Electrical · Pest · CapEx Plan</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="pm-triggers">
-      <div>
-        <div class="pm-trigger-lbl">When you log this visit</div>
-        <div class="pm-trigger-item">Calendar marks visit date and recalculates next due</div>
-        <div class="pm-trigger-item">Hours prompt opens to log time on this visit</div>
-      </div>
-      <div>
-        <div class="pm-trigger-lbl">Overdue items trigger</div>
-        <div class="pm-trigger-item">Project card created in Projects tab</div>
-        <div class="pm-trigger-item">On Deck flagged with vendor recommendation</div>
-      </div>
-      <div>
-        <div class="pm-trigger-lbl">Condition Report</div>
-        <div class="pm-trigger-item">Findings auto-populate report tab for review</div>
-        <div class="pm-trigger-item">Principal-ready summary generated on save</div>
-      </div>
-    </div>
-
-    <div class="section-lbl">Property Health — Click to Jump to Service Area</div>
-    <div class="pm-health-strip">
-      <div class="pm-health-cell" onclick="pmJumpTo('pm-svc-water')"><div class="pm-health-icon">💧</div><div class="pm-health-name">Water &amp; Plumbing</div><div class="pm-health-status">Not Set</div></div>
-      <div class="pm-health-cell" onclick="pmJumpTo('pm-svc-hvac')"><div class="pm-health-icon">❄️</div><div class="pm-health-name">HVAC &amp; Air</div><div class="pm-health-status">Not Set</div></div>
-      <div class="pm-health-cell" onclick="pmJumpTo('pm-svc-appl')"><div class="pm-health-icon">🔥</div><div class="pm-health-name">Appliances</div><div class="pm-health-status">Not Set</div></div>
-      <div class="pm-health-cell" onclick="pmJumpTo('pm-svc-ext')"><div class="pm-health-icon">🏠</div><div class="pm-health-name">Exterior &amp; Structure</div><div class="pm-health-status">Not Set</div></div>
-      <div class="pm-health-cell" onclick="pmJumpTo('pm-svc-safe')"><div class="pm-health-icon">🛡️</div><div class="pm-health-name">Safety Systems</div><div class="pm-health-status">Not Set</div></div>
-      <div class="pm-health-cell" onclick="pmJumpTo('pm-svc-gnd')"><div class="pm-health-icon">🌿</div><div class="pm-health-name">Grounds</div><div class="pm-health-status">Not Set</div></div>
-    </div>
-
-    <!-- SERVICE AREA ACCORDIONS -->
-    <div id="pm-svc-water" class="pm-area-wrap">
-      <div class="pm-area-head" onclick="pmToggleArea(this)">
-        <div class="pm-area-icon">💧</div>
-        <div class="pm-area-info"><div class="pm-area-title">Water &amp; Plumbing</div><div class="pm-area-desc">Drain clearing, leak prevention, pressure and fixture performance</div></div>
-        <div class="pm-area-pills"><span class="tag">—</span></div>
-        <div class="pm-area-chev">▾</div>
-      </div>
-      <div class="pm-area-body">
-        <table class="pm-svc-table"><thead><tr><th>Service Item</th><th>Frequency</th><th>Last Serviced</th><th>Next Due</th><th>Status</th><th>Assigned</th></tr></thead>
-        <tbody><tr class="pm-empty-row"><td colspan="6">No service records logged — add first entry to get started</td></tr></tbody></table>
-        <div class="pm-asset-strip" style="display:none;background:var(--cream);border-top:1px solid var(--line);"></div>
-          <div class="pm-asset-strip" style="display:none;background:var(--cream);border-top:1px solid var(--line);"></div>
-          <div class="pm-log-row"><div class="pm-log-note">Logging updates Last Serviced, recalculates Next Due, prompts hours entry</div><button class="addbtn" style="font-size:11px;padding:7px 13px;" onclick="openModal('service','Water & Plumbing')">+ Log Service</button></div>
-      </div>
-    </div>
-
-    <div id="pm-svc-hvac" class="pm-area-wrap">
-      <div class="pm-area-head" onclick="pmToggleArea(this)">
-        <div class="pm-area-icon">❄️</div>
-        <div class="pm-area-info"><div class="pm-area-title">HVAC &amp; Air Systems</div><div class="pm-area-desc">Airflow optimization, filter service, and system health</div></div>
-        <div class="pm-area-pills"><span class="tag">—</span></div>
-        <div class="pm-area-chev">▾</div>
-      </div>
-      <div class="pm-area-body">
-        <table class="pm-svc-table"><thead><tr><th>Service Item</th><th>Frequency</th><th>Last Serviced</th><th>Next Due</th><th>Status</th><th>Assigned</th></tr></thead>
-        <tbody><tr class="pm-empty-row"><td colspan="6">No service records logged — add first entry to get started</td></tr></tbody></table>
-        <div class="pm-asset-strip" style="display:none;background:var(--cream);border-top:1px solid var(--line);"></div>
-          <div class="pm-asset-strip" style="display:none;background:var(--cream);border-top:1px solid var(--line);"></div>
-          <div class="pm-log-row"><div class="pm-log-note">Logging updates Last Serviced, recalculates Next Due, prompts hours entry</div><button class="addbtn" style="font-size:11px;padding:7px 13px;" onclick="openModal('service','HVAC & Air Systems')">+ Log Service</button></div>
-      </div>
-    </div>
-
-    <div id="pm-svc-appl" class="pm-area-wrap">
-      <div class="pm-area-head" onclick="pmToggleArea(this)">
-        <div class="pm-area-icon">🔥</div>
-        <div class="pm-area-info"><div class="pm-area-title">Appliances &amp; Fire Risk</div><div class="pm-area-desc">Cleaning, servicing, and performance restoration</div></div>
-        <div class="pm-area-pills"><span class="tag">—</span></div>
-        <div class="pm-area-chev">▾</div>
-      </div>
-      <div class="pm-area-body">
-        <table class="pm-svc-table"><thead><tr><th>Service Item</th><th>Frequency</th><th>Last Serviced</th><th>Next Due</th><th>Status</th><th>Assigned</th></tr></thead>
-        <tbody><tr class="pm-empty-row"><td colspan="6">No service records logged — add first entry to get started</td></tr></tbody></table>
-        <div class="pm-asset-strip" style="display:none;background:var(--cream);border-top:1px solid var(--line);"></div>
-          <div class="pm-asset-strip" style="display:none;background:var(--cream);border-top:1px solid var(--line);"></div>
-          <div class="pm-log-row"><div class="pm-log-note">Logging updates Last Serviced, recalculates Next Due, prompts hours entry</div><button class="addbtn" style="font-size:11px;padding:7px 13px;" onclick="openModal('service','Appliances & Fire Risk')">+ Log Service</button></div>
-      </div>
-    </div>
-
-    <div id="pm-svc-ext" class="pm-area-wrap">
-      <div class="pm-area-head" onclick="pmToggleArea(this)">
-        <div class="pm-area-icon">🏠</div>
-        <div class="pm-area-info"><div class="pm-area-title">Exterior &amp; Structure</div><div class="pm-area-desc">Roof, drainage, sealing, and water intrusion prevention</div></div>
-        <div class="pm-area-pills"><span class="tag">—</span></div>
-        <div class="pm-area-chev">▾</div>
-      </div>
-      <div class="pm-area-body">
-        <table class="pm-svc-table"><thead><tr><th>Service Item</th><th>Frequency</th><th>Last Serviced</th><th>Next Due</th><th>Status</th><th>Assigned</th></tr></thead>
-        <tbody><tr class="pm-empty-row"><td colspan="6">No service records logged — add first entry to get started</td></tr></tbody></table>
-        <div class="pm-asset-strip" style="display:none;background:var(--cream);border-top:1px solid var(--line);"></div>
-          <div class="pm-asset-strip" style="display:none;background:var(--cream);border-top:1px solid var(--line);"></div>
-          <div class="pm-log-row"><div class="pm-log-note">Logging updates Last Serviced, recalculates Next Due, prompts hours entry</div><button class="addbtn" style="font-size:11px;padding:7px 13px;" onclick="openModal('service','Exterior & Structure')">+ Log Service</button></div>
-      </div>
-    </div>
-
-    <div id="pm-svc-safe" class="pm-area-wrap">
-      <div class="pm-area-head" onclick="pmToggleArea(this)">
-        <div class="pm-area-icon">🛡️</div>
-        <div class="pm-area-info"><div class="pm-area-title">Safety Systems</div><div class="pm-area-desc">Detectors, GFCI, outlets, and hazard identification</div></div>
-        <div class="pm-area-pills"><span class="tag">—</span></div>
-        <div class="pm-area-chev">▾</div>
-      </div>
-      <div class="pm-area-body">
-        <table class="pm-svc-table"><thead><tr><th>Service Item</th><th>Frequency</th><th>Last Serviced</th><th>Next Due</th><th>Status</th><th>Assigned</th></tr></thead>
-        <tbody><tr class="pm-empty-row"><td colspan="6">No service records logged — add first entry to get started</td></tr></tbody></table>
-        <div class="pm-asset-strip" style="display:none;background:var(--cream);border-top:1px solid var(--line);"></div>
-          <div class="pm-asset-strip" style="display:none;background:var(--cream);border-top:1px solid var(--line);"></div>
-          <div class="pm-log-row"><div class="pm-log-note">Logging updates Last Serviced, recalculates Next Due, prompts hours entry</div><button class="addbtn" style="font-size:11px;padding:7px 13px;" onclick="openModal('service','Safety Systems')">+ Log Service</button></div>
-      </div>
-    </div>
-
-    <div id="pm-svc-gnd" class="pm-area-wrap">
-      <div class="pm-area-head" onclick="pmToggleArea(this)">
-        <div class="pm-area-icon">🌿</div>
-        <div class="pm-area-info"><div class="pm-area-title">Exterior &amp; Grounds</div><div class="pm-area-desc">Irrigation, outdoor structures, and property condition</div></div>
-        <div class="pm-area-pills"><span class="tag">—</span></div>
-        <div class="pm-area-chev">▾</div>
-      </div>
-      <div class="pm-area-body">
-        <table class="pm-svc-table"><thead><tr><th>Service Item</th><th>Frequency</th><th>Last Serviced</th><th>Next Due</th><th>Status</th><th>Assigned</th></tr></thead>
-        <tbody><tr class="pm-empty-row"><td colspan="6">No service records logged — add first entry to get started</td></tr></tbody></table>
-        <div class="pm-asset-strip" style="display:none;background:var(--cream);border-top:1px solid var(--line);"></div>
-          <div class="pm-asset-strip" style="display:none;background:var(--cream);border-top:1px solid var(--line);"></div>
-          <div class="pm-log-row"><div class="pm-log-note">Logging updates Last Serviced, recalculates Next Due, prompts hours entry</div><button class="addbtn" style="font-size:11px;padding:7px 13px;" onclick="openModal('service','Exterior & Grounds')">+ Log Service</button></div>
-      </div>
-    </div>
-
-    <!-- CONDITION REPORT PREVIEW -->
-    <div class="pm-report-preview">
-      <div class="pm-report-hdr">
-        <div class="pm-report-hdr-left">Condition Report — No inspections logged yet</div>
-        <div class="pm-report-hdr-right">Auto-generates after first service entry</div>
-      </div>
-      <div class="pm-report-empty">Complete your first inspection visit and log service entries above.<br>Findings will populate here automatically, organized by priority and linked to Projects, Vendors, and Calendar.</div>
-      <div class="pm-report-footer"><span>Next visit: — · Select inspection level above to begin</span><span>All findings traceable to service area above</span></div>
-    </div>
-
-  </div><!-- /view-service -->
-      <!-- PMAAS INSERT END -->
+    <div id="pm-tasks-view">
+      <div class="filters" id="pm-category-filters"></div>
+      <div class="filters" id="pm-filters"></div>
+      <div id="pm-list"></div>
     </div>
     <div id="pm-assets-view" hidden>
       <div class="banner">Add only assets present at this estate. Existing operational records remain unchanged.</div>
@@ -787,283 +433,7 @@
 
 <div class="status" id="status" role="status" aria-live="polite" aria-atomic="true"></div>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js">/* ── BID SYSTEM ─────────────────────────────────────────────────── */
-function openAddBidModal(projId){
-  window._bidProjId = projId;
-  window._bidEditId = null;
-  showModal(`
-    <h2>Add Bid</h2>
-    <label>Vendor</label><input id="f-bid-vendor" placeholder="e.g. Brightwater Pool & Spa">
-    <div class="row2">
-      <div><label>Bid Amount ($)</label><input type="number" id="f-bid-amount" placeholder="0.00"></div>
-      <div><label>Submitted Date</label><input type="date" id="f-bid-date"></div>
-    </div>
-    <label>Scope / What's Included</label>
-    <textarea id="f-bid-scope" placeholder="Describe what this bid covers..."></textarea>
-    <div class="row2">
-      <div><label>Insurance Verified?</label><select id="f-bid-ins"><option value="">Unknown</option><option value="yes">Yes</option><option value="no">No</option></select></div>
-      <div><label>Existing Vendor on File?</label><select id="f-bid-existing"><option value="">No</option><option value="yes">Yes</option></select></div>
-    </div>
-    <label>Flag / Warning (optional)</label>
-    <input id="f-bid-flag" placeholder="e.g. Scope gap — heater not included">
-    <div class="modal-actions"><div></div><div style="display:flex;gap:8px;">
-      <button class="cancel" onclick="closeModal()">Cancel</button>
-      <button class="save" onclick="submitBid()">Save Bid</button>
-    </div></div>`);
-}
-
-async function submitBid(){
-  const projId = window._bidProjId;
-  const proj = projects.find(p=>p.id===projId);
-  if(!proj) return;
-  const vendor = val('f-bid-vendor');
-  const amount = val('f-bid-amount');
-  if(!vendor||!amount){ toast('Vendor and amount required'); return; }
-  const bid = {
-    id: window._bidEditId || cryptoId(),
-    vendor, amount: parseFloat(amount),
-    scope: val('f-bid-scope'),
-    submitted: val('f-bid-date'),
-    insuranceVerified: val('f-bid-ins')==='yes',
-    existingVendor: val('f-bid-existing')==='yes',
-    flag: val('f-bid-flag'),
-    recommended: false
-  };
-  if(!proj.bids) proj.bids = [];
-  const idx = proj.bids.findIndex(b=>b.id===bid.id);
-  if(idx>-1) proj.bids[idx]=bid; else proj.bids.push(bid);
-  await saveKey('completed-projects', projects);
-  closeModal(); renderProjects();
-}
-
-async function deleteBid(projId, bidId){
-  const proj = projects.find(p=>p.id===projId);
-  if(!proj) return;
-  proj.bids = (proj.bids||[]).filter(b=>b.id!==bidId);
-  await saveKey('completed-projects', projects);
-  renderProjects();
-}
-
-async function toggleBidRecommend(projId, bidId){
-  const proj = projects.find(p=>p.id===projId);
-  if(!proj) return;
-  (proj.bids||[]).forEach(b=>{ b.recommended = b.id===bidId ? !b.recommended : false; });
-  await saveKey('completed-projects', projects);
-  renderProjects();
-}
-
-async function runAIBidReview(projId){
-  const proj = projects.find(p=>p.id===projId);
-  if(!proj||!proj.bids||proj.bids.length<2){ toast('Need at least 2 bids to run analysis'); return; }
-  const btn = document.querySelector(`[data-ai-proj="${projId}"]`);
-  if(btn){ btn.classList.add('loading'); btn.disabled=true; }
-
-  const bidsText = (proj.bids||[]).map((b,i)=>
-    `Bid ${i+1}: ${b.vendor} — $${b.amount.toLocaleString()}\nScope: ${b.scope||'Not specified'}\nInsurance verified: ${b.insuranceVerified?'Yes':'No/Unknown'}\nExisting vendor: ${b.existingVendor?'Yes':'No'}\nFlag: ${b.flag||'None'}`
-  ).join('\n\n');
-
-  const prompt = `You are an estate manager reviewing bids for a private residential project.\n\nProject: ${proj.title}\nBudget: ${proj.estimate?'$'+Number(proj.estimate).toLocaleString():'Not set'}\nProperty: ${proj.area||'Estate'}\n\nBids submitted:\n${bidsText}\n\nProvide a JSON response only — no markdown, no explanation outside the JSON. Format:\n{"recommendation":"<vendor name>","reasoning":"<2-3 sentences>","flags":["<flag 1>","<flag 2>"],"questions":["<question 1>","<question 2>","<question 3>"]}`;
-
-  try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:prompt}]})
-    });
-    const data = await resp.json();
-    const text = data.content.find(c=>c.type==='text')?.text||'{}';
-    const clean = text.replace(/```json|```/g,'').trim();
-    const review = JSON.parse(clean);
-    proj.aiReview = {...review, runDate: new Date().toISOString().slice(0,10), approvedBy:null};
-    // Move to Your Approval stage
-    proj.stage = 'Your Approval';
-    await saveKey('completed-projects', projects);
-    renderProjects();
-    toast('AI review complete');
-  } catch(e){
-    console.error(e);
-    toast('AI review failed — check connection');
-  } finally {
-    if(btn){ btn.classList.remove('loading'); btn.disabled=false; }
-  }
-}
-
-function toggleAIPanel(projId){
-  const panel = document.getElementById('ai-panel-'+projId);
-  if(panel) panel.classList.toggle('open');
-}
-
-async function approveProject(projId, vendorName){
-  const proj = projects.find(p=>p.id===projId);
-  if(!proj) return;
-  if(proj.aiReview) proj.aiReview.approvedBy = 'Principal';
-  proj.stage = 'In Progress';
-  proj.vendor = vendorName;
-  await saveKey('completed-projects', projects);
-  renderProjects();
-  toast('Project approved — moving to In Progress');
-}
-/* ── END BID SYSTEM ──────────────────────────────────────────────── */
-
-function renderBidsSection(proj){
-  const bids = proj.bids || [];
-  const canRunAI = bids.length >= 2;
-  const hasReview = !!proj.aiReview;
-  const today = new Date().toISOString().slice(0,10);
-
-  const bidsRows = bids.length === 0
-    ? `<tr><td colspan="5" style="text-align:center;padding:14px;color:var(--muted);font-style:italic;font-size:12px;">No bids yet — add first bid below</td></tr>`
-    : bids.map(b=>`
-      <tr class="${b.recommended?'bid-rec':''}">
-        <td><div class="bid-vendor-name">${escapeHtml(b.vendor)}</div>
-            <div class="bid-vendor-note">${b.existingVendor?'Existing vendor · ':''}${b.insuranceVerified?'Insured':'Insurance unknown'}</div></td>
-        <td><div class="bid-scope">${escapeHtml(b.scope||'—')}</div></td>
-        <td><div class="bid-amt">$${finNum(b.amount).toLocaleString()}</div>
-            <div style="font-size:10.5px;color:var(--muted);">${b.submitted||''}</div></td>
-        <td>${b.recommended?'<span class="bid-rec-badge">✓ Recommended</span>':b.flag?`<span class="bid-flag-badge">⚠ ${escapeHtml(b.flag)}</span>`:''}</td>
-        <td style="text-align:right;">
-          <button onclick="toggleBidRecommend('${proj.id}','${b.id}')" style="font-size:10px;padding:3px 7px;border:1px solid var(--line);border-radius:4px;background:var(--paper);cursor:pointer;font-family:inherit;">
-            ${b.recommended?'Unrecommend':'Recommend'}
-          </button>
-        </td>
-      </tr>`).join('');
-
-  const aiPanel = hasReview ? `
-    <div class="ai-panel open" id="ai-panel-${proj.id}">
-      <div class="ai-panel-hd">
-        <span>✦</span><h4>Bid Analysis</h4>
-        <span class="ai-ts">Claude Sonnet · ${proj.aiReview.runDate||''}</span>
-      </div>
-      <div class="ai-rec-box">
-        <div class="ai-rec-lbl">Recommendation</div>
-        <div class="ai-rec-text"><strong>${escapeHtml(proj.aiReview.recommendation)}</strong> — ${escapeHtml(proj.aiReview.reasoning||'')}</div>
-      </div>
-      <div class="ai-cols">
-        <div class="ai-col ai-flags">
-          <h5>Flags to review</h5>
-          <ul>${(proj.aiReview.flags||[]).map(f=>`<li>${escapeHtml(f)}</li>`).join('')}</ul>
-        </div>
-        <div class="ai-col ai-qs">
-          <h5>Questions to ask</h5>
-          <ul>${(proj.aiReview.questions||[]).map(q=>`<li>${escapeHtml(q)}</li>`).join('')}</ul>
-        </div>
-      </div>
-      <div class="ai-footer-row">
-        <span class="ai-footer-note">${proj.aiReview.approvedBy?'✓ Approved by '+proj.aiReview.approvedBy:'Awaiting principal approval'}</span>
-        ${!proj.aiReview.approvedBy?`<button class="approve-proj-btn" onclick="approveProject('${proj.id}','${escapeHtml(proj.aiReview.recommendation||'')}')">Approve ${escapeHtml(proj.aiReview.recommendation||'')}</button>`:'<span style="font-size:12px;font-weight:600;color:var(--low);">✓ Approved</span>'}
-      </div>
-    </div>` : '';
-
-  const aiBar = `
-    <div class="ai-bar">
-      <p>${hasReview?`AI review complete · ${proj.aiReview.runDate}`:canRunAI?`${bids.length} bids ready for analysis`:`Add ${2-bids.length} more bid${bids.length===1?'':'s'} to enable AI review`}</p>
-      ${hasReview
-        ? `<button class="ai-run-btn" onclick="toggleAIPanel('${proj.id}')">✦ ${proj.aiReview.approvedBy?'View Decision':'View Analysis'}</button>`
-        : `<button class="ai-run-btn" data-ai-proj="${proj.id}" ${canRunAI?'':'disabled'} onclick="runAIBidReview('${proj.id}')"><div class="ai-spin"></div><span>✦ Run AI Analysis</span></button>`
-      }
-    </div>`;
-
-  return `
-    <div class="bids-section">
-      <div class="bids-hdr">
-        <div class="bids-hdr-title">Bids — ${bids.length} received</div>
-        <button class="add-bid-btn" onclick="openAddBidModal('${proj.id}')">+ Add Bid</button>
-      </div>
-      <table class="bids-tbl">
-        <thead><tr><th>Vendor</th><th>Scope</th><th>Amount</th><th>Status</th><th></th></tr></thead>
-        <tbody>${bidsRows}</tbody>
-      </table>
-    </div>
-    ${aiBar}
-    ${aiPanel}`;
-}
-
-</script>
-<script>
-/* ── PRINCIPAL STAYS ────────────────────────────────────────────── */
-
-function openStayModal(editId){
-  const e = editId ? principalStays.find(s=>s.id===editId) : null;
-  showModal(`
-    <h2>${e ? 'Edit Stay' : '&#127968; Add a Stay'}</h2>
-    <label>Location</label>
-    <select id="f-stay-loc">${ESTATE_CONFIG.zones.filter(z=>z!=='Vehicles'&&z!=='Yacht').map(z=>`<option value="${z}" ${e&&e.location===z?'selected':''}>${z}</option>`).join('')}</select>
-    <div class="row2">
-      <div><label>Arrival Date</label><input type="date" id="f-stay-start" value="${e?e.startDate:''}"></div>
-      <div><label>Departure Date</label><input type="date" id="f-stay-end" value="${e?e.endDate:''}"></div>
-    </div>
-    <div class="row2">
-      <div><label>Expected Arrival Time</label><input type="time" id="f-stay-arr" value="${e&&e.arrivalTime?e.arrivalTime:''}"></div>
-      <div><label>Expected Departure Time</label><input type="time" id="f-stay-dep" value="${e&&e.departTime?e.departTime:''}"></div>
-    </div>
-    <label>Notes (optional)</label>
-    <textarea id="f-stay-notes" placeholder="Flight details, vehicle needed, pre-arrival requests...">${e?escapeHtml(e.notes||''):''}</textarea>
-    <div class="modal-actions">
-      ${e ? `<button class="cancel" style="color:var(--high);border-color:var(--high);" onclick="deleteStay('${e.id}')">Delete</button>` : '<div></div>'}
-      <div style="display:flex;gap:8px;">
-        <button class="cancel" onclick="closeModal()">Cancel</button>
-        <button class="save" onclick="submitStay('${e?e.id:''}')">Save Stay</button>
-      </div>
-    </div>`);
-}
-
-async function submitStay(editId){
-  const location    = val('f-stay-loc');
-  const startDate   = val('f-stay-start');
-  const endDate     = val('f-stay-end');
-  const arrivalTime = val('f-stay-arr');
-  const departTime  = val('f-stay-dep');
-  const notes       = val('f-stay-notes');
-  if(!startDate || !endDate){ toast('Arrival and departure dates required'); return; }
-  if(endDate < startDate){ toast('Departure must be on or after arrival'); return; }
-  const id = editId || cryptoId();
-  const stay = {id, location, startDate, endDate, arrivalTime, departTime, notes};
-  const idx = principalStays.findIndex(s=>s.id===id);
-  if(idx>-1) principalStays[idx] = stay; else principalStays.push(stay);
-  await saveKey('principal-stays', principalStays);
-  closeModal();
-  renderCalendar();
-}
-
-async function deleteStay(id){
-  if(!confirm('Remove this stay?')) return;
-  principalStays = principalStays.filter(s=>s.id!==id);
-  await saveKey('principal-stays', principalStays);
-  closeModal();
-  renderCalendar();
-}
-
-function openStayDetail(id){
-  const s = principalStays.find(s=>s.id===id);
-  if(!s) return;
-  const fmt = d => new Date(d+'T00:00:00').toLocaleDateString('default',{weekday:'short',month:'long',day:'numeric',year:'numeric'});
-  const fmtT = t => t ? fmtTime(t) : 'Not specified';
-  const nights = Math.round((new Date(s.endDate+'T00:00:00')-new Date(s.startDate+'T00:00:00'))/86400000);
-  showModal(`
-    <h2>&#127968; ${escapeHtml(s.location)}</h2>
-    <div class="row2" style="margin-bottom:4px;">
-      <div><label>Arrival</label>
-        <div style="font-size:14px;font-weight:600;">${fmt(s.startDate)}</div>
-        <div style="color:var(--muted);font-size:12px;margin-top:2px;">${fmtT(s.arrivalTime)}</div>
-      </div>
-      <div><label>Departure</label>
-        <div style="font-size:14px;font-weight:600;">${fmt(s.endDate)}</div>
-        <div style="color:var(--muted);font-size:12px;margin-top:2px;">${fmtT(s.departTime)}</div>
-      </div>
-    </div>
-    <div style="font-size:12px;color:var(--muted);margin:10px 0;">${nights} night${nights!==1?'s':''}</div>
-    ${s.notes?`<label>Notes</label><textarea style="resize:none;pointer-events:none;" rows="3">${escapeHtml(s.notes)}</textarea>`:''}
-    <div class="modal-actions">
-      <div></div>
-      <div style="display:flex;gap:8px;">
-        <button class="cancel" onclick="closeModal()">Close</button>
-        <button class="save" onclick="closeModal();openStayModal('${s.id}')">Edit Stay</button>
-      </div>
-    </div>`);
-}
-/* ── END PRINCIPAL STAYS ────────────────────────────────────────── */
-
-</script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
@@ -1124,7 +494,7 @@ document.getElementById('auth-signout').addEventListener('click', () => auth.sig
 const SOP_CATEGORIES = ["Security","Access","Supervision","Vehicle Use & Notation","Facilities & Guest Use","General Household Standards"];
 const PRIORITIES = ["High","Medium","Low"];
 const PROJ_AREAS = ["Main Home","Julian Ranch","Hangar","Office","Vehicles"];
-const PROJ_STAGES = ["Scoping","Bidding","Your Approval","In Progress","Complete"];
+const PROJ_STAGES = ["Vendor identified","Vendor contacted","Vendor scheduled","Project commenced","Project completed"];
 const PM_FREQUENCIES = ["Weekly","Monthly","Quarterly","Semi-Annual","Annual"];
 const CAP_OPEX = ["Unclassified","CapEx","OpEx"];
 const ZONES = ["Main Home","Julian Ranch","Hangar","Office","Vehicles"];
@@ -1149,214 +519,13 @@ function normalizeZone(name){
   return ZONE_UNASSIGNED;
 }
 const PM_CATEGORIES = ["Water & Plumbing","HVAC & Air Systems","Electrical & Power","Appliances & Kitchen","Roof, Exterior & Structure","Grounds & Exterior","Pest & Termite Control","Pool & Aquatics","Wellness & Recreation","Smart Home, AV & Security","Wine & Specialty Rooms","Vehicles & Garage","General"];
-const STAGE_CLASS = {"Scoping":"low","Bidding":"medium","Your Approval":"high","In Progress":"low","Complete":""};
-/* PMAAS JS START */
+const STAGE_CLASS = {
+  "Vendor identified":"stage-identified", "Vendor contacted":"stage-contacted",
+  "Vendor scheduled":"stage-scheduled", "Project commenced":"stage-commenced",
+  "Project completed":"stage-completed"
+};
 
-function renderPMZoneFilter(){
-  const strip = document.getElementById('pm-zone-filter');
-  if(!strip) return;
-  const zoneList = typeof ESTATE_CONFIG !== 'undefined' ? ESTATE_CONFIG.zones : ZONES;
-  const zones = ['All'].concat(zoneList.filter(function(z){ return z!=='Vehicles'; }));
-  strip.innerHTML = zones.map(function(z){ return '<button class="pm-zone-chip' + (pmZoneFilter===z?' active':'') + '" onclick="setPMZone(\'' + z + '\')">' + z + '</button>'; }).join('');
-}
-function setPMZone(zone){
-  pmZoneFilter = zone;
-  renderPMZoneFilter();
-  renderPMaaS();
-}
-
-
-function renderPMZoneFilter(){
-  const strip = document.getElementById('pm-zone-filter');
-  if(!strip) return;
-  const zones = ['All'].concat(ESTATE_CONFIG.zones.filter(function(z){ return z!=='Vehicles'&&z!=='Yacht'; }));
-  strip.innerHTML = zones.map(function(z){
-    return '<button class="pm-zone-chip' + (pmZoneFilter===z?' active':'') + '" onclick="setPMZone(\'' + z + '\')">' + z + '</button>';
-  }).join('');
-}
-function setPMZone(zone){
-  pmZoneFilter = zone;
-  renderPMZoneFilter();
-  renderPMaaS();
-}
-
-function pmToggleRubric(){
-  var el=document.getElementById('pm-rubric-detail');
-  if(el) el.classList.toggle('open');
-}
-function pmToggleArea(head){
-  var body=head.nextElementSibling;
-  var isOpen=head.classList.contains('open');
-  head.classList.toggle('open',!isOpen);
-  if(body) body.classList.toggle('open',!isOpen);
-}
-function pmJumpTo(id){
-  var el=document.getElementById(id);
-  if(!el) return;
-  el.scrollIntoView({behavior:'smooth',block:'start'});
-  var head=el.querySelector('.pm-area-head');
-  var body=el.querySelector('.pm-area-body');
-  if(head&&body){head.classList.add('open');body.classList.add('open');}
-}
-function pmOpenLogModal(area){
-  showModal('<h2>Log Service \u2014 '+area+'</h2>'+
-    '<label>Service Item</label><input id="pm-f-item" placeholder="e.g. Filter replacement, Drain clearing...">'+
-    '<label>Date Completed</label><input type="date" id="pm-f-date" value="'+fmtDate(new Date())+'">'+
-    '<label>Inspection Level</label>'+
-    '<select id="pm-f-level"><option>Level 1 \u2014 Property Walk</option><option selected>Level 2 \u2014 System Check</option><option>Level 3 \u2014 Full Estate Audit</option></select>'+
-    '<label>Completed By</label>'+
-    '<select id="pm-f-by"><option>Erik Matthews / In-house</option><option>Vendor \u2014 specify in notes</option></select>'+
-    '<label>Condition Found</label>'+
-    '<select id="pm-f-cond"><option>Good \u2014 no issues</option><option>Minor \u2014 monitor</option><option>Action required \u2014 log as finding</option></select>'+
-    '<label>Findings / Notes</label><textarea id="pm-f-notes" placeholder="Issues found, observations, or follow-up required..."></textarea>'+
-    '<div style="background:var(--cream);border:1px solid var(--line);border-left:3px solid var(--brass);padding:9px 13px;margin-top:12px;font-size:12px;color:var(--muted);">'+
-    '<b style="color:var(--ink);">Saving will:</b> Update Last Serviced \u00b7 Recalculate Next Due \u00b7 Add to Calendar \u00b7 Open hours prompt \u00b7 Push findings to Condition Report'+
-    '</div>'+
-    '<div class="modal-actions"><div></div><div style="display:flex;gap:10px;">'+
-    '<button class="cancel" onclick="closeModal()">Cancel</button>'+
-    '<button class="save" onclick="closeModal();toast(\'Saved\')">Save and Update All Tabs</button>'+
-    '</div></div>');
-}
-
-function pmSwitchView(view, btn) {
-  document.querySelectorAll('.pm-view').forEach(v => v.classList.remove('pm-view-active'));
-  document.querySelectorAll('.sub-tab').forEach(b => b.classList.remove('active'));
-  document.getElementById('pm-view-' + view).classList.add('pm-view-active');
-  btn.classList.add('active');
-}
-/* =============================================================
-   PMAAS RENDER — populates PMaaS accordions from pmTasks array
-   Added: 2026-09-13
-   ============================================================= */
-function renderPMaaS(){
-  renderPMZoneFilter();
-  var today = new Date(); today.setHours(0,0,0,0);
-  var areaMap = {
-    'pm-svc-water':  ['Water & Plumbing'],
-    'pm-svc-hvac':   ['HVAC & Air Systems'],
-    'pm-svc-appl':   ['Appliances & Kitchen'],
-    'pm-svc-ext':    ['Roof, Exterior & Structure'],
-    'pm-svc-safe':   ['Smart Home, AV & Security','Electrical & Power'],
-    'pm-svc-gnd':    ['Grounds & Exterior','Pool & Aquatics','Pest & Termite Control','Wine & Specialty Rooms','Vehicles & Garage','General']
-  };
-  var healthMap = {
-    'pm-svc-water': 0, 'pm-svc-hvac': 1, 'pm-svc-appl': 2,
-    'pm-svc-ext': 3, 'pm-svc-safe': 4, 'pm-svc-gnd': 5
-  };
-
-  Object.keys(areaMap).forEach(function(areaId){
-    var cats = areaMap[areaId];
-    var tasks = pmTasks.filter(function(t){ return cats.indexOf(t.category||'General') > -1 && (pmZoneFilter==='All' || (t.area||'')=== pmZoneFilter); });
-    var wrap = document.getElementById(areaId);
-    if(!wrap) return;
-
-    // Update health strip
-    var healthIdx = healthMap[areaId];
-    var healthCells = document.querySelectorAll('.pm-health-cell');
-    if(healthCells[healthIdx]){
-      var statusEl = healthCells[healthIdx].querySelector('.pm-health-status');
-      if(statusEl){
-        if(tasks.length === 0){ statusEl.textContent = 'Not Set'; statusEl.style.color = ''; }
-        else {
-          var overdue = tasks.filter(function(t){ return t.nextDue && new Date(t.nextDue+'T00:00:00') < today; });
-          var due = tasks.filter(function(t){
-            if(!t.nextDue) return false;
-            var d = new Date(t.nextDue+'T00:00:00');
-            return d >= today && d <= new Date(today.getTime() + 14*86400000);
-          });
-          if(overdue.length){ statusEl.textContent = 'Overdue'; statusEl.style.color = 'var(--high)'; }
-          else if(due.length){ statusEl.textContent = 'Due Soon'; statusEl.style.color = 'var(--med)'; }
-          else { statusEl.textContent = 'Current'; statusEl.style.color = 'var(--low)'; }
-        }
-      }
-    }
-
-    // Update area pill count
-    var pill = wrap.querySelector('.pm-area-pills');
-    if(pill){
-      var overduePills = tasks.filter(function(t){ return t.nextDue && new Date(t.nextDue+'T00:00:00') < today; }).length;
-      var duePills = tasks.filter(function(t){
-        if(!t.nextDue) return false;
-        var d = new Date(t.nextDue+'T00:00:00');
-        return d >= today && d <= new Date(today.getTime() + 14*86400000);
-      }).length;
-      pill.innerHTML = tasks.length === 0 ? '<span class="tag">—</span>' :
-        (overduePills ? '<span class="tag high">'+overduePills+' Overdue</span>' : '') +
-        (duePills ? '<span class="tag medium">'+duePills+' Due Soon</span>' : '') +
-        (!overduePills && !duePills ? '<span class="tag low">'+tasks.length+' Current</span>' : '');
-    }
-
-    // Populate table
-    var tbody = wrap.querySelector('tbody');
-    if(!tbody) return;
-    if(tasks.length === 0){
-      tbody.innerHTML = '<tr class="pm-empty-row"><td colspan="6">No service records logged — add first entry to get started</td></tr>';
-      return;
-    }
-    tbody.innerHTML = tasks.map(function(t){
-      var due = t.nextDue ? new Date(t.nextDue+'T00:00:00') : null;
-      var daysOut = due ? Math.round((due - today) / 86400000) : null;
-      var statusBadge = !due ? '<span class="tag">—</span>' :
-        daysOut < 0 ? '<span class="tag high">Overdue</span>' :
-        daysOut <= 14 ? '<span class="tag medium">Due Soon</span>' :
-        '<span class="tag low">Scheduled</span>';
-      var dueLabel = due ? due.toLocaleDateString('default',{month:'short',day:'numeric',year:'numeric'}) : '—';
-      return '<tr>' +
-        '<td><b>'+escapeHtml(t.title)+'</b>' + (t.body ? '<br><span style="font-size:11px;color:var(--muted);">'+escapeHtml(t.body.slice(0,80))+(t.body.length>80?'…':'')+'</span>' : '') + '</td>' +
-        '<td>'+escapeHtml(t.frequency)+'</td>' +
-        '<td style="color:var(--muted);">'+(t.lastServiced ? new Date(t.lastServiced+'T00:00:00').toLocaleDateString('default',{month:'short',day:'numeric',year:'numeric'}) : '—')+'</td>' +
-        '<td>'+dueLabel+'</td>' +
-        '<td>'+statusBadge+'</td>' +
-        '<td>'+escapeHtml(t.vendor||'—')+'</td>' +
-        '</tr>';
-    }).join('');
-
-      // Asset link strip — show homeAssets matching this service area
-      var assetStrip = wrap.querySelector('.pm-asset-strip');
-      if(assetStrip && typeof homeAssets !== 'undefined'){
-        var matchingAssets = homeAssets.filter(function(a){ return cats.indexOf(a.category||'General') > -1 && (pmZoneFilter==='All' || (a.zone||a.location||'')=== pmZoneFilter); });
-        if(matchingAssets.length){
-          assetStrip.style.display = 'block';
-          assetStrip.innerHTML = '<div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:8px 14px 4px;">Assets in this area</div>' +
-            matchingAssets.map(function(a){
-              return '<div onclick="openAssetModal(\'' + a.id + '\')" style="display:flex;justify-content:space-between;padding:7px 14px;border-top:1px solid var(--line);font-size:12px;cursor:pointer;" onmouseover="this.style.background=\'var(--cream)\'" onmouseout="this.style.background=\'\'">'+
-                '<span style="color:var(--ink);font-weight:500;">'+escapeHtml(a.name)+'</span>'+
-                '<span style="color:var(--muted);">'+escapeHtml(a.brand||'')+(a.model?' &middot; '+escapeHtml(a.model):'')+(a.location?' &middot; '+escapeHtml(a.location):'')+'</span>'+
-                '</div>';
-            }).join('');
-        } else {
-          assetStrip.style.display = 'none';
-        }
-      }
-  });
-
-  // Update condition report preview
-  var reportHdr = document.querySelector('.pm-report-hdr-left');
-  var reportBody = document.querySelector('.pm-report-empty');
-  var overdueTasks = pmTasks.filter(function(t){ return t.nextDue && new Date(t.nextDue+'T00:00:00') < today; });
-  var dueSoonTasks = pmTasks.filter(function(t){
-    if(!t.nextDue) return false;
-    var d = new Date(t.nextDue+'T00:00:00');
-    return d >= today && d <= new Date(today.getTime() + 14*86400000);
-  });
-  if(reportHdr && pmTasks.length > 0){
-    reportHdr.textContent = 'Condition Summary — ' + pmTasks.length + ' service items tracked';
-    if(reportBody){
-      var lines = [];
-      if(overdueTasks.length) lines.push('<span style="color:var(--high);font-weight:600;">⚠ Overdue ('+overdueTasks.length+'):</span> '+overdueTasks.map(function(t){return escapeHtml(t.title);}).join(', '));
-      if(dueSoonTasks.length) lines.push('<span style="color:var(--med);font-weight:600;">◷ Due within 14 days ('+dueSoonTasks.length+'):</span> '+dueSoonTasks.map(function(t){return escapeHtml(t.title);}).join(', '));
-      if(!overdueTasks.length && !dueSoonTasks.length) lines.push('<span style="color:var(--low);font-weight:600;">✓ All items current</span> — next due dates on schedule.');
-      reportBody.innerHTML = lines.join('<br><br>');
-      reportBody.style.textAlign = 'left';
-      reportBody.style.fontStyle = 'normal';
-      reportBody.style.color = 'var(--ink)';
-    }
-  }
-}
-/* END PMAAS RENDER */
-/* PMAAS JS END */
-let sops = [], calEvents = [], projects = [], hoursLog = [], pmTasks = [], principalStays = [];
-let pmZoneFilter = "All";
+let sops = [], calEvents = [], projects = [], hoursLog = [], pmTasks = [];
 let vendorDirectory = [], properties = [], vehicles = [], vehicleTrips = [], receipts = [], propertyDetails = [], homeAssets = [];
 let activeTab = 'overview';
 let sopFilter = 'All';
@@ -1378,7 +547,6 @@ async function loadAll(){
   projects = await loadKey('completed-projects', []);
   hoursLog = await loadKey('hours-log', []);
   pmTasks = await loadKey('pm-tasks', []);
-  principalStays = await loadKey('principal-stays', []);
   vendorDirectory = await loadKey('vendor-directory', []);
   properties = await loadKey('property-catalog', seedProperties());
   vehicles = await loadKey('vehicle-catalog', []);
@@ -1387,7 +555,7 @@ async function loadAll(){
   propertyDetails = await loadKey('property-details', []);
   homeAssets = await loadKey('home-assets', []);
   renderOverview();
-  renderSops(); renderCalendar(); renderProjects(); renderHours(); renderPM(); renderPMaaS();
+  renderSops(); renderCalendar(); renderProjects(); renderHours(); renderPM();
   renderVendors(); renderProperties(); renderVehicles(); renderReceipts(); renderPropDetails();
   renderAssetRegistry(); renderFinancials();
 }
@@ -1626,21 +794,7 @@ document.querySelector('.tabs').addEventListener('keydown', event=>{
 });
 document.getElementById('add-btn').onclick = ()=>{
   if(activeTab==='sops') openSopModal();
-  else if(activeTab==='calendar') showModal(`
-    <h2>Add to Calendar</h2>
-    <div style="display:flex;flex-direction:column;gap:12px;margin-top:4px;">
-      <button class="save" style="width:100%;text-align:left;padding:14px 18px;display:flex;align-items:center;gap:12px;"
-        onclick="closeModal();openCalModal(fmtDate(new Date(calDate.getFullYear(),calDate.getMonth(),1)))">
-        <span style="font-size:20px;">📅</span>
-        <div><div style="font-weight:700;">Calendar Entry</div><div style="font-size:12px;opacity:.8;font-weight:400;">Add a single event, service, or appointment</div></div>
-      </button>
-      <button class="save" style="width:100%;text-align:left;padding:14px 18px;display:flex;align-items:center;gap:12px;background:var(--ink);"
-        onclick="closeModal();openStayModal()">
-        <span style="font-size:20px;">🏠</span>
-        <div><div style="font-weight:700;">Add a Stay</div><div style="font-size:12px;opacity:.8;font-weight:400;">Block multi-day principal visit with arrival and departure</div></div>
-      </button>
-    </div>
-    <div class="modal-actions" style="margin-top:8px;"><div></div><button class="cancel" onclick="closeModal()">Cancel</button></div>`);
+  else if(activeTab==='calendar') openCalModal(fmtDate(new Date(calDate.getFullYear(),calDate.getMonth(),1)));
   else if(activeTab==='projects') openProjModal();
   else if(activeTab==='hours') openHoursModal();
   else if(activeTab==='pm') pmSubView==='assets' ? openAssetModal() : openPMModal();
@@ -1801,36 +955,10 @@ function renderCalendar(){
   for(let d=1; d<=daysInMonth; d++){
     const dateStr = fmtDate(new Date(year,month,d));
     const dayEvents = calEvents.filter(e=> e.date===dateStr || (e.recurring && e.weekday===new Date(year,month,d).getDay()));
-    /* PMAAS CAL INJECT */
-    pmTasks.forEach(function(t){
-      if(t.nextDue === dateStr){
-        var today0 = new Date(); today0.setHours(0,0,0,0);
-        var dueDate = new Date(t.nextDue+'T00:00:00');
-        dayEvents.push({title:t.title,vendor:t.vendor||'',date:dateStr,recurring:false,_pmTask:true,_overdue:dueDate<today0,notes:t.body||''});
-      }
-    });
-    /* END PMAAS CAL INJECT */
     const cell = document.createElement('div'); cell.className='cal-day';
     cell.innerHTML = `<div class="cal-daynum">${d}</div>` +
-      dayEvents.slice(0,3).map(e=>`<div class="cal-event ${e.recurring?'recurring':''} ${e._pmTask?(e._overdue?'pm-cal-overdue':'pm-cal-due'):''}" title="${e.vendor?escapeHtml(e.vendor):''}">${e._pmTask?'🔧 ':''}${escapeHtml(e.title)}</div>`).join('') +
+      dayEvents.slice(0,3).map(e=>`<div class="cal-event ${e.recurring?'recurring':''}">${escapeHtml(e.title)}${e.startTime?` &middot; ${fmtTime(e.startTime)}`:''}</div>`).join('') +
       (dayEvents.length>3 ? `<div style="font-size:10px;color:var(--muted);margin-top:2px;">+${dayEvents.length-3} more</div>` : '');
-    /* STAY RENDER — principal stays spanning this date */
-    principalStays.filter(function(s){
-      return dateStr >= s.startDate && dateStr <= s.endDate;
-    }).forEach(function(s){
-      const isStart = dateStr === s.startDate;
-      const isEnd   = dateStr === s.endDate;
-      const cls = 'stay-bar ' + (isStart ? 'stay-start ' : '') + (isEnd ? 'stay-end ' : (!isStart&&!isEnd?'stay-mid':''));
-      const label = isStart ? '&#127968; '+escapeHtml(s.location)+(s.arrivalTime?' &middot; arr '+fmtTime(s.arrivalTime):'') :
-                    isEnd   ? (s.departTime?'dep '+fmtTime(s.departTime):'') : '';
-      const bar = document.createElement('div');
-      bar.className = cls.trim();
-      bar.innerHTML = label;
-      bar.onclick = function(ev){ ev.stopPropagation(); openStayDetail(s.id); };
-      cell.appendChild(bar);
-    });
-
-
     cell.onclick = ()=> openCalModal(dateStr, dayEvents);
     grid.appendChild(cell);
   }
@@ -2095,7 +1223,7 @@ async function submitProj(){
     capOpEx: val('f-capopex'), pmTaskId: val('f-pmtask'),
     attachments: window._projAttachments || []
   };
-  if(editing.id){ const i = projects.findIndex(x=>x.id===editing.id); const existing=projects[i]; projects[i] = {...existing, ...data, bids:existing.bids||[], aiReview:existing.aiReview||null}; }
+  if(editing.id){ const i = projects.findIndex(x=>x.id===editing.id); projects[i] = {...projects[i], ...data}; }
   else { projects.push({id:cryptoId(), ...data}); }
   await saveKey('completed-projects', projects); closeModal(); renderProjects();
 }
@@ -2210,7 +1338,6 @@ async function deleteHours(){ hoursLog = hoursLog.filter(e=>e.id!==editing.id); 
 /* ---------- PREVENTATIVE MAINTENANCE ---------- */
 function renderPM(){
   const categoryFilters = document.getElementById('pm-category-filters');
-  if(!categoryFilters) return; /* PMaaS active */
   categoryFilters.innerHTML = '';
   ["All", ...PM_CATEGORIES].forEach(category=>{
     const chip = document.createElement('div');
@@ -2369,7 +1496,7 @@ async function submitAsset(){
   if(editing.id){ const index=homeAssets.findIndex(item=>item.id===editing.id); homeAssets[index]={...homeAssets[index],...data}; }
   else homeAssets.push({id:cryptoId(),...data});
   await saveKey('home-assets', homeAssets);
-  closeModal(); renderAssetRegistry(); if(typeof renderPMaaS==='function') renderPMaaS();
+  closeModal(); renderAssetRegistry();
 }
 
 function computeFinancials(){
@@ -3369,91 +2496,6 @@ auth.onAuthStateChanged(async function(user){
     setAuthMessage(error.message || 'Estate records could not be loaded securely.', true);
   }
 });
-
-</script>
-<script>
-/* ── PRINCIPAL STAYS ────────────────────────────────────────────── */
-
-function openStayModal(editId){
-  const e = editId ? principalStays.find(s=>s.id===editId) : null;
-  showModal(`
-    <h2>${e ? 'Edit Stay' : '&#127968; Add a Stay'}</h2>
-    <label>Location</label>
-    <select id="f-stay-loc">${ESTATE_CONFIG.zones.filter(z=>z!=='Vehicles'&&z!=='Yacht').map(z=>`<option value="${z}" ${e&&e.location===z?'selected':''}>${z}</option>`).join('')}</select>
-    <div class="row2">
-      <div><label>Arrival Date</label><input type="date" id="f-stay-start" value="${e?e.startDate:''}"></div>
-      <div><label>Departure Date</label><input type="date" id="f-stay-end" value="${e?e.endDate:''}"></div>
-    </div>
-    <div class="row2">
-      <div><label>Expected Arrival Time</label><input type="time" id="f-stay-arr" value="${e&&e.arrivalTime?e.arrivalTime:''}"></div>
-      <div><label>Expected Departure Time</label><input type="time" id="f-stay-dep" value="${e&&e.departTime?e.departTime:''}"></div>
-    </div>
-    <label>Notes (optional)</label>
-    <textarea id="f-stay-notes" placeholder="Flight details, vehicle needed, pre-arrival requests...">${e?escapeHtml(e.notes||''):''}</textarea>
-    <div class="modal-actions">
-      ${e ? `<button class="cancel" style="color:var(--high);border-color:var(--high);" onclick="deleteStay('${e.id}')">Delete</button>` : '<div></div>'}
-      <div style="display:flex;gap:8px;">
-        <button class="cancel" onclick="closeModal()">Cancel</button>
-        <button class="save" onclick="submitStay('${e?e.id:''}')">Save Stay</button>
-      </div>
-    </div>`);
-}
-
-async function submitStay(editId){
-  const location    = val('f-stay-loc');
-  const startDate   = val('f-stay-start');
-  const endDate     = val('f-stay-end');
-  const arrivalTime = val('f-stay-arr');
-  const departTime  = val('f-stay-dep');
-  const notes       = val('f-stay-notes');
-  if(!startDate || !endDate){ toast('Arrival and departure dates required'); return; }
-  if(endDate < startDate){ toast('Departure must be on or after arrival'); return; }
-  const id = editId || cryptoId();
-  const stay = {id, location, startDate, endDate, arrivalTime, departTime, notes};
-  const idx = principalStays.findIndex(s=>s.id===id);
-  if(idx>-1) principalStays[idx] = stay; else principalStays.push(stay);
-  await saveKey('principal-stays', principalStays);
-  closeModal();
-  renderCalendar();
-}
-
-async function deleteStay(id){
-  if(!confirm('Remove this stay?')) return;
-  principalStays = principalStays.filter(s=>s.id!==id);
-  await saveKey('principal-stays', principalStays);
-  closeModal();
-  renderCalendar();
-}
-
-function openStayDetail(id){
-  const s = principalStays.find(s=>s.id===id);
-  if(!s) return;
-  const fmt = d => new Date(d+'T00:00:00').toLocaleDateString('default',{weekday:'short',month:'long',day:'numeric',year:'numeric'});
-  const fmtT = t => t ? fmtTime(t) : 'Not specified';
-  const nights = Math.round((new Date(s.endDate+'T00:00:00')-new Date(s.startDate+'T00:00:00'))/86400000);
-  showModal(`
-    <h2>&#127968; ${escapeHtml(s.location)}</h2>
-    <div class="row2" style="margin-bottom:4px;">
-      <div><label>Arrival</label>
-        <div style="font-size:14px;font-weight:600;">${fmt(s.startDate)}</div>
-        <div style="color:var(--muted);font-size:12px;margin-top:2px;">${fmtT(s.arrivalTime)}</div>
-      </div>
-      <div><label>Departure</label>
-        <div style="font-size:14px;font-weight:600;">${fmt(s.endDate)}</div>
-        <div style="color:var(--muted);font-size:12px;margin-top:2px;">${fmtT(s.departTime)}</div>
-      </div>
-    </div>
-    <div style="font-size:12px;color:var(--muted);margin:10px 0;">${nights} night${nights!==1?'s':''}</div>
-    ${s.notes?`<label>Notes</label><textarea style="resize:none;pointer-events:none;" rows="3">${escapeHtml(s.notes)}</textarea>`:''}
-    <div class="modal-actions">
-      <div></div>
-      <div style="display:flex;gap:8px;">
-        <button class="cancel" onclick="closeModal()">Close</button>
-        <button class="save" onclick="closeModal();openStayModal('${s.id}')">Edit Stay</button>
-      </div>
-    </div>`);
-}
-/* ── END PRINCIPAL STAYS ────────────────────────────────────────── */
 
 </script>
 </body>
