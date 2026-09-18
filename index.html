@@ -405,6 +405,21 @@
     .ai-footer-note{font-size:10.5px;color:var(--muted);}
     .approve-proj-btn{font-size:12px;font-weight:600;padding:7px 16px;border-radius:8px;background:var(--ink);color:#fff;border:none;cursor:pointer;font-family:inherit;}
     
+    
+    /* ── Projects Pipeline ── */
+    .proj-pipeline{display:flex;gap:0;margin-bottom:16px;border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+    .pipe-stage{flex:1;padding:10px 8px;text-align:center;border-right:1px solid var(--line);background:var(--paper);cursor:pointer;transition:background .1s;}
+    .pipe-stage:last-child{border-right:none;}
+    .pipe-stage:hover{background:var(--cream);}
+    .pipe-stage.pipe-active{background:var(--ink);}
+    .pipe-stage.pipe-action .ps-count{color:var(--high);}
+    .pipe-stage.pipe-action .ps-label{color:var(--high);}
+    .pipe-stage .ps-count{font-family:'Playfair Display',serif;font-size:19px;font-weight:600;color:var(--muted);line-height:1;}
+    .pipe-stage.pipe-active .ps-count{color:#fff;}
+    .pipe-stage .ps-label{font-size:9.5px;font-weight:600;color:var(--muted);margin-top:3px;letter-spacing:.04em;white-space:nowrap;}
+    .pipe-stage.pipe-active .ps-label{color:rgba(255,255,255,.55);}
+    .proj-sec-label{font-size:10px;font-weight:600;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin:16px 0 8px;padding-bottom:5px;border-bottom:1px solid var(--line);}
+
     /* PMAAS CSS END */
   @media (max-width: 640px){
     .wrap{padding:20px 14px 70px;}
@@ -536,6 +551,7 @@
     <div style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Stage</div>
     <div class="filters" id="proj-stage-filters" style="margin-bottom:14px;"></div>
     <div style="font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Area</div>
+    <div id="proj-pipeline" class="proj-pipeline"></div>
     <div class="filters" id="proj-filters"></div>
     <div id="proj-list"></div>
   </section>
@@ -976,6 +992,33 @@ function renderBidsSection(proj){
     </div>
     ${aiBar}
     ${aiPanel}`;
+}
+
+
+function renderProjectPipeline(){
+  const strip = document.getElementById('proj-pipeline');
+  if(!strip) return;
+  const STAGES = ['Scoping','Bidding','Your Approval','In Progress','Complete'];
+  const counts = {};
+  STAGES.forEach(s=>counts[s]=0);
+  projects.forEach(p=>{ const s=p.stage||'Scoping'; if(counts[s]!==undefined) counts[s]++; else counts['Scoping']++; });
+  strip.innerHTML = STAGES.map(s=>`
+    <div class="pipe-stage${s==='Your Approval'&&counts[s]>0?' pipe-action':''}" onclick="filterProjByStage('${s}')">
+      <div class="ps-count">${counts[s]}</div>
+      <div class="ps-label">${s}</div>
+    </div>`).join('');
+}
+
+let projStageView = 'All';
+function filterProjByStage(stage){
+  projStageView = stage;
+  renderProjects();
+  renderProjectPipeline();
+  // Highlight active
+  document.querySelectorAll('#proj-pipeline .pipe-stage').forEach((el,i)=>{
+    const stages=['Scoping','Bidding','Your Approval','In Progress','Complete'];
+    el.classList.toggle('pipe-active', stages[i]===stage);
+  });
 }
 
 </script>
@@ -1657,34 +1700,171 @@ function renderOverview(){
   const root = document.getElementById('overview-content');
   if(!root) return;
   const today = new Date(); today.setHours(0,0,0,0);
-  const weekEnd = new Date(today); weekEnd.setDate(weekEnd.getDate()+7);
-  const activeProjects = projects.filter(p=>(p.stage||PROJ_STAGES[0])!=='Project completed');
-  const overdue = pmTasks.filter(p=>p.nextDue && new Date(p.nextDue+'T00:00:00') < today);
-  const dueSoon = pmTasks.filter(p=>{ if(!p.nextDue) return false; const d=new Date(p.nextDue+'T00:00:00'); return d>=today && d<=weekEnd; });
-  const thisMonthHours = hoursLog.filter(h=>{ const d=new Date(h.date+'T00:00:00'); return d.getMonth()===today.getMonth() && d.getFullYear()===today.getFullYear(); }).reduce((sum,h)=>sum+calcHours(h.start,h.finish),0);
-  const currentMonthSpend = receipts.filter(r=>{ const d=new Date(r.date+'T00:00:00'); return d.getMonth()===today.getMonth() && d.getFullYear()===today.getFullYear(); }).reduce((sum,r)=>sum+finNum(r.price),0);
-  const warnings = [];
-  projects.forEach(p=>{
-    if(p.completedDate && (p.stage||PROJ_STAGES[0])!=='Project completed') warnings.push(`<b>${escapeHtml(p.title)}</b> has a completion date but is still marked ${escapeHtml(p.stage||PROJ_STAGES[0])}.`);
-    if((p.stage||PROJ_STAGES[0])==='Project completed' && !p.completedDate) warnings.push(`<b>${escapeHtml(p.title)}</b> is marked complete without a completion date.`);
-    if(p.vendor && !vendorDirectory.some(v=>(v.name||'').trim().toLowerCase()===p.vendor.trim().toLowerCase())) warnings.push(`<b>${escapeHtml(p.title)}</b> references ${escapeHtml(p.vendor)}, which is not yet linked to the Vendor Directory.`);
-  });
-  root.innerHTML = `
-    <div class="overview-grid" aria-label="Current operational summary">
-      <div class="metric" data-icon="◆"><div class="metric-label">Active projects</div><div class="metric-value">${activeProjects.length}</div><div class="metric-detail">In progress across all estates</div></div>
-      <div class="metric" data-icon="△"><div class="metric-label">Maintenance overdue</div><div class="metric-value">${overdue.length}</div><div class="metric-detail">${overdue.length?'Requires attention':'All schedules current'}</div></div>
-      <div class="metric" data-icon="◷"><div class="metric-label">Hours this month</div><div class="metric-value">${thisMonthHours.toFixed(2)}</div><div class="metric-detail">Recorded management time</div></div>
-      <div class="metric" data-icon="$"><div class="metric-label">Receipts this month</div><div class="metric-value">$${currentMonthSpend.toLocaleString(undefined,{maximumFractionDigits:0})}</div><div class="metric-detail">Logged project expenses</div></div>
-    </div>
-    ${dueSoon.length ? `<div class="notice"><b>Due in the next 7 days:</b> ${dueSoon.map(x=>escapeHtml(x.title)).join(', ')}</div>` : ''}
-    ${overdue.length ? `<div class="notice high"><b>Overdue maintenance:</b> ${overdue.map(x=>escapeHtml(x.title)).join(', ')}</div>` : ''}
-    <details class="card review-details">
-      <summary class="review-summary"><div><div class="card-title">Records requiring review</div><div class="card-body">${warnings.length ? 'Stage, date, or vendor links may need attention. Existing records have not been changed.' : 'No stage, date, or vendor-link inconsistencies detected.'}</div></div><span class="review-count">${warnings.length} ${warnings.length===1?'item':'items'}</span></summary>
-      ${warnings.slice(0,8).map(w=>`<div class="notice">${w}</div>`).join('')}
-    </details>`;
-}
+  const in14 = new Date(today); in14.setDate(in14.getDate()+14);
+  const monthStr = today.toLocaleString('default',{month:'long',year:'numeric'});
 
-/* ---------- SOPs ---------- */
+  // Data
+  const approvalProjects = projects.filter(p=>(p.stage||'')==='Your Approval');
+  const overdueTasks = pmTasks.filter(t=>t.nextDue && new Date(t.nextDue+'T00:00:00')<today);
+  const dueSoonTasks = pmTasks.filter(t=>{ if(!t.nextDue) return false; const d=new Date(t.nextDue+'T00:00:00'); return d>=today && d<=in14; });
+  const onScheduleTasks = pmTasks.filter(t=>{ if(!t.nextDue) return false; const d=new Date(t.nextDue+'T00:00:00'); return d>in14; });
+  const activeProjects = projects.filter(p=>p.stage && p.stage!=='Complete');
+  const upcomingStays = (principalStays||[]).filter(s=>s.endDate>=today.toISOString().slice(0,10)).sort((a,b)=>a.startDate.localeCompare(b.startDate)).slice(0,3);
+  const thisMonthReceipts = (receipts||[]).filter(r=>{ const d=new Date(r.date+'T00:00:00'); return d.getMonth()===today.getMonth()&&d.getFullYear()===today.getFullYear(); });
+  const recentReceipts = (receipts||[]).slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
+  const thisMonthHours = hoursLog.filter(h=>{ const d=new Date(h.date+'T00:00:00'); return d.getMonth()===today.getMonth()&&d.getFullYear()===today.getFullYear(); }).reduce((s,h)=>s+calcHours(h.start,h.finish),0);
+  const totalDecisions = approvalProjects.length + overdueTasks.length;
+
+  // Spend by category
+  const spendByCat = {};
+  thisMonthReceipts.forEach(r=>{ const cat=r.category||'Other'; spendByCat[cat]=(spendByCat[cat]||0)+finNum(r.price); });
+  const totalSpend = Object.values(spendByCat).reduce((s,v)=>s+v,0);
+  const topCats = Object.entries(spendByCat).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const maxCat = topCats.length ? topCats[0][1] : 1;
+
+  // Stage progress for project card
+  const STAGE_ORDER = ['Scoping','Bidding','Your Approval','In Progress','Complete'];
+  const stagePct = s=>{ const i=STAGE_ORDER.indexOf(s); return i<0?0:Math.round((i+1)/STAGE_ORDER.length*100); };
+  const stageColor = s=>s==='Your Approval'?'var(--high)':s==='In Progress'?'var(--low)':'var(--med)';
+
+  const fmtDate = d=>new Date(d+'T00:00:00').toLocaleDateString('default',{month:'short',day:'numeric'});
+  const fmtTime = t=>{ if(!t) return ''; const [h,m]=t.split(':'); const hr=+h; return (hr%12||12)+':'+(m||'00')+' '+(hr<12?'AM':'PM'); };
+  const nightCount = s=>{ const diff=new Date(s.endDate+'T00:00:00')-new Date(s.startDate+'T00:00:00'); return Math.round(diff/86400000); };
+
+  root.innerHTML = `
+  <div style="display:flex;flex-direction:column;gap:18px;">
+
+    <!-- DECISION STRIP -->
+    <div style="background:${totalDecisions?'var(--ink)':'var(--low-bg,#E9EFE8)'};border-radius:10px;padding:16px 20px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;">
+      <div style="display:flex;gap:12px;align-items:flex-start;">
+        <div style="font-size:20px;margin-top:2px;">${totalDecisions?'⚑':'✓'}</div>
+        <div>
+          <div style="font-size:14px;font-weight:600;color:${totalDecisions?'#fff':'var(--low)'};margin-bottom:${totalDecisions?'8px':'0'}px;">
+            ${totalDecisions?totalDecisions+' thing'+(totalDecisions>1?'s':'')+' need your decision':'All clear — nothing needs your attention'}
+          </div>
+          ${approvalProjects.map(p=>`<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px;"><span style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;background:rgba(255,255,255,.15);color:rgba(255,255,255,.9);text-transform:uppercase;letter-spacing:.06em;">Approval</span><span style="font-size:12px;color:rgba(255,255,255,.75);">${escapeHtml(p.title)}</span></div>`).join('')}
+          ${overdueTasks.map(t=>`<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px;"><span style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;background:var(--high-bg,#FBEAE6);color:var(--high);text-transform:uppercase;letter-spacing:.06em;">Overdue</span><span style="font-size:12px;color:rgba(255,255,255,.75);">${escapeHtml(t.title)}</span></div>`).join('')}
+        </div>
+      </div>
+      ${totalDecisions?`<div style="font-family:'Playfair Display',serif;font-size:36px;font-weight:600;color:rgba(255,255,255,.15);align-self:center;flex-shrink:0;">${totalDecisions}</div>`:''}
+    </div>
+
+    <!-- PROJECTS -->
+    ${activeProjects.length?`
+    <div>
+      <div style="font-size:10px;font-weight:600;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--line);">Projects</div>
+      <div style="display:flex;flex-direction:column;gap:7px;">
+        ${activeProjects.map(p=>`
+        <div style="background:var(--paper);border:1px solid var(--line);border-left:3px solid ${stageColor(p.stage||'')};border-radius:8px;padding:11px 14px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;">
+          <div>
+            <div style="font-size:13px;font-weight:600;margin-bottom:2px;">${escapeHtml(p.title)}</div>
+            <div style="font-size:11px;color:var(--muted);">${escapeHtml(p.area||'')}${p.vendor?' &middot; '+escapeHtml(p.vendor):''}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;">
+            <span style="font-size:9.5px;font-weight:700;padding:3px 9px;border-radius:20px;background:${p.stage==='Your Approval'?'var(--high-bg,#FBEAE6)':p.stage==='In Progress'?'var(--low-bg,#E9EFE8)':'var(--med-bg,#F5EEDD)'};color:${stageColor(p.stage||'')};">${escapeHtml(p.stage||'Scoping')}</span>
+            <div style="width:110px;">
+              <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--muted);margin-bottom:2px;"><span>Progress</span><span>${stagePct(p.stage||'')}%</span></div>
+              <div style="height:4px;background:var(--line);border-radius:2px;overflow:hidden;"><div style="width:${stagePct(p.stage||'')}%;height:100%;border-radius:2px;background:${stageColor(p.stage||'')};"></div></div>
+            </div>
+            ${(p.estimate||p.cost)?`<div style="font-size:11px;color:var(--muted);">${p.cost?'$'+finNum(p.cost).toLocaleString():p.estimate?'Est. $'+finNum(p.estimate).toLocaleString():''}</div>`:''}
+          </div>
+        </div>`).join('')}
+      </div>
+    </div>`:''}
+
+    <!-- MAINTENANCE -->
+    <div>
+      <div style="font-size:10px;font-weight:600;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--line);">Maintenance</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+        <div style="background:var(--high-bg,#FBEAE6);border:1px solid rgba(122,46,35,.15);border-radius:8px;padding:12px 14px;">
+          <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:600;color:var(--high);line-height:1;">${overdueTasks.length}</div>
+          <div style="font-size:11px;font-weight:500;margin-top:3px;">Overdue</div>
+          <div style="margin-top:7px;display:flex;flex-direction:column;gap:2px;">${overdueTasks.slice(0,3).map(t=>`<div style="font-size:10.5px;color:var(--muted);display:flex;align-items:baseline;gap:5px;"><span style="width:4px;height:4px;border-radius:50%;background:var(--high);flex-shrink:0;display:inline-block;margin-bottom:1px;"></span>${escapeHtml(t.title)}</div>`).join('')}</div>
+        </div>
+        <div style="background:var(--med-bg,#F5EEDD);border:1px solid rgba(154,117,55,.15);border-radius:8px;padding:12px 14px;">
+          <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:600;color:var(--med);line-height:1;">${dueSoonTasks.length}</div>
+          <div style="font-size:11px;font-weight:500;margin-top:3px;">Due in 14 days</div>
+          <div style="margin-top:7px;display:flex;flex-direction:column;gap:2px;">${dueSoonTasks.slice(0,3).map(t=>`<div style="font-size:10.5px;color:var(--muted);display:flex;align-items:baseline;gap:5px;"><span style="width:4px;height:4px;border-radius:50%;background:var(--med);flex-shrink:0;display:inline-block;margin-bottom:1px;"></span>${escapeHtml(t.title)}</div>`).join('')}${dueSoonTasks.length>3?`<div style="font-size:10px;color:var(--muted);margin-top:2px;">+${dueSoonTasks.length-3} more</div>`:''}</div>
+        </div>
+        <div style="background:var(--low-bg,#E9EFE8);border:1px solid rgba(63,97,68,.15);border-radius:8px;padding:12px 14px;">
+          <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:600;color:var(--low);line-height:1;">${onScheduleTasks.length}</div>
+          <div style="font-size:11px;font-weight:500;margin-top:3px;">On schedule</div>
+          <div style="margin-top:7px;display:flex;flex-direction:column;gap:2px;">${onScheduleTasks.slice(0,3).map(t=>`<div style="font-size:10.5px;color:var(--muted);display:flex;align-items:baseline;gap:5px;"><span style="width:4px;height:4px;border-radius:50%;background:var(--low);flex-shrink:0;display:inline-block;margin-bottom:1px;"></span>${escapeHtml(t.title)}${t.nextDue?' &middot; '+fmtDate(t.nextDue):''}</div>`).join('')}${onScheduleTasks.length>3?`<div style="font-size:10px;color:var(--muted);margin-top:2px;">+${onScheduleTasks.length-3} more</div>`:''}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UPCOMING STAYS -->
+    ${upcomingStays.length?`
+    <div>
+      <div style="font-size:10px;font-weight:600;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--line);">Upcoming Stays</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        ${upcomingStays.map(s=>`
+        <div style="background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+          <div>
+            <div style="font-size:13px;font-weight:600;">&#127968; ${escapeHtml(s.location)}</div>
+            <div style="font-size:11px;color:var(--muted);">${fmtDate(s.startDate)} &mdash; ${fmtDate(s.endDate)}${s.arrivalTime?' &nbsp;&middot;&nbsp; arr '+fmtTime(s.arrivalTime):''}${s.departTime?' &nbsp;&middot;&nbsp; dep '+fmtTime(s.departTime):''}</div>
+          </div>
+          <div style="font-size:11px;font-weight:600;background:var(--cream);padding:3px 9px;border-radius:20px;white-space:nowrap;">${nightCount(s)} night${nightCount(s)!==1?'s':''}</div>
+        </div>`).join('')}
+      </div>
+    </div>`:''}
+
+    <!-- FINANCIALS + HOURS -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+
+      <!-- Spend by category -->
+      <div style="background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;">
+        <div style="font-size:10px;font-weight:600;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin-bottom:12px;">${monthStr} — spend by category</div>
+        ${topCats.length?`
+        <div style="display:flex;flex-direction:column;gap:7px;">
+          ${topCats.map(([cat,amt])=>`
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="font-size:11.5px;color:var(--ink);width:130px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(cat)}</div>
+            <div style="flex:1;height:5px;background:var(--line);border-radius:3px;overflow:hidden;"><div style="width:${Math.round(amt/maxCat*100)}%;height:100%;border-radius:3px;background:var(--brass);"></div></div>
+            <div style="font-size:11.5px;font-weight:600;width:54px;text-align:right;flex-shrink:0;">$${finNum(amt).toLocaleString()}</div>
+          </div>`).join('')}
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:10px;padding-top:8px;border-top:1px solid var(--line);">
+          <span style="font-size:11px;color:var(--muted);">Total</span>
+          <span style="font-family:'Playfair Display',serif;font-size:17px;font-weight:600;">$${finNum(totalSpend).toLocaleString()}</span>
+        </div>`:`<div style="font-size:12px;color:var(--muted);font-style:italic;">No receipts logged this month</div>`}
+      </div>
+
+      <!-- Recent receipts -->
+      <div style="background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;">
+        <div style="font-size:10px;font-weight:600;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin-bottom:10px;">Recent receipts</div>
+        ${recentReceipts.length?`
+        <div style="display:flex;flex-direction:column;">
+          ${recentReceipts.map(r=>`
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);">
+            <div style="min-width:0;">
+              <div style="font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(r.vendor||r.category||'Receipt')}</div>
+              <div style="font-size:10.5px;color:var(--muted);">${escapeHtml(r.category||'')}</div>
+            </div>
+            <div style="display:flex;align-items:baseline;gap:10px;flex-shrink:0;">
+              <span style="font-size:12.5px;font-weight:600;">$${finNum(r.price).toLocaleString()}</span>
+              <span style="font-size:10.5px;color:var(--muted);">${r.date?fmtDate(r.date):''}</span>
+            </div>
+          </div>`).join('')}
+        </div>`:`<div style="font-size:12px;color:var(--muted);font-style:italic;">No receipts yet</div>`}
+      </div>
+    </div>
+
+    <!-- HOURS BAR -->
+    <div style="background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;">
+      <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:8px;">
+        <span style="font-family:'Playfair Display',serif;font-size:28px;font-weight:600;">${thisMonthHours.toFixed(1)}</span>
+        <span style="font-size:12px;color:var(--muted);">management hours logged — ${monthStr}</span>
+      </div>
+      <div style="height:6px;background:var(--line);border-radius:3px;overflow:hidden;">
+        <div style="width:${Math.min(thisMonthHours/40*100,100).toFixed(0)}%;height:100%;border-radius:3px;background:var(--brass);"></div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:5px;">${(thisMonthHours/40*100).toFixed(0)}% of typical monthly engagement</div>
+    </div>
+
+  </div>`;
+}
 function renderSops(){
   const filters = document.getElementById('sop-filters');
   filters.innerHTML = '';
