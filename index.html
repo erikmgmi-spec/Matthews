@@ -397,6 +397,105 @@
     }
     .ov-proj-meta,.ov-spend-label,.ov-receipt-title,.ov-receipt-sub{min-width:0;overflow:hidden;text-overflow:ellipsis;}
 
+  /* PMAAS CSS START */
+    .pm-inspection-bar{display:flex;align-items:center;justify-content:space-between;background:var(--paper);border:1px solid var(--line);padding:10px 16px;margin-bottom:16px;border-radius:8px;}
+    .pm-inspection-bar-left{font-size:12px;color:var(--muted);}
+    .pm-inspection-bar-left b{color:var(--ink);}
+    .pm-inspection-toggle{font-size:11px;color:var(--accent);font-weight:600;cursor:pointer;background:none;border:none;font-family:inherit;}
+    .pm-rubric-detail{display:none;background:var(--paper);border:1px solid var(--line);border-top:none;margin-top:-16px;margin-bottom:16px;border-radius:0 0 8px 8px;}
+    .pm-rubric-detail.open{display:block;}
+    .pm-rubric-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);}
+    .pm-rubric-cell{padding:12px 16px;background:var(--cream);}
+    .pm-rubric-cell.mid{background:var(--paper);}
+    .pm-rubric-lv{font-size:10px;font-weight:700;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;}
+    .pm-rubric-lv.gold{color:var(--brass);}
+    .pm-rubric-name{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:3px;}
+    .pm-rubric-cadence{font-size:11px;color:var(--muted);}
+    .pm-triggers{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--brass);padding:12px 16px;margin-bottom:16px;display:flex;gap:20px;flex-wrap:wrap;border-radius:0 8px 8px 0;}
+    .pm-trigger-col .pm-trigger-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--brass);margin-bottom:5px;}
+    .pm-trigger-item{font-size:11px;color:var(--ink);margin-bottom:3px;display:flex;align-items:center;gap:6px;}
+    .pm-trigger-item::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--brass);flex-shrink:0;}
+    .pm-health-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-bottom:16px;border-radius:8px;overflow:hidden;}
+    .pm-health-cell{background:var(--paper);padding:10px 8px;text-align:center;cursor:pointer;transition:background 0.1s;}
+    .pm-health-cell:hover{background:var(--cream);}
+    .pm-health-icon{font-size:18px;margin-bottom:4px;}
+    .pm-health-name{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:2px;line-height:1.3;}
+    .pm-health-status{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);}
+    .pm-area-wrap{margin-bottom:6px;}
+    .pm-area-head{display:flex;align-items:center;gap:12px;padding:13px 16px;background:var(--paper);border:1px solid var(--line);border-radius:10px;cursor:pointer;transition:background 0.1s;}
+    .pm-area-head:hover{background:var(--cream);}
+    .pm-area-head.open{background:var(--ink);border-color:var(--ink);border-radius:10px 10px 0 0;}
+    .pm-area-icon{width:32px;height:32px;background:var(--cream);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+    .pm-area-head.open .pm-area-icon{background:rgba(255,255,255,.12);}
+    .pm-area-info{flex:1;min-width:0;}
+    .pm-area-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:1px;}
+    .pm-area-head.open .pm-area-title{color:#fff;}
+    .pm-area-desc{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .pm-area-head.open .pm-area-desc{color:rgba(255,255,255,.4);}
+    .pm-area-pills{display:flex;gap:4px;flex-shrink:0;}
+    .pm-area-chev{font-size:11px;color:var(--muted);flex-shrink:0;transition:transform .15s;}
+    .pm-area-head.open .pm-area-chev{color:var(--brass);transform:rotate(180deg);}
+    .pm-area-body{display:none;border:1px solid var(--line);border-top:none;background:var(--paper);border-radius:0 0 10px 10px;overflow:hidden;}
+    .pm-area-body.open{display:block;}
+    .pm-svc-table{width:100%;border-collapse:collapse;}
+    .pm-svc-table thead tr{background:var(--cream);border-bottom:1px solid var(--line);}
+    .pm-svc-table th{padding:8px 14px;text-align:left;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+    .pm-svc-table td{padding:10px 14px;font-size:13px;color:var(--ink);border-bottom:1px solid var(--line);vertical-align:middle;}
+    .pm-svc-table tr:last-child td{border-bottom:none;}
+    .pm-empty-row td{text-align:center;padding:24px;color:var(--muted);font-style:italic;font-size:13px;}
+    .pm-log-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--cream);border-top:1px solid var(--line);}
+    .pm-log-note{font-size:10px;color:var(--muted);font-style:italic;}
+    .pm-report-preview{margin-top:24px;border:1px solid var(--line);background:var(--paper);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);}
+    .pm-report-hdr{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:var(--ink);}
+    .pm-report-hdr-left{font-family:'Playfair Display',serif;font-size:17px;font-weight:500;color:#fff;}
+    .pm-report-hdr-right{font-size:10px;color:rgba(255,255,255,.35);}
+    .pm-report-empty{padding:36px;text-align:center;color:var(--muted);font-style:italic;line-height:1.8;font-size:13px;}
+    .pm-report-footer{padding:10px 16px;font-size:10px;color:var(--muted);font-style:italic;border-top:1px solid var(--line);display:flex;justify-content:space-between;}
+    @media(max-width:640px){.pm-health-strip{grid-template-columns:repeat(3,1fr);}.pm-rubric-grid{grid-template-columns:1fr;}.pm-triggers{flex-direction:column;gap:10px;}}
+    
+    .pm-view{display:none;} .pm-view.pm-view-active{display:block;}
+    .pm-hist-summary{display:flex;gap:1px;background:var(--line);border:1px solid var(--line);margin-bottom:16px;border-radius:8px;overflow:hidden;}
+    .pm-hist-stat{flex:1;background:var(--paper);padding:12px 16px;}
+    .pm-hist-stat-l{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:3px;}
+    .pm-hist-stat-v{font-family:'Playfair Display',serif;font-size:20px;color:var(--ink);}
+    .pm-modal-overlay{display:none;position:fixed;inset:0;background:rgba(33,30,26,.65);z-index:200;align-items:center;justify-content:center;}
+    .pm-modal-overlay.open{display:flex;}
+    .pm-modal{background:var(--cream);width:500px;max-width:94vw;border-radius:14px;border-top:3px solid var(--brass);max-height:90vh;overflow-y:auto;}
+    .pm-modal-hdr{padding:16px 20px;background:var(--ink);display:flex;justify-content:space-between;align-items:center;border-radius:11px 11px 0 0;position:sticky;top:0;}
+    .pm-modal-title{font-family:'Playfair Display',serif;font-size:18px;color:#fff;font-weight:500;}
+    .pm-modal-close{background:none;border:none;color:rgba(255,255,255,.4);font-size:18px;cursor:pointer;}
+    .pm-modal-body{padding:20px;display:flex;flex-direction:column;gap:14px;}
+    .pm-field-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+    .pm-field-input,.pm-field-select,.pm-field-textarea{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:14px;background:#fff;color:var(--ink);}
+    .pm-modal-footer{display:flex;gap:8px;padding:14px 20px;border-top:1px solid var(--line);position:sticky;bottom:0;background:var(--cream);}
+    .pm-save-flash{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--cream);padding:9px 18px;border-radius:20px;font-size:12.5px;opacity:0;transition:opacity .3s;pointer-events:none;}
+    .pm-save-flash.show{opacity:1;}
+    .pm-footer{background:var(--ink);padding:14px 36px;display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.25);}
+    
+    .pm-cal-due{background:#FBF0E0 !important;color:var(--med) !important;border-left:3px solid var(--med);}
+    .pm-cal-overdue{background:#FBEAE6 !important;color:var(--high) !important;border-left:3px solid var(--high);}
+    
+    /* PMaaS Zone Filter */
+    .pm-zone-filter{display:flex;gap:6px;flex-wrap:wrap;padding:0 0 14px;}
+    .pm-zone-chip{padding:6px 14px;border:1px solid var(--line);border-radius:20px;font-size:12px;
+      font-weight:500;cursor:pointer;background:var(--paper);color:var(--muted);transition:all .12s;}
+    .pm-zone-chip:hover{border-color:var(--ink);color:var(--ink);}
+    .pm-zone-chip.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+    
+    /* ── Principal Stay Bars ── */
+    .stay-bar{background:var(--ink);color:#fff;font-size:10px;font-weight:600;
+      padding:2px 7px;letter-spacing:.04em;border-radius:3px;margin-top:2px;
+      display:flex;align-items:center;gap:4px;cursor:pointer;white-space:nowrap;
+      overflow:hidden;text-overflow:ellipsis;}
+    .stay-bar.stay-start{border-radius:6px 2px 2px 6px;}
+    .stay-bar.stay-mid{border-radius:2px;opacity:.7;}
+    .stay-bar.stay-end{border-radius:2px 6px 6px 2px;opacity:.85;}
+    .add-stay-btn{background:var(--ink);color:#fff;border:none;
+      padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;
+      cursor:pointer;font-family:inherit;letter-spacing:.02em;}
+    .add-stay-btn:hover{opacity:.85;}
+
+    /* PMAAS CSS END */
 </style>
 </head>
 <body>
@@ -514,9 +613,162 @@
       <button class="subtab" id="pm-subtab-assets" type="button" onclick="switchPMSubView('assets')">Appliance &amp; Amenity Registry</button>
     </div>
     <div id="pm-tasks-view">
-      <div class="filters" id="pm-category-filters"></div>
-      <div class="filters" id="pm-filters"></div>
-      <div id="pm-list"></div>
+<div class="pm-zone-filter" id="pm-zone-filter"></div>
+      <!-- PMAAS view: read-only over pm-tasks and home-assets; add/edit stays in the existing modals -->
+<div class="pm-view pm-view-active" id="pm-view-service">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;background:var(--paper);border:1px solid var(--line);padding:10px 16px;margin-bottom:20px;">
+      <div style="font-size:11px;color:var(--muted);">
+        <span style="font-weight:600;color:var(--ink);">Inspection levels:</span>
+        &nbsp;L1 Property Walk &nbsp;·&nbsp; L2 System Check &nbsp;·&nbsp; L3 Full Estate Audit
+      </div>
+      <div style="font-size:10px;color:var(--brass);font-weight:600;letter-spacing:0.06em;cursor:pointer;" onclick="pmToggleRubric()">What's included ▾</div>
+    </div>
+    <div id="pm-rubric-detail" style="display:none;background:var(--paper);border:1px solid var(--line);border-top:none;margin-top:-20px;margin-bottom:20px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);">
+        <div style="padding:12px 16px;background:var(--paper);">
+          <div style="font-size:10px;font-weight:700;color:var(--muted);margin-bottom:4px;">L1 — Property Walk</div>
+          <div style="font-size:11px;color:var(--ink);margin-bottom:6px;">Any visit · visual only · no tools</div>
+          <div style="font-size:10px;color:var(--muted);">Exterior · Grounds · Access Points · Vehicles</div>
+        </div>
+        <div style="padding:12px 16px;background:var(--cream);">
+          <div style="font-size:10px;font-weight:700;color:var(--brass);margin-bottom:4px;">L2 — System Check</div>
+          <div style="font-size:11px;color:var(--ink);margin-bottom:6px;">Quarterly · all six areas · hands-on</div>
+          <div style="font-size:10px;color:var(--muted);">All Systems · Status Update · Condition Report</div>
+        </div>
+        <div style="padding:12px 16px;background:var(--paper);">
+          <div style="font-size:10px;font-weight:700;color:var(--muted);margin-bottom:4px;">L3 — Full Estate Audit</div>
+          <div style="font-size:11px;color:var(--ink);margin-bottom:6px;">Annual · specialist-assisted · CapEx</div>
+          <div style="font-size:10px;color:var(--muted);">Structural · Electrical · Pest · CapEx Plan</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pm-triggers">
+      <div>
+        <div class="pm-trigger-lbl">When you log this visit</div>
+        <div class="pm-trigger-item">Calendar marks visit date and recalculates next due</div>
+        <div class="pm-trigger-item">Hours prompt opens to log time on this visit</div>
+      </div>
+      <div>
+        <div class="pm-trigger-lbl">Overdue items trigger</div>
+        <div class="pm-trigger-item">Project card created in Projects tab</div>
+        <div class="pm-trigger-item">On Deck flagged with vendor recommendation</div>
+      </div>
+      <div>
+        <div class="pm-trigger-lbl">Condition Report</div>
+        <div class="pm-trigger-item">Findings auto-populate report tab for review</div>
+        <div class="pm-trigger-item">Principal-ready summary generated on save</div>
+      </div>
+    </div>
+
+    <div class="section-lbl">Property Health — Click to Jump to Service Area</div>
+    <div class="pm-health-strip">
+      <div class="pm-health-cell" onclick="pmJumpTo('pm-svc-water')"><div class="pm-health-icon">💧</div><div class="pm-health-name">Water &amp; Plumbing</div><div class="pm-health-status">Not Set</div></div>
+      <div class="pm-health-cell" onclick="pmJumpTo('pm-svc-hvac')"><div class="pm-health-icon">❄️</div><div class="pm-health-name">HVAC &amp; Air</div><div class="pm-health-status">Not Set</div></div>
+      <div class="pm-health-cell" onclick="pmJumpTo('pm-svc-appl')"><div class="pm-health-icon">🔥</div><div class="pm-health-name">Appliances</div><div class="pm-health-status">Not Set</div></div>
+      <div class="pm-health-cell" onclick="pmJumpTo('pm-svc-ext')"><div class="pm-health-icon">🏠</div><div class="pm-health-name">Exterior &amp; Structure</div><div class="pm-health-status">Not Set</div></div>
+      <div class="pm-health-cell" onclick="pmJumpTo('pm-svc-safe')"><div class="pm-health-icon">🛡️</div><div class="pm-health-name">Safety Systems</div><div class="pm-health-status">Not Set</div></div>
+      <div class="pm-health-cell" onclick="pmJumpTo('pm-svc-gnd')"><div class="pm-health-icon">🌿</div><div class="pm-health-name">Grounds</div><div class="pm-health-status">Not Set</div></div>
+    </div>
+
+    <!-- SERVICE AREA ACCORDIONS -->
+    <div id="pm-svc-water" class="pm-area-wrap">
+      <div class="pm-area-head" onclick="pmToggleArea(this)">
+        <div class="pm-area-icon">💧</div>
+        <div class="pm-area-info"><div class="pm-area-title">Water &amp; Plumbing</div><div class="pm-area-desc">Drain clearing, leak prevention, pressure and fixture performance</div></div>
+        <div class="pm-area-pills"><span class="tag">—</span></div>
+        <div class="pm-area-chev">▾</div>
+      </div>
+      <div class="pm-area-body">
+        <table class="pm-svc-table"><thead><tr><th>Service Item</th><th>Frequency</th><th>Last Serviced</th><th>Next Due</th><th>Status</th><th>Assigned</th><th></th></tr></thead>
+        <tbody><tr class="pm-empty-row"><td colspan="7">No service records logged — add first entry to get started</td></tr></tbody></table>
+        <div class="pm-asset-strip" style="display:none;background:var(--cream);border-top:1px solid var(--line);"></div>
+      </div>
+    </div>
+
+    <div id="pm-svc-hvac" class="pm-area-wrap">
+      <div class="pm-area-head" onclick="pmToggleArea(this)">
+        <div class="pm-area-icon">❄️</div>
+        <div class="pm-area-info"><div class="pm-area-title">HVAC &amp; Air Systems</div><div class="pm-area-desc">Airflow optimization, filter service, and system health</div></div>
+        <div class="pm-area-pills"><span class="tag">—</span></div>
+        <div class="pm-area-chev">▾</div>
+      </div>
+      <div class="pm-area-body">
+        <table class="pm-svc-table"><thead><tr><th>Service Item</th><th>Frequency</th><th>Last Serviced</th><th>Next Due</th><th>Status</th><th>Assigned</th><th></th></tr></thead>
+        <tbody><tr class="pm-empty-row"><td colspan="7">No service records logged — add first entry to get started</td></tr></tbody></table>
+        <div class="pm-asset-strip" style="display:none;background:var(--cream);border-top:1px solid var(--line);"></div>
+      </div>
+    </div>
+
+    <div id="pm-svc-appl" class="pm-area-wrap">
+      <div class="pm-area-head" onclick="pmToggleArea(this)">
+        <div class="pm-area-icon">🔥</div>
+        <div class="pm-area-info"><div class="pm-area-title">Appliances &amp; Fire Risk</div><div class="pm-area-desc">Cleaning, servicing, and performance restoration</div></div>
+        <div class="pm-area-pills"><span class="tag">—</span></div>
+        <div class="pm-area-chev">▾</div>
+      </div>
+      <div class="pm-area-body">
+        <table class="pm-svc-table"><thead><tr><th>Service Item</th><th>Frequency</th><th>Last Serviced</th><th>Next Due</th><th>Status</th><th>Assigned</th><th></th></tr></thead>
+        <tbody><tr class="pm-empty-row"><td colspan="7">No service records logged — add first entry to get started</td></tr></tbody></table>
+        <div class="pm-asset-strip" style="display:none;background:var(--cream);border-top:1px solid var(--line);"></div>
+      </div>
+    </div>
+
+    <div id="pm-svc-ext" class="pm-area-wrap">
+      <div class="pm-area-head" onclick="pmToggleArea(this)">
+        <div class="pm-area-icon">🏠</div>
+        <div class="pm-area-info"><div class="pm-area-title">Exterior &amp; Structure</div><div class="pm-area-desc">Roof, drainage, sealing, and water intrusion prevention</div></div>
+        <div class="pm-area-pills"><span class="tag">—</span></div>
+        <div class="pm-area-chev">▾</div>
+      </div>
+      <div class="pm-area-body">
+        <table class="pm-svc-table"><thead><tr><th>Service Item</th><th>Frequency</th><th>Last Serviced</th><th>Next Due</th><th>Status</th><th>Assigned</th><th></th></tr></thead>
+        <tbody><tr class="pm-empty-row"><td colspan="7">No service records logged — add first entry to get started</td></tr></tbody></table>
+        <div class="pm-asset-strip" style="display:none;background:var(--cream);border-top:1px solid var(--line);"></div>
+      </div>
+    </div>
+
+    <div id="pm-svc-safe" class="pm-area-wrap">
+      <div class="pm-area-head" onclick="pmToggleArea(this)">
+        <div class="pm-area-icon">🛡️</div>
+        <div class="pm-area-info"><div class="pm-area-title">Safety Systems</div><div class="pm-area-desc">Detectors, GFCI, outlets, and hazard identification</div></div>
+        <div class="pm-area-pills"><span class="tag">—</span></div>
+        <div class="pm-area-chev">▾</div>
+      </div>
+      <div class="pm-area-body">
+        <table class="pm-svc-table"><thead><tr><th>Service Item</th><th>Frequency</th><th>Last Serviced</th><th>Next Due</th><th>Status</th><th>Assigned</th><th></th></tr></thead>
+        <tbody><tr class="pm-empty-row"><td colspan="7">No service records logged — add first entry to get started</td></tr></tbody></table>
+        <div class="pm-asset-strip" style="display:none;background:var(--cream);border-top:1px solid var(--line);"></div>
+      </div>
+    </div>
+
+    <div id="pm-svc-gnd" class="pm-area-wrap">
+      <div class="pm-area-head" onclick="pmToggleArea(this)">
+        <div class="pm-area-icon">🌿</div>
+        <div class="pm-area-info"><div class="pm-area-title">Exterior &amp; Grounds</div><div class="pm-area-desc">Irrigation, outdoor structures, and property condition</div></div>
+        <div class="pm-area-pills"><span class="tag">—</span></div>
+        <div class="pm-area-chev">▾</div>
+      </div>
+      <div class="pm-area-body">
+        <table class="pm-svc-table"><thead><tr><th>Service Item</th><th>Frequency</th><th>Last Serviced</th><th>Next Due</th><th>Status</th><th>Assigned</th><th></th></tr></thead>
+        <tbody><tr class="pm-empty-row"><td colspan="7">No service records logged — add first entry to get started</td></tr></tbody></table>
+        <div class="pm-asset-strip" style="display:none;background:var(--cream);border-top:1px solid var(--line);"></div>
+      </div>
+    </div>
+
+    <!-- CONDITION REPORT PREVIEW -->
+    <div class="pm-report-preview">
+      <div class="pm-report-hdr">
+        <div class="pm-report-hdr-left">Condition Report — No inspections logged yet</div>
+        <div class="pm-report-hdr-right">Auto-generates after first service entry</div>
+      </div>
+      <div class="pm-report-empty">Complete your first inspection visit and log service entries above.<br>Findings will populate here automatically, organized by priority and linked to Projects, Vendors, and Calendar.</div>
+      <div class="pm-report-footer"><span>Next visit: — · Select inspection level above to begin</span><span>All findings traceable to service area above</span></div>
+    </div>
+
+  </div><!-- /view-service -->
+      <!-- PMAAS INSERT END -->
     </div>
     <div id="pm-assets-view" hidden>
       <div class="banner">Add only assets present at this estate. Existing operational records remain unchanged.</div>
@@ -665,6 +917,7 @@ const STAGE_CLASS = {
   "Project completed":"stage-completed"
 };
 
+let pmZoneFilter = "All";
 let sops = [], calEvents = [], projects = [], hoursLog = [], pmTasks = [];
 let principalStays = [], pendingProjects = []; /* not part of Keating's data model; kept empty so the shared Overview renders without those sections */
 let vendorDirectory = [], properties = [], vehicles = [], vehicleTrips = [], receipts = [], propertyDetails = [], homeAssets = [];
@@ -1774,8 +2027,184 @@ async function deleteHours(){ hoursLog = hoursLog.filter(e=>e.id!==editing.id); 
 
 
 /* ---------- PREVENTATIVE MAINTENANCE ---------- */
+/* PMAAS JS START */
+
+function renderPMZoneFilter(){
+  const strip = document.getElementById('pm-zone-filter');
+  if(!strip) return;
+  const zones = ['All'].concat(ZONES.filter(function(z){ return z!=='Vehicles'; }));
+  strip.innerHTML = zones.map(function(z){
+    return '<button class="pm-zone-chip' + (pmZoneFilter===z?' active':'') + '" onclick="setPMZone(\'' + z + '\')">' + z + '</button>';
+  }).join('');
+}
+function setPMZone(zone){
+  pmZoneFilter = zone;
+  renderPMZoneFilter();
+  renderPMaaS();
+}
+
+function pmToggleRubric(){
+  var el=document.getElementById('pm-rubric-detail');
+  if(el) el.classList.toggle('open');
+}
+function pmToggleArea(head){
+  var body=head.nextElementSibling;
+  var isOpen=head.classList.contains('open');
+  head.classList.toggle('open',!isOpen);
+  if(body) body.classList.toggle('open',!isOpen);
+}
+function pmJumpTo(id){
+  var el=document.getElementById(id);
+  if(!el) return;
+  el.scrollIntoView({behavior:'smooth',block:'start'});
+  var head=el.querySelector('.pm-area-head');
+  var body=el.querySelector('.pm-area-body');
+  if(head&&body){head.classList.add('open');body.classList.add('open');}
+}
+function pmSwitchView(view, btn) {
+  document.querySelectorAll('.pm-view').forEach(v => v.classList.remove('pm-view-active'));
+  document.querySelectorAll('.sub-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('pm-view-' + view).classList.add('pm-view-active');
+  btn.classList.add('active');
+}
+/* =============================================================
+   PMAAS RENDER — populates PMaaS accordions from pmTasks array
+   Added: 2026-09-13
+   ============================================================= */
+function renderPMaaS(){
+  renderPMZoneFilter();
+  var today = new Date(); today.setHours(0,0,0,0);
+  var areaMap = {
+    'pm-svc-water':  ['Water & Plumbing'],
+    'pm-svc-hvac':   ['HVAC & Air Systems'],
+    'pm-svc-appl':   ['Appliances & Kitchen'],
+    'pm-svc-ext':    ['Roof, Exterior & Structure'],
+    'pm-svc-safe':   ['Smart Home, AV & Security','Electrical & Power'],
+    'pm-svc-gnd':    ['Grounds & Exterior','Pool & Aquatics','Pest & Termite Control','Wine & Specialty Rooms','Vehicles & Garage','General']
+  };
+  var healthMap = {
+    'pm-svc-water': 0, 'pm-svc-hvac': 1, 'pm-svc-appl': 2,
+    'pm-svc-ext': 3, 'pm-svc-safe': 4, 'pm-svc-gnd': 5
+  };
+
+  var allMappedCats = new Set([].concat.apply([], Object.keys(areaMap).map(function(id){ return areaMap[id]; })));
+  Object.keys(areaMap).forEach(function(areaId){
+    var cats = areaMap[areaId];
+    var inGroup = function(cat){ return cats.indexOf(cat) > -1 || (areaId==='pm-svc-gnd' && !allMappedCats.has(cat)); };
+    var tasks = pmTasks.filter(function(t){ return inGroup(t.category||'General') && (pmZoneFilter==='All' || (t.area||'')=== pmZoneFilter); });
+    var wrap = document.getElementById(areaId);
+    if(!wrap) return;
+
+    // Update health strip
+    var healthIdx = healthMap[areaId];
+    var healthCells = document.querySelectorAll('.pm-health-cell');
+    if(healthCells[healthIdx]){
+      var statusEl = healthCells[healthIdx].querySelector('.pm-health-status');
+      if(statusEl){
+        if(tasks.length === 0){ statusEl.textContent = 'Not Set'; statusEl.style.color = ''; }
+        else {
+          var overdue = tasks.filter(function(t){ return t.nextDue && new Date(t.nextDue+'T00:00:00') < today; });
+          var due = tasks.filter(function(t){
+            if(!t.nextDue) return false;
+            var d = new Date(t.nextDue+'T00:00:00');
+            return d >= today && d <= new Date(today.getTime() + 14*86400000);
+          });
+          if(overdue.length){ statusEl.textContent = 'Overdue'; statusEl.style.color = 'var(--high)'; }
+          else if(due.length){ statusEl.textContent = 'Due Soon'; statusEl.style.color = 'var(--med)'; }
+          else { statusEl.textContent = 'Current'; statusEl.style.color = 'var(--low)'; }
+        }
+      }
+    }
+
+    // Update area pill count
+    var pill = wrap.querySelector('.pm-area-pills');
+    if(pill){
+      var overduePills = tasks.filter(function(t){ return t.nextDue && new Date(t.nextDue+'T00:00:00') < today; }).length;
+      var duePills = tasks.filter(function(t){
+        if(!t.nextDue) return false;
+        var d = new Date(t.nextDue+'T00:00:00');
+        return d >= today && d <= new Date(today.getTime() + 14*86400000);
+      }).length;
+      pill.innerHTML = tasks.length === 0 ? '<span class="tag">—</span>' :
+        (overduePills ? '<span class="tag high">'+overduePills+' Overdue</span>' : '') +
+        (duePills ? '<span class="tag medium">'+duePills+' Due Soon</span>' : '') +
+        (!overduePills && !duePills ? '<span class="tag low">'+tasks.length+' Current</span>' : '');
+    }
+
+    // Populate table
+    var tbody = wrap.querySelector('tbody');
+    if(!tbody) return;
+    if(tasks.length === 0){
+      tbody.innerHTML = '<tr class="pm-empty-row"><td colspan="7">No service records logged — add first entry to get started</td></tr>';
+      return;
+    }
+    tbody.innerHTML = tasks.map(function(t){
+      var due = t.nextDue ? new Date(t.nextDue+'T00:00:00') : null;
+      var daysOut = due ? Math.round((due - today) / 86400000) : null;
+      var statusBadge = !due ? '<span class="tag">—</span>' :
+        daysOut < 0 ? '<span class="tag high">Overdue</span>' :
+        daysOut <= 14 ? '<span class="tag medium">Due Soon</span>' :
+        '<span class="tag low">Scheduled</span>';
+      var dueLabel = due ? due.toLocaleDateString('default',{month:'short',day:'numeric',year:'numeric'}) : '—';
+      return '<tr>' +
+        '<td><b>'+escapeHtml(t.title)+'</b>' + (t.body ? '<br><span style="font-size:11px;color:var(--muted);">'+escapeHtml(t.body.slice(0,80))+(t.body.length>80?'…':'')+'</span>' : '') + '</td>' +
+        '<td>'+escapeHtml(t.frequency)+'</td>' +
+        '<td style="color:var(--muted);">'+(t.lastServiced ? new Date(t.lastServiced+'T00:00:00').toLocaleDateString('default',{month:'short',day:'numeric',year:'numeric'}) : '—')+'</td>' +
+        '<td>'+dueLabel+'</td>' +
+        '<td>'+statusBadge+'</td>' +
+        '<td>'+escapeHtml(t.vendor||'—')+'</td>' +
+        '<td><button class="del" style="color:var(--muted);" onclick="openPMModal(\''+escapeHtml(t.id)+'\')">Edit</button></td>' +
+        '</tr>';
+    }).join('');
+
+      // Asset link strip — show homeAssets matching this service area
+      var assetStrip = wrap.querySelector('.pm-asset-strip');
+      if(assetStrip && typeof homeAssets !== 'undefined'){
+        var matchingAssets = homeAssets.filter(function(a){ return inGroup(a.category||'General') && (pmZoneFilter==='All' || (a.zone||a.location||'')=== pmZoneFilter); });
+        if(matchingAssets.length){
+          assetStrip.style.display = 'block';
+          assetStrip.innerHTML = '<div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:8px 14px 4px;">Assets in this area</div>' +
+            matchingAssets.map(function(a){
+              return '<div onclick="openAssetModal(\'' + a.id + '\')" style="display:flex;justify-content:space-between;padding:7px 14px;border-top:1px solid var(--line);font-size:12px;cursor:pointer;" onmouseover="this.style.background=\'var(--cream)\'" onmouseout="this.style.background=\'\'">'+
+                '<span style="color:var(--ink);font-weight:500;">'+escapeHtml(a.name)+'</span>'+
+                '<span style="color:var(--muted);">'+escapeHtml(a.brand||'')+(a.model?' &middot; '+escapeHtml(a.model):'')+(a.location?' &middot; '+escapeHtml(a.location):'')+'</span>'+
+                '</div>';
+            }).join('');
+        } else {
+          assetStrip.style.display = 'none';
+        }
+      }
+  });
+
+  // Update condition report preview
+  var reportHdr = document.querySelector('.pm-report-hdr-left');
+  var reportBody = document.querySelector('.pm-report-empty');
+  var overdueTasks = pmTasks.filter(function(t){ return t.nextDue && new Date(t.nextDue+'T00:00:00') < today; });
+  var dueSoonTasks = pmTasks.filter(function(t){
+    if(!t.nextDue) return false;
+    var d = new Date(t.nextDue+'T00:00:00');
+    return d >= today && d <= new Date(today.getTime() + 14*86400000);
+  });
+  if(reportHdr && pmTasks.length > 0){
+    reportHdr.textContent = 'Condition Summary — ' + pmTasks.length + ' service items tracked';
+    if(reportBody){
+      var lines = [];
+      if(overdueTasks.length) lines.push('<span style="color:var(--high);font-weight:600;">⚠ Overdue ('+overdueTasks.length+'):</span> '+overdueTasks.map(function(t){return escapeHtml(t.title);}).join(', '));
+      if(dueSoonTasks.length) lines.push('<span style="color:var(--med);font-weight:600;">◷ Due within 14 days ('+dueSoonTasks.length+'):</span> '+dueSoonTasks.map(function(t){return escapeHtml(t.title);}).join(', '));
+      if(!overdueTasks.length && !dueSoonTasks.length) lines.push('<span style="color:var(--low);font-weight:600;">✓ All items current</span> — next due dates on schedule.');
+      reportBody.innerHTML = lines.join('<br><br>');
+      reportBody.style.textAlign = 'left';
+      reportBody.style.fontStyle = 'normal';
+      reportBody.style.color = 'var(--ink)';
+    }
+  }
+}
+/* END PMAAS RENDER */
+/* PMAAS JS END */
 function renderPM(){
+  if(typeof renderPMaaS==='function') renderPMaaS();
   const categoryFilters = document.getElementById('pm-category-filters');
+  if(!categoryFilters) return; /* PMaaS accordions replace the chip list */
   categoryFilters.innerHTML = '';
   ["All", ...PM_CATEGORIES].forEach(category=>{
     const chip = document.createElement('div');
@@ -1829,6 +2258,7 @@ function renderPM(){
   }).join('');
 }
 
+function optionsKeeping(list, current){ const l=list.slice(); if(current && l.indexOf(current)<0) l.push(current); return l; }
 function openPMModal(id){
   editing = {type:'pm', id: id||null};
   const e = id ? pmTasks.find(x=>x.id===id) : {title:'',category:'General',area:ZONES[0],frequency:PM_FREQUENCIES[1],body:'',vendor:'',cost:'',nextDue:''};
@@ -1836,9 +2266,9 @@ function openPMModal(id){
     <h2>${id?'Edit Maintenance Item':'Add Maintenance Item'}</h2>
     <label>Title</label><input id="f-title" value="${escapeHtml(e.title)}" placeholder="e.g. HVAC filter replacement">
     <div class="row2">
-      <div><label>Category</label><select id="f-category">${PM_CATEGORIES.map(c=>`<option ${c===(e.category||'General')?'selected':''}>${c}</option>`).join('')}</select></div>
-      <div><label>Zone</label><select id="f-pm-area">${ZONES.map(z=>`<option ${z===(e.area||ZONES[0])?'selected':''}>${z}</option>`).join('')}</select></div>
-      <div><label>Frequency</label><select id="f-freq">${PM_FREQUENCIES.map(f=>`<option ${f===e.frequency?'selected':''}>${f}</option>`).join('')}</select></div>
+      <div><label>Category</label><select id="f-category">${optionsKeeping(PM_CATEGORIES,e.category).map(c=>`<option ${c===(e.category||'General')?'selected':''}>${escapeHtml(c)}</option>`).join('')}</select></div>
+      <div><label>Zone</label><select id="f-pm-area">${optionsKeeping(ZONES,e.area).map(z=>`<option ${z===(e.area||ZONES[0])?'selected':''}>${escapeHtml(z)}</option>`).join('')}</select></div>
+      <div><label>Frequency</label><select id="f-freq">${optionsKeeping(PM_FREQUENCIES,e.frequency).map(f=>`<option ${f===e.frequency?'selected':''}>${escapeHtml(f)}</option>`).join('')}</select></div>
     </div>
     <label>Next Due Date</label><input type="date" id="f-nextdue" value="${e.nextDue||''}">
     <label>Statement / Instructions</label><textarea id="f-body" placeholder="What needs to happen, and how.">${escapeHtml(e.body)}</textarea>
