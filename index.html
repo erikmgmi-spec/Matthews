@@ -2090,7 +2090,6 @@ async function deleteCalEvent(id, dateStr){
 
 /* ---------- COMPLETED PROJECTS ---------- */
 function renderProjects(){
-  renderProjectPipeline();
   const filters = document.getElementById('proj-filters');
   filters.innerHTML = '';
   ["All", ...getKnownAreas()].forEach(cat=>{
@@ -2112,7 +2111,6 @@ function renderProjects(){
 
   const list = document.getElementById('proj-list');
   let shown = projFilter==="All" ? projects : projects.filter(e=>e.area===projFilter);
-  if(projStageView!=="All") shown = shown.filter(p=>(p.stage||"Scoping")===projStageView);
   shown = projStageFilter==="All Stages" ? shown : shown.filter(e=>(e.stage||"Vendor identified")===projStageFilter);
 
   if(shown.length===0){ list.innerHTML = `<div class="empty"><h3>No projects in this view</h3><p>Add a project, or adjust the filters above.</p></div>`; return; }
